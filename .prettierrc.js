@@ -1,9 +1,9 @@
 module.exports = {
   trailingComma: 'none',
   tabWidth: 2,
-  printWidth: 80,
+  printWidth: 90,
   useTabs: false,
-  semi: false,
+  semi: true,
   singleQuote: true,
   quoteProps: 'as-needed',
   bracketSpacing: true,
@@ -15,9 +15,9 @@ module.exports = {
     {
       files: '.prettierrc',
       options: {
-        parser: 'json',
-      },
-    },
+        parser: 'json'
+      }
+    }
   ],
-  plugins: [require('prettier-plugin-tailwindcss')],
-};
+  plugins: [require('prettier-plugin-tailwindcss')]
+}

@@ -41,6 +41,7 @@ module.exports = {
     'tailwindcss/no-custom-classname': 'warn',
     'tailwindcss/no-contradicting-classname': 'error',
     'simple-import-sort/imports': 'error',
-    'simple-import-sort/exports': 'error'
+    'simple-import-sort/exports': 'error',
+    semi: [2, 'always']
   }
-}
+};
