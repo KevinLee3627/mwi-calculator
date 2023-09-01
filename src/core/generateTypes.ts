@@ -2,14 +2,27 @@ import { readFile, writeFile } from 'fs/promises';
 
 async function main() {
   const file = await readFile('./src/core/clientData.json', { encoding: 'utf-8' });
-  const parsed = JSON.parse(file);
+  const data = JSON.parse(file);
 
-  const skillDetailMap = parsed.skillDetailMap;
-  const skillHrids = Object.keys(skillDetailMap);
-  const skillHridTypeDef = `export type SkillHrid = ${skillHrids
-    .map((hrid) => `'${hrid}'`)
+  generateHridType('SkillHrid', Object.keys(data.skillDetailMap));
+  generateHridType('AbilityHrid', Object.keys(data.abilityDetailMap));
+  generateHridType('ItemHrid', Object.keys(data.itemDetailMap));
+  generateHridType('ItemCategoryHrid', Object.keys(data.itemCategoryDetailMap));
+  generateHridType('ItemLocationHrid', Object.keys(data.itemLocationDetailMap));
+  generateHridType('EquipmentTypeHrid', Object.keys(data.equipmentTypeDetailMap));
+  generateHridType('ActionHrid', Object.keys(data.actionDetailMap));
+  generateHridType('ActionTypeHrid', Object.keys(data.actionTypeDetailMap));
+  generateHridType('ActionCategoryHrid', Object.keys(data.actionCategoryDetailMap));
+  generateHridType('BuffTypeHrid', Object.keys(data.buffTypeDetailMap));
+  generateHridType('CommunityBuffType', Object.keys(data.communityBuffTypeDetailMap));
+}
+
+async function generateHridType(name: string, values: string[]): Promise<void> {
+  const filePath = `${process.cwd()}/src/core/${name}.ts`;
+
+  const skillHridTypeDef = `export type ${name} = ${values
+    .map((val) => `'${val}'`)
     .join(' | ')}`;
-  const filePath = `${process.cwd()}/src/core/SkillHrid.ts`;
   await writeFile(filePath, skillHridTypeDef);
 }
 
