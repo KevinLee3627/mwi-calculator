@@ -1,3 +1,4 @@
+import { BuffDetail } from 'src/core/buffs/BuffDetail';
 import { ActionTypeHrid } from 'src/core/hrid/ActionTypeHrid';
 
 export interface ConsumableDetail {
@@ -6,6 +7,6 @@ export interface ConsumableDetail {
   hitpointRestore: number;
   manapointRestore: number;
   recoveryDuration: number;
-  buffs: null;
+  buffs: BuffDetail;
   defaultCombatTriggers: null; // TODO
 }
