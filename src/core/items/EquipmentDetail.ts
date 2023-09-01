@@ -8,7 +8,7 @@ export interface EquipmentDetail {
   levelRequirements: null | LevelRequirement[];
   combatStats: {
     combatStyleHrids: null | CombatStyleHrid[];
-    damageType: '' | DamageTypeHrid; // TODO
+    damageType: '' | DamageTypeHrid;
     attackInterval: number;
     castSpeed: number;
     abilityHaste: number;
@@ -85,7 +85,7 @@ export interface EquipmentDetail {
   };
   combatEnhancementBonuses: {
     combatStyleHrids: null;
-    damageType: ''; // TODO
+    damageType: '';
     attackInterval: number;
     castSpeed: number;
     abilityHaste: number;
