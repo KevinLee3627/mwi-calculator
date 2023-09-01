@@ -17,11 +17,16 @@ async function main() {
   generateHridType('CommunityBuffTypeHrid', Object.keys(data.communityBuffTypeDetailMap));
   generateHridType('DamageTypeHrid', Object.keys(data.damageTypeDetailMap));
   generateHridType('CombatStyleHrid', Object.keys(data.combatStyleDetailMap));
-  const actionFunctionHrids = Object.values<Record<string, string>>(
+  const actionFunctionHrids = Object.values<Record<string, unknown>>(
     data.actionDetailMap
   ).map((value) => value.function);
-  const uniqueActionFunctions = Array.from(new Set(actionFunctionHrids));
+  const uniqueActionFunctions = Array.from(new Set(actionFunctionHrids)) as string[];
   generateHridType('ActionFunctionHrid', uniqueActionFunctions);
+  const itemLocationTypeHrids = Object.values<Record<string, unknown>>(
+    data.itemLocationDetailMap
+  ).map((value) => value.type);
+  const uniqueItemLocationTypes = Array.from(new Set(itemLocationTypeHrids)) as string[];
+  generateHridType('ItemLocationTypeHrid', uniqueItemLocationTypes);
 }
 
 async function generateHridType(name: string, values: string[]): Promise<void> {
