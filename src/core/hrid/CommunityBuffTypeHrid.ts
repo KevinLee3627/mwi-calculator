@@ -1,4 +1,4 @@
-export type CommunityBuffType =
+export type CommunityBuffTypeHrid =
   | '/community_buff_types/combat_drop_quantity'
   | '/community_buff_types/enhancing_speed'
   | '/community_buff_types/experience'
