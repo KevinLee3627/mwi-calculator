@@ -1,9 +1,9 @@
 import { ItemCategoryHrid } from 'src/core/hrid/ItemCategoryHrid';
 import { ItemHrid } from 'src/core/hrid/ItemHrid';
-import { InputItem } from 'src/core/InputItem';
 import { AbilityBookDetail } from 'src/core/items/AbilityBookDetail';
 import { ConsumableDetail } from 'src/core/items/ConsumableDetail';
 import { EquipmentDetail } from 'src/core/items/EquipmentDetail';
+import { InputItem } from 'src/core/items/InputItem';
 
 export interface ItemDetail {
   hrid: ItemHrid;
