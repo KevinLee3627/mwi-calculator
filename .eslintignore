@@ -11,3 +11,5 @@
 build
 
 .eslintrc.js
+
+/dist

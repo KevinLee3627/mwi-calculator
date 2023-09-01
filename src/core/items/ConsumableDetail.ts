@@ -3,10 +3,10 @@ import { ActionTypeHrid } from 'src/core/hrid/ActionTypeHrid';
 
 export interface ConsumableDetail {
   cooldownDuration: number;
-  usableInActionTypeMap: null | { [key in ActionTypeHrid]: boolean };
+  usableInActionTypeMap: null | Partial<Record<ActionTypeHrid, boolean>>;
   hitpointRestore: number;
   manapointRestore: number;
   recoveryDuration: number;
-  buffs: BuffDetail;
+  buffs: BuffDetail | null;
   defaultCombatTriggers: null; // TODO
 }
