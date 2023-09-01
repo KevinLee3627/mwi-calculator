@@ -7,7 +7,7 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint src --max-warnings=0",
-    "types": "tsc --project tsconfig.json --noEmit"
+    "gen-types": "npx ts-node src/core/generateTypes.ts && npx prettier src/core --write"
   },
   "dependencies": {
     "react": "^18.2.0",

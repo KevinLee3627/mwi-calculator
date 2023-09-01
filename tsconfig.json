@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
     "useDefineForClassFields": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "allowJs": false,
@@ -9,7 +8,8 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "ESNext",
+    "target": "es2017",
+    "module": "NodeNext",
     "moduleResolution": "Node",
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -17,7 +17,9 @@
     "jsx": "react-jsx",
     "baseUrl": "./src",
     "paths": {
-      "core/*": ["./core/*"]
+      "src/*": ["./*"],
+      "core/*": ["./core/*"],
+      "components/*": ["./components/*"]
     }
   },
   "include": ["src"],
