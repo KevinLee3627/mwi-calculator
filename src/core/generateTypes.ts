@@ -17,6 +17,16 @@ async function main() {
   generateHridType('CommunityBuffTypeHrid', Object.keys(data.communityBuffTypeDetailMap));
   generateHridType('DamageTypeHrid', Object.keys(data.damageTypeDetailMap));
   generateHridType('CombatStyleHrid', Object.keys(data.combatStyleDetailMap));
+  generateHridType(
+    'ActionFunctionHrid',
+    Array.from(
+      new Set(
+        Object.values<Record<string, string>>(data.actionDetailMap).map(
+          (value: Record<string, string>) => value.function
+        )
+      )
+    )
+  );
 }
 
 async function generateHridType(name: string, values: string[]): Promise<void> {
