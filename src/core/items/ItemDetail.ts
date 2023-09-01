@@ -1,5 +1,6 @@
 import { ItemCategoryHrid } from 'src/core/hrid/ItemCategoryHrid';
 import { ItemHrid } from 'src/core/hrid/ItemHrid';
+import { InputItem } from 'src/core/InputItem';
 import { AbilityBookDetail } from 'src/core/items/AbilityBookDetail';
 import { ConsumableDetail } from 'src/core/items/ConsumableDetail';
 import { EquipmentDetail } from 'src/core/items/EquipmentDetail';
@@ -13,8 +14,8 @@ export interface ItemDetail {
   isTradable: boolean;
   isOpenable: boolean;
   itemLevel: number;
-  enhancementCosts: null | { itemHrid: ItemHrid; count: number }[]; // TODO
-  protectionItemHrids: null | []; // TODO
+  enhancementCosts: null | InputItem[]; // TODO - Rename InputItem?
+  protectionItemHrids: null | ItemHrid[];
   equipmentDetail: EquipmentDetail;
   consumableDetail: ConsumableDetail;
   abilityBookDetail: AbilityBookDetail;
