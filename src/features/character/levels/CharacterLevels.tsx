@@ -22,17 +22,15 @@ export function CharacterLevels() {
         </label>
         <input
           type="number"
+          min={0}
+          max={200}
           id={`${skillHrid}_level_input`}
           name={`${skillHrid}_level_input`}
           className="input-primary input"
           value={levels[skillHrid]}
           onChange={(e) => {
             const value = parseInt(e.target.value, 10);
-            if (typeof value !== 'number' || isNaN(value) || value < 1) {
-              dispatch(setLevel({ skillHrid, value: 1 }));
-            } else if (value > 200) {
-              dispatch(setLevel({ skillHrid, value: 200 }));
-            } else dispatch(setLevel({ skillHrid, value }));
+            dispatch(setLevel({ skillHrid, value }));
           }}
         />
       </div>
