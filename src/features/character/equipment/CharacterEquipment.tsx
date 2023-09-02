@@ -30,7 +30,7 @@ export function CharacterEquipment() {
     );
   }, []);
 
-  const inputs = Object.entries(equipment).map((entry) => {
+  function convertEquipToSelect(entry: [string, ItemDetail | null]) {
     const itemLocationHrid = entry[0] as PossibleCharacterEquipmentLocationHrid;
     // Why use location vs. itemLocationHrid? in clientData.itemDetailMap uses
     // EquipmentTypeHrid instead of ItemLocationHrid, which means the two Hrid
@@ -49,11 +49,22 @@ export function CharacterEquipment() {
         <CharacterEnhancementSelect itemLocationHrid={itemLocationHrid} />
       </div>
     );
-  });
+  }
+
+  const inputs = Object.entries(equipment)
+    .filter((entry) => !entry[0].includes('tool'))
+    .map((entry) => convertEquipToSelect(entry));
+
+  const toolEntries = Object.entries(equipment)
+    .filter((entry) => entry[0].includes('tool'))
+    .map((entry) => convertEquipToSelect(entry));
   return (
-    <dialog id="characterEquipmentModal" className="modal">
-      <form method="dialog" className="modal-box">
-        {inputs}
+    <dialog id="characterEquipmentModal" className="modal modal-bottom sm:modal-middle">
+      <form method="dialog" className="modal-box min-w-max">
+        <div className="flex gap-4">
+          <div>{inputs}</div>
+          <div>{toolEntries}</div>
+        </div>
       </form>
       <form method="dialog" className="modal-backdrop">
         <button>close</button>
