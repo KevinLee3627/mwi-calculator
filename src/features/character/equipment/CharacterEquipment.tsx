@@ -6,7 +6,7 @@ import {
   PossibleCharacterEquipmentLocationHrid,
   selectCharacterEquipment,
   setEquipment
-} from 'src/features/character/characterEquipmentSlice';
+} from 'src/features/character/equipment/characterEquipmentSlice';
 import { useAppDispatch } from 'src/hooks/useAppDispatch';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 

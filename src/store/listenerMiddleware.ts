@@ -1,6 +1,6 @@
 import { createListenerMiddleware } from '@reduxjs/toolkit';
-import { characterEquipmentSlice } from 'src/features/character/characterEquipmentSlice';
 import { characterLevelSlice } from 'src/features/character/characterLevelSlice';
+import { characterEquipmentSlice } from 'src/features/character/equipment/characterEquipmentSlice';
 import { store } from 'src/store/store';
 
 export const characterLevelListenerMiddleware = createListenerMiddleware();
