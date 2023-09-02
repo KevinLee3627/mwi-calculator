@@ -38,10 +38,10 @@ export function CharacterEquipment() {
     // ex: EquipmentTypeHrid = /equipment_type/head
     // ex: ItemLocationHrid = /item_location/head
     const location = itemLocationHrid.split('/').at(-1);
-    console.log(location);
+
     if (location == null) return <></>;
     return (
-      <div className="flex items-end" key={`${itemLocationHrid}_key`}>
+      <div className="flex items-end gap-4" key={`${itemLocationHrid}_key`}>
         <CharacterEquipmentSelect
           itemLocationHrid={itemLocationHrid}
           possibleItems={itemMap[location]}
@@ -50,5 +50,14 @@ export function CharacterEquipment() {
       </div>
     );
   });
-  return <div>{inputs}</div>;
+  return (
+    <dialog id="characterEquipmentModal" className="modal">
+      <form method="dialog" className="modal-box">
+        {inputs}
+      </form>
+      <form method="dialog" className="modal-backdrop">
+        <button>close</button>
+      </form>
+    </dialog>
+  );
 }
