@@ -1,19 +1,16 @@
 import { useMemo } from 'react';
-import { Select } from 'src/components/Select';
 import { clientData } from 'src/core/clientData';
 import { ItemDetail } from 'src/core/items/ItemDetail';
 import { CharacterEnhancementSelect } from 'src/features/character/enhancements/CharacterEnhancementSelect';
+import { CharacterEquipmentSelect } from 'src/features/character/equipment/CharacterEquipmentSelect';
 import {
   PossibleCharacterEquipmentLocationHrid,
-  selectCharacterEquipment,
-  setEquipment
+  selectCharacterEquipment
 } from 'src/features/character/equipment/characterEquipmentSlice';
-import { useAppDispatch } from 'src/hooks/useAppDispatch';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 
 export function CharacterEquipment() {
   const equipment = useAppSelector(selectCharacterEquipment);
-  const dispatch = useAppDispatch();
 
   // Creates mapping between item location and items from client data
   const itemMap = useMemo(() => {
@@ -35,30 +32,19 @@ export function CharacterEquipment() {
 
   const inputs = Object.entries(equipment).map((entry) => {
     const itemLocationHrid = entry[0] as PossibleCharacterEquipmentLocationHrid;
-    const itemLocationName = clientData.itemLocationDetailMap[itemLocationHrid].name;
+    // Why use location vs. itemLocationHrid? in clientData.itemDetailMap uses
+    // EquipmentTypeHrid instead of ItemLocationHrid, which means the two Hrid
+    // types have the same suffixes but different prefixes.
+    // ex: EquipmentTypeHrid = /equipment_type/head
+    // ex: ItemLocationHrid = /item_location/head
     const location = itemLocationHrid.split('/').at(-1);
     console.log(location);
     if (location == null) return <></>;
     return (
       <div className="" key={`${itemLocationHrid}_key`}>
-        <span>{itemLocationName}</span>
-        <Select
-          name={`${itemLocationHrid}_select`}
-          options={itemMap[location].map((item) => ({ label: item.name, value: item }))}
-          defaultValue={{
-            label: equipment[itemLocationHrid]?.name,
-            value: equipment[itemLocationHrid]
-          }}
-          placeholder="test"
-          onChange={(selected) => {
-            if (selected?.value == null) return;
-            dispatch(
-              setEquipment({
-                itemHrid: selected.value.hrid,
-                locationHrid: itemLocationHrid
-              })
-            );
-          }}
+        <CharacterEquipmentSelect
+          itemLocationHrid={itemLocationHrid}
+          possibleItems={itemMap[location]}
         />
         <CharacterEnhancementSelect itemLocationHrid={itemLocationHrid} />
       </div>
