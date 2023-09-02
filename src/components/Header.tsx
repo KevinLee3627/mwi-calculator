@@ -4,7 +4,7 @@ export const Header = () => {
       <div className="navbar-start">
         <a className="btn-ghost btn text-xl font-extrabold normal-case">mwi-calculator</a>
       </div>
-      <div className="navbar-end">
+      <div className="navbar-end flex gap-4">
         <button
           className="btn-primary btn"
           onClick={() => {
@@ -15,6 +15,17 @@ export const Header = () => {
           }}
         >
           Set Loadout
+        </button>
+        <button
+          className="btn-primary btn"
+          onClick={() => {
+            const modal = document.getElementById(
+              'characterLevelModal'
+            ) as HTMLDialogElement;
+            modal.showModal();
+          }}
+        >
+          Set Levels
         </button>
       </div>
     </div>

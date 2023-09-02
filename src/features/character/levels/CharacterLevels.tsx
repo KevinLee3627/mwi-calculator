@@ -38,5 +38,14 @@ export function CharacterLevels() {
       </div>
     );
   });
-  return <form>{inputs}</form>;
+  return (
+    <dialog id="characterLevelModal" className="modal modal-bottom sm:modal-middle">
+      <form method="dialog" className="modal-box sm:min-w-max">
+        {inputs}
+      </form>
+      <form method="dialog" className="modal-backdrop">
+        <button>close</button>
+      </form>
+    </dialog>
+  );
 }
