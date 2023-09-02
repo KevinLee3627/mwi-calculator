@@ -20,7 +20,7 @@ export function CharacterLevels() {
         <td>{skillName}</td>
         <td>
           <input
-            type="text"
+            type="number"
             id={`${skillHrid}_input`}
             name={`${skillHrid}_input`}
             className="input-primary input"
