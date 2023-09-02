@@ -1,12 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import {
-  characterLevelInitialState,
-  characterLevelSlice
-} from 'src/features/character/characterLevelSlice';
-import {
   characterEquipmentInitialState,
   characterEquipmentSlice
 } from 'src/features/character/equipment/characterEquipmentSlice';
+import {
+  characterLevelInitialState,
+  characterLevelSlice
+} from 'src/features/character/levels/characterLevelSlice';
 import {
   characterEquipmentListenerMiddleware,
   characterLevelListenerMiddleware

@@ -3,7 +3,7 @@ import { NonCombatSkillHrid } from 'src/core/skills/NonCombatSkillHrid';
 import {
   selectCharacterLevel,
   setLevel
-} from 'src/features/character/characterLevelSlice';
+} from 'src/features/character/levels/characterLevelSlice';
 import { useAppDispatch } from 'src/hooks/useAppDispatch';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 
