@@ -1,9 +1,16 @@
 import { configureStore } from '@reduxjs/toolkit';
 import {
+  characterEquipmentInitialState,
+  characterEquipmentSlice
+} from 'src/features/character/characterEquipmentSlice';
+import {
   characterLevelInitialState,
   characterLevelSlice
 } from 'src/features/character/characterLevelSlice';
-import { characterLevelListenerMiddleware } from 'src/store/listenerMiddleware';
+import {
+  characterEquipmentListenerMiddleware,
+  characterLevelListenerMiddleware
+} from 'src/store/listenerMiddleware';
 
 const tryLocalStorage = (key: string, fallback: object) =>
   localStorage.getItem(key) != null
@@ -12,14 +19,20 @@ const tryLocalStorage = (key: string, fallback: object) =>
 
 export const store = configureStore({
   reducer: {
-    characterLevel: characterLevelSlice.reducer
+    characterLevel: characterLevelSlice.reducer,
+    characterEquipment: characterEquipmentSlice.reducer
   },
   middleware: (getDefaultMiddleware) => [
     ...getDefaultMiddleware(),
-    characterLevelListenerMiddleware.middleware
+    characterLevelListenerMiddleware.middleware,
+    characterEquipmentListenerMiddleware.middleware
   ],
   preloadedState: {
-    characterLevel: tryLocalStorage('characterLevel', characterLevelInitialState)
+    characterLevel: tryLocalStorage('characterLevel', characterLevelInitialState),
+    characterEquipment: tryLocalStorage(
+      'characterEquipment',
+      characterEquipmentInitialState
+    )
   }
 });
 

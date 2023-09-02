@@ -1,10 +1,13 @@
+import { CharacterEquipment } from 'src/components/CharacterEquipment';
 import { CharacterLevels } from 'src/components/CharacterLevels';
+import { Header } from 'src/components/Header';
 
 const App = () => {
   return (
     <>
-      <div className="flex justify-center bg-gray-300">Hello, world</div>
-      <CharacterLevels />
+      <Header />
+      {/* <CharacterLevels /> */}
+      <CharacterEquipment />
     </>
   );
 };
