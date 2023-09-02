@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { SkillHrid } from 'src/core/hrid/SkillHrid';
-import { RootState, store } from 'src/store';
+import { RootState } from 'src/store';
 
 export type CharacterLevelState = Record<SkillHrid, number>;
 
