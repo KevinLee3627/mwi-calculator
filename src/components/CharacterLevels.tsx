@@ -26,6 +26,7 @@ export function CharacterLevels() {
             className="input-primary input"
             defaultValue={levels[skillHrid]}
             onChange={(e) => {
+              // TODO: Debounce?
               dispatch(
                 characterLevelSlice.actions.setLevel({
                   skillHrid,

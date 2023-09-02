@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { SkillHrid } from 'src/core/hrid/SkillHrid';
-import { RootState } from 'src/store';
+import { RootState, store } from 'src/store';
 
-type CharacterLevelState = Record<SkillHrid, number>;
+export type CharacterLevelState = Record<SkillHrid, number>;
 
-const initialState: CharacterLevelState = {
+export const characterLevelInitialState: CharacterLevelState = {
   '/skills/brewing': 0,
   '/skills/cheesesmithing': 0,
   '/skills/cooking': 0,
@@ -30,11 +30,12 @@ interface SetLevelPayload {
 }
 
 export const characterLevelSlice = createSlice({
-  name: 'character_level',
-  initialState,
+  name: 'characterLevel',
+  initialState: characterLevelInitialState,
   reducers: {
     setLevel: (state, action: PayloadAction<SetLevelPayload>) => {
-      state = { ...state, ...action.payload };
+      const { payload } = action;
+      state[payload.skillHrid] = payload.value;
     }
   }
 });

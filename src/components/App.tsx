@@ -1,4 +1,3 @@
-import clientData from 'core/clientData.json';
 import { CharacterLevels } from 'src/components/CharacterLevels';
 
 const App = () => {
