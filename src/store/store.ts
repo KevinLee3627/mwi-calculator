@@ -3,7 +3,7 @@ import {
   characterLevelInitialState,
   characterLevelSlice
 } from 'src/features/character/characterLevelSlice';
-import { characterLevelListenerMiddleware } from 'src/listenerMiddleware';
+import { characterLevelListenerMiddleware } from 'src/store/listenerMiddleware';
 
 export const store = configureStore({
   reducer: {

@@ -1,6 +1,6 @@
 import { createListenerMiddleware } from '@reduxjs/toolkit';
 import { characterLevelSlice } from 'src/features/character/characterLevelSlice';
-import { store } from 'src/store';
+import { store } from 'src/store/store';
 
 export const characterLevelListenerMiddleware = createListenerMiddleware();
 characterLevelListenerMiddleware.startListening({
