@@ -41,7 +41,7 @@ export function CharacterEquipment() {
 
     if (location == null) return <></>;
     return (
-      <div className="flex items-end gap-4" key={`${itemLocationHrid}_key`}>
+      <div className="flex items-end gap-2" key={`${itemLocationHrid}_key`}>
         <CharacterEquipmentSelect
           itemLocationHrid={itemLocationHrid}
           possibleItems={itemMap[location]}
@@ -61,7 +61,7 @@ export function CharacterEquipment() {
   return (
     <dialog id="characterEquipmentModal" className="modal modal-bottom sm:modal-middle">
       <form method="dialog" className="modal-box sm:min-w-max">
-        <div className="gap-4 sm:flex">
+        <div className="gap-12 sm:flex">
           <div>
             <h1 className="text-lg font-bold">Equipment</h1>
             {equipmentInputs}
