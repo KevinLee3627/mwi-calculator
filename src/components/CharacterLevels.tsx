@@ -1,7 +1,6 @@
 import { clientData } from 'src/core/clientData';
 import { SkillHrid } from 'src/core/hrid/SkillHrid';
 import {
-  characterLevelSlice,
   selectCharacterLevel,
   setLevel
 } from 'src/features/character/characterLevelSlice';
