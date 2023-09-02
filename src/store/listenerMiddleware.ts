@@ -1,4 +1,5 @@
 import { createListenerMiddleware } from '@reduxjs/toolkit';
+import { characterEnhancementSlice } from 'src/features/character/enhancements/characterEnhancementSlice';
 import { characterEquipmentSlice } from 'src/features/character/equipment/characterEquipmentSlice';
 import { characterLevelSlice } from 'src/features/character/levels/characterLevelSlice';
 import { store } from 'src/store/store';
@@ -21,6 +22,17 @@ characterEquipmentListenerMiddleware.startListening({
     localStorage.setItem(
       'characterEquipment',
       JSON.stringify(store.getState().characterEquipment)
+    );
+  }
+});
+
+export const characterEnhancementListenerMiddleware = createListenerMiddleware();
+characterEnhancementListenerMiddleware.startListening({
+  actionCreator: characterEnhancementSlice.actions.setEnhancementLevel,
+  effect: () => {
+    localStorage.setItem(
+      'characterEnhancement',
+      JSON.stringify(store.getState().characterEnhancement)
     );
   }
 });

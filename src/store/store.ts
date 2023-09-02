@@ -1,5 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
 import {
+  characterEnhancementInitialState,
+  characterEnhancementSlice
+} from 'src/features/character/enhancements/characterEnhancementSlice';
+import {
   characterEquipmentInitialState,
   characterEquipmentSlice
 } from 'src/features/character/equipment/characterEquipmentSlice';
@@ -8,6 +12,7 @@ import {
   characterLevelSlice
 } from 'src/features/character/levels/characterLevelSlice';
 import {
+  characterEnhancementListenerMiddleware,
   characterEquipmentListenerMiddleware,
   characterLevelListenerMiddleware
 } from 'src/store/listenerMiddleware';
@@ -20,18 +25,24 @@ const tryLocalStorage = (key: string, fallback: object) =>
 export const store = configureStore({
   reducer: {
     characterLevel: characterLevelSlice.reducer,
-    characterEquipment: characterEquipmentSlice.reducer
+    characterEquipment: characterEquipmentSlice.reducer,
+    characterEnhancement: characterEnhancementSlice.reducer
   },
   middleware: (getDefaultMiddleware) => [
     ...getDefaultMiddleware(),
     characterLevelListenerMiddleware.middleware,
-    characterEquipmentListenerMiddleware.middleware
+    characterEquipmentListenerMiddleware.middleware,
+    characterEnhancementListenerMiddleware.middleware
   ],
   preloadedState: {
     characterLevel: tryLocalStorage('characterLevel', characterLevelInitialState),
     characterEquipment: tryLocalStorage(
       'characterEquipment',
       characterEquipmentInitialState
+    ),
+    characterEnhancement: tryLocalStorage(
+      'characterEnhancement',
+      characterEnhancementInitialState
     )
   }
 });

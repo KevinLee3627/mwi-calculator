@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { Select } from 'src/components/Select';
 import { clientData } from 'src/core/clientData';
 import { ItemDetail } from 'src/core/items/ItemDetail';
+import { CharacterEnhancementSelect } from 'src/features/character/enhancements/CharacterEnhancementSelect';
 import {
   PossibleCharacterEquipmentLocationHrid,
   selectCharacterEquipment,
@@ -59,6 +60,7 @@ export function CharacterEquipment() {
             );
           }}
         />
+        <CharacterEnhancementSelect itemLocationHrid={itemLocationHrid} />
       </div>
     );
   });
