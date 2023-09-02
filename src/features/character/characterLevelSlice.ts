@@ -5,15 +5,15 @@ import { RootState } from 'src/store/store';
 export type CharacterLevelState = Record<NonCombatSkillHrid, number>;
 
 export const characterLevelInitialState: CharacterLevelState = {
-  '/skills/brewing': 0,
-  '/skills/cheesesmithing': 0,
-  '/skills/cooking': 0,
-  '/skills/crafting': 0,
-  '/skills/enhancing': 0,
-  '/skills/foraging': 0,
   '/skills/milking': 0,
+  '/skills/foraging': 0,
+  '/skills/woodcutting': 0,
+  '/skills/cheesesmithing': 0,
+  '/skills/crafting': 0,
   '/skills/tailoring': 0,
-  '/skills/woodcutting': 0
+  '/skills/cooking': 0,
+  '/skills/brewing': 0,
+  '/skills/enhancing': 0
 };
 
 interface SetLevelPayload {
