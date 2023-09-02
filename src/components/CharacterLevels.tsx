@@ -1,5 +1,5 @@
 import { clientData } from 'src/core/clientData';
-import { SkillHrid } from 'src/core/hrid/SkillHrid';
+import { NonCombatSkillHrid } from 'src/core/skills/NonCombatSkillHrid';
 import {
   selectCharacterLevel,
   setLevel
@@ -12,7 +12,7 @@ export function CharacterLevels() {
   const dispatch = useAppDispatch();
 
   const inputs = Object.entries(levels).map((entry) => {
-    const skillHrid = entry[0] as SkillHrid;
+    const skillHrid = entry[0] as NonCombatSkillHrid;
     const skillName = clientData.skillDetailMap[skillHrid].name;
 
     return (

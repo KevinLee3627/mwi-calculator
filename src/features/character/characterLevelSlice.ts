@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { SkillHrid } from 'src/core/hrid/SkillHrid';
+import { NonCombatSkillHrid } from 'src/core/skills/NonCombatSkillHrid';
 import { RootState } from 'src/store/store';
 
-export type CharacterLevelState = Record<SkillHrid, number>;
+export type CharacterLevelState = Record<NonCombatSkillHrid, number>;
 
 export const characterLevelInitialState: CharacterLevelState = {
   '/skills/brewing': 0,
@@ -13,19 +13,11 @@ export const characterLevelInitialState: CharacterLevelState = {
   '/skills/foraging': 0,
   '/skills/milking': 0,
   '/skills/tailoring': 0,
-  '/skills/woodcutting': 0,
-  '/skills/attack': 0,
-  '/skills/defense': 0,
-  '/skills/intelligence': 0,
-  '/skills/magic': 0,
-  '/skills/power': 0,
-  '/skills/ranged': 0,
-  '/skills/stamina': 0,
-  '/skills/total_level': 0
+  '/skills/woodcutting': 0
 };
 
 interface SetLevelPayload {
-  skillHrid: SkillHrid;
+  skillHrid: NonCombatSkillHrid;
   value: number;
 }
 
