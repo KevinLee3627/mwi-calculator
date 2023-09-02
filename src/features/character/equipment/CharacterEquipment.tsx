@@ -51,19 +51,25 @@ export function CharacterEquipment() {
     );
   }
 
-  const inputs = Object.entries(equipment)
+  const equipmentInputs = Object.entries(equipment)
     .filter((entry) => !entry[0].includes('tool'))
     .map((entry) => convertEquipToSelect(entry));
 
-  const toolEntries = Object.entries(equipment)
+  const toolInputs = Object.entries(equipment)
     .filter((entry) => entry[0].includes('tool'))
     .map((entry) => convertEquipToSelect(entry));
   return (
     <dialog id="characterEquipmentModal" className="modal modal-bottom sm:modal-middle">
-      <form method="dialog" className="modal-box min-w-max">
-        <div className="flex gap-4">
-          <div>{inputs}</div>
-          <div>{toolEntries}</div>
+      <form method="dialog" className="modal-box sm:min-w-max">
+        <div className="gap-4 sm:flex">
+          <div>
+            <h1 className="text-lg font-bold">Equipment</h1>
+            {equipmentInputs}
+          </div>
+          <div className="mt-8 sm:mt-0">
+            <h1 className="text-lg font-bold">Tools</h1>
+            {toolInputs}
+          </div>
         </div>
       </form>
       <form method="dialog" className="modal-backdrop">
