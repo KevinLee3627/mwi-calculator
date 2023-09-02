@@ -40,4 +40,6 @@ export const characterLevelSlice = createSlice({
   }
 });
 
+export const { setLevel } = characterLevelSlice.actions;
+
 export const selectCharacterLevel = (state: RootState) => state.characterLevel;
