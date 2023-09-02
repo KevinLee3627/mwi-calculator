@@ -5,6 +5,11 @@ import {
 } from 'src/features/character/characterLevelSlice';
 import { characterLevelListenerMiddleware } from 'src/store/listenerMiddleware';
 
+const tryLocalStorage = (key: string) =>
+  localStorage.getItem(key) != null
+    ? JSON.parse(localStorage.getItem(key) as string)
+    : characterLevelInitialState;
+
 export const store = configureStore({
   reducer: {
     characterLevel: characterLevelSlice.reducer
@@ -14,10 +19,7 @@ export const store = configureStore({
     characterLevelListenerMiddleware.middleware
   ],
   preloadedState: {
-    characterLevel:
-      localStorage.getItem('characterLevel') != null
-        ? JSON.parse(localStorage.getItem('characterLevel') as string)
-        : characterLevelInitialState
+    characterLevel: tryLocalStorage('characterLevel')
   }
 });
 
