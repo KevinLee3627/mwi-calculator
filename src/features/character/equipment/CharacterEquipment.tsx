@@ -41,7 +41,7 @@ export function CharacterEquipment() {
     console.log(location);
     if (location == null) return <></>;
     return (
-      <div className="" key={`${itemLocationHrid}_key`}>
+      <div className="flex items-end" key={`${itemLocationHrid}_key`}>
         <CharacterEquipmentSelect
           itemLocationHrid={itemLocationHrid}
           possibleItems={itemMap[location]}

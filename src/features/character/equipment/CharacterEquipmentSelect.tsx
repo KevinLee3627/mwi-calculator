@@ -26,7 +26,7 @@ export function CharacterEquipmentSelect({
 
   if (location == null) return <></>;
   return (
-    <div className="" key={`${itemLocationHrid}_key`}>
+    <div className="flex-1">
       <span>{itemLocationName}</span>
       <Select
         name={`${itemLocationHrid}_select`}
