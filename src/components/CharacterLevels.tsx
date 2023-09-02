@@ -16,31 +16,27 @@ export function CharacterLevels() {
     const skillName = clientData.skillDetailMap[skillHrid].name;
 
     return (
-      <tr key={`${skillHrid}_level`}>
-        <td>{skillName}</td>
-        <td>
-          <input
-            type="number"
-            id={`${skillHrid}_input`}
-            name={`${skillHrid}_input`}
-            className="input-primary input"
-            value={levels[skillHrid]}
-            onChange={(e) => {
-              const value = parseInt(e.target.value, 10);
-              if (typeof value !== 'number' || isNaN(value) || value < 1) {
-                dispatch(setLevel({ skillHrid, value: 1 }));
-              } else if (value > 200) {
-                dispatch(setLevel({ skillHrid, value: 200 }));
-              } else dispatch(setLevel({ skillHrid, value }));
-            }}
-          />
-        </td>
-      </tr>
+      <div className="form-control" key={`${skillHrid}_key`}>
+        <label className="label">
+          <span className="label-text">{skillName}</span>
+        </label>
+        <input
+          type="number"
+          id={`${skillHrid}_level_input`}
+          name={`${skillHrid}_level_input`}
+          className="input-primary input"
+          value={levels[skillHrid]}
+          onChange={(e) => {
+            const value = parseInt(e.target.value, 10);
+            if (typeof value !== 'number' || isNaN(value) || value < 1) {
+              dispatch(setLevel({ skillHrid, value: 1 }));
+            } else if (value > 200) {
+              dispatch(setLevel({ skillHrid, value: 200 }));
+            } else dispatch(setLevel({ skillHrid, value }));
+          }}
+        />
+      </div>
     );
   });
-  return (
-    <table>
-      <tbody>{inputs}</tbody>
-    </table>
-  );
+  return <form>{inputs}</form>;
 }
