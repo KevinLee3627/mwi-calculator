@@ -81,7 +81,7 @@ export function SkillTable({
             characterLevels,
             levelRequirement
           });
-          return (efficiency * 100).toFixed(2);
+          return `${(efficiency * 100).toFixed(2)}%`;
         }
       }),
       columnHelper.accessor((row) => row.dropTable, {
