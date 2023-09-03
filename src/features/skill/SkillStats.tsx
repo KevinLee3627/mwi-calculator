@@ -1,8 +1,8 @@
 import { NonCombatActionTypeHrid } from 'src/core/actions/NonCombatActionTypeHrid';
 import { NonCombatStats } from 'src/core/items/NonCombatStats';
-import { computeEquipmentStats } from 'src/features/character/equipment/computeEquipmentStats';
 import { selectCharacterEnhancement } from 'src/features/character/enhancements/characterEnhancementSlice';
 import { selectCharacterEquipment } from 'src/features/character/equipment/characterEquipmentSlice';
+import { computeEquipmentStats } from 'src/features/character/equipment/computeEquipmentStats';
 import { actionTypeStatMapping } from 'src/features/skill/actionTypeStatMapping';
 import { computeDrinkStats } from 'src/features/skill/drinks/computeDrinkStats';
 import { selectSkillDrinks } from 'src/features/skill/drinks/drinksSlice';
