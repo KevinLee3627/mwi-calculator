@@ -23,5 +23,11 @@ export function Select<
   IsMulti extends boolean = false,
   Group extends GroupBase<Option> = GroupBase<Option>
 >(props: Props<Option, IsMulti, Group>) {
-  return <ReactSelect {...props} theme={customTheme} />;
+  return (
+    <ReactSelect
+      {...props}
+      theme={customTheme}
+      styles={{ control: (base) => ({ ...base, height: '3rem', minHeight: '3rem' }) }}
+    />
+  );
 }
