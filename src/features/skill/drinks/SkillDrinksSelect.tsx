@@ -33,7 +33,7 @@ export function SkillDrinksSelect({ actionTypeHrid }: SkillDrinksSelectProps) {
       <Select
         isMulti
         options={drinkChoices.map((drink) => ({ label: drink.name, value: drink }))}
-        defaultValue={
+        value={
           skillDrinks[actionTypeHrid]?.map((drink) => ({
             label: drink.name,
             value: drink
@@ -49,6 +49,7 @@ export function SkillDrinksSelect({ actionTypeHrid }: SkillDrinksSelectProps) {
             (drink) => drink.hrid === option.data.value.hrid
           );
         }}
+        isOptionDisabled={() => (skillDrinks[actionTypeHrid] ?? []).length >= 3}
       />
     </div>
   );
