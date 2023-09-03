@@ -1,4 +1,4 @@
-import { createListenerMiddleware } from '@reduxjs/toolkit';
+import { createListenerMiddleware, isAnyOf } from '@reduxjs/toolkit';
 import { characterEnhancementSlice } from 'src/features/character/enhancements/characterEnhancementSlice';
 import { characterEquipmentSlice } from 'src/features/character/equipment/characterEquipmentSlice';
 import { characterLevelSlice } from 'src/features/character/levels/characterLevelSlice';
@@ -18,12 +18,19 @@ characterLevelListenerMiddleware.startListening({
 
 export const characterEquipmentListenerMiddleware = createListenerMiddleware();
 characterEquipmentListenerMiddleware.startListening({
-  actionCreator: characterEquipmentSlice.actions.setEquipment,
-  effect: () => {
-    localStorage.setItem(
-      'characterEquipment',
-      JSON.stringify(store.getState().characterEquipment)
-    );
+  matcher: isAnyOf(
+    characterEquipmentSlice.actions.setEquipment,
+    characterEquipmentSlice.actions.resetEquipment
+  ),
+  effect: (action) => {
+    if (action.type === 'characterEquipment/setEquipment') {
+      localStorage.setItem(
+        'characterEquipment',
+        JSON.stringify(store.getState().characterEquipment)
+      );
+    } else if (action.type === 'characterEquipment/resetEquipment') {
+      localStorage.removeItem('characterEquipment');
+    }
   }
 });
 

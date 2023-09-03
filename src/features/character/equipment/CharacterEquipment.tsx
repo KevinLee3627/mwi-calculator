@@ -5,11 +5,14 @@ import { CharacterEnhancementSelect } from 'src/features/character/enhancements/
 import { CharacterEquipmentSelect } from 'src/features/character/equipment/CharacterEquipmentSelect';
 import {
   PossibleCharacterEquipmentLocationHrid,
+  resetEquipment,
   selectCharacterEquipment
 } from 'src/features/character/equipment/characterEquipmentSlice';
+import { useAppDispatch } from 'src/hooks/useAppDispatch';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 
 export function CharacterEquipment() {
+  const dispatch = useAppDispatch();
   const equipment = useAppSelector(selectCharacterEquipment);
 
   // Creates mapping between item location and items from client data
@@ -71,6 +74,14 @@ export function CharacterEquipment() {
             {toolInputs}
           </div>
         </div>
+        <button
+          className="btn-error btn mt-4"
+          onClick={() => {
+            dispatch(resetEquipment());
+          }}
+        >
+          RESET
+        </button>
       </form>
       <form method="dialog" className="modal-backdrop">
         <button>close</button>

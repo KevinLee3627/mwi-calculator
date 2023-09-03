@@ -50,10 +50,11 @@ export const characterEquipmentSlice = createSlice({
     setEquipment: (state, action: PayloadAction<SetEquipmentPayload>) => {
       const { payload } = action;
       state[payload.locationHrid] = clientData.itemDetailMap[payload.itemHrid];
-    }
+    },
+    resetEquipment: () => characterEquipmentInitialState
   }
 });
 
-export const { setEquipment } = characterEquipmentSlice.actions;
+export const { setEquipment, resetEquipment } = characterEquipmentSlice.actions;
 
 export const selectCharacterEquipment = (state: RootState) => state.characterEquipment;

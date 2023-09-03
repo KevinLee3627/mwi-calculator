@@ -31,7 +31,7 @@ export function CharacterEquipmentSelect({
       <Select
         name={`${itemLocationHrid}_select`}
         options={possibleItems.map((item) => ({ label: item.name, value: item }))}
-        defaultValue={{
+        value={{
           label: equipment[itemLocationHrid]?.name,
           value: equipment[itemLocationHrid]
         }}
