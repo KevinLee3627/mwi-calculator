@@ -33,7 +33,7 @@ export function SkillPage({ actionTypeHrid }: SkillPageProps) {
         <div className="inline-block">
           <CharacterLevelInput skillHrid={actionTypeToSkill(actionTypeHrid)} />
         </div>
-        <div className="inline-block">
+        <div className="ml-4 inline-block">
           <SkillDrinksSelect actionTypeHrid={actionTypeHrid} />
         </div>
       </div>
