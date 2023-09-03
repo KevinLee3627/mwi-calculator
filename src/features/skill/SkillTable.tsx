@@ -11,16 +11,12 @@ import { useMemo, useState } from 'react';
 import { ActionDetail } from 'src/core/actions/ActionDetail';
 import { NonCombatActionTypeHrid } from 'src/core/actions/NonCombatActionTypeHrid';
 import { clientData } from 'src/core/clientData';
-import { NonCombatStats } from 'src/core/items/NonCombatStats';
 import { computeEquipmentStats } from 'src/features/character/equipment/computeEquipmentStats';
 import { CharacterLevelState } from 'src/features/character/levels/characterLevelSlice';
-import {
-  actionTypeSpeedStatMapping,
-  actionTypeStatMapping
-} from 'src/features/skill/actionTypeStatMapping';
 import { computeSkillEfficiency } from 'src/features/skill/computeSkillEfficiency';
+import { computeSkillTime } from 'src/features/skill/computeSkillTime';
+import { computeSkillXp } from 'src/features/skill/computeSkillXp';
 import { computeDrinkStats } from 'src/features/skill/drinks/computeDrinkStats';
-import { baseTimeToSeconds } from 'src/util/baseTimeToSeconds';
 
 interface SkillTableProps {
   actionTypeHrid: NonCombatActionTypeHrid;
@@ -34,14 +30,6 @@ export function SkillTable({
   drinkStats,
   characterLevels
 }: SkillTableProps) {
-  const relevantEquipmentStats = Object.fromEntries(
-    Object.entries(equipmentStats).filter(
-      ([statName, statValue]) =>
-        statValue !== 0 &&
-        actionTypeStatMapping[actionTypeHrid][statName as keyof NonCombatStats] != null
-    )
-  ) as Partial<Record<keyof NonCombatStats, number>>;
-
   const defaultData = useMemo(
     () =>
       Object.values(clientData.actionDetailMap).filter(
@@ -64,20 +52,15 @@ export function SkillTable({
       columnHelper.accessor((row) => row.experienceGain.value, {
         header: 'XP',
         cell: (info) => {
-          const equipBonus = relevantEquipmentStats.skillingExperience ?? 0;
-          const drinkBonus = drinkStats['/buff_types/wisdom'] ?? 0;
           const baseXp = info.row.original.experienceGain.value;
-          return baseXp * (1 + equipBonus + drinkBonus);
+          return computeSkillXp({ equipmentStats, drinkStats, baseXp });
         }
       }),
       columnHelper.accessor((row) => row.baseTimeCost, {
         header: 'Time (s)',
         cell: (info) => {
-          const speedStatName = actionTypeSpeedStatMapping[actionTypeHrid];
-          const equipBonus = relevantEquipmentStats[speedStatName];
-          return equipBonus == null
-            ? baseTimeToSeconds(info.row.original.baseTimeCost)
-            : baseTimeToSeconds(info.row.original.baseTimeCost, equipBonus);
+          const baseTime = info.row.original.baseTimeCost;
+          return computeSkillTime({ actionTypeHrid, equipmentStats, baseTime });
         }
       }),
       columnHelper.accessor((row) => row.levelRequirement.level, {
@@ -96,14 +79,7 @@ export function SkillTable({
         }
       })
     ],
-    [
-      columnHelper,
-      relevantEquipmentStats,
-      actionTypeHrid,
-      drinkStats,
-      characterLevels,
-      equipmentStats
-    ]
+    [columnHelper, actionTypeHrid, drinkStats, characterLevels, equipmentStats]
   );
 
   const [sorting, setSorting] = useState<SortingState>([
