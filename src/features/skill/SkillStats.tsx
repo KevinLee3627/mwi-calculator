@@ -1,6 +1,6 @@
 import { NonCombatActionTypeHrid } from 'src/core/actions/NonCombatActionTypeHrid';
 import { NonCombatStats } from 'src/core/items/NonCombatStats';
-import { computeEquipmentStats } from 'src/features/character/computeEquipmentStats';
+import { computeEquipmentStats } from 'src/features/character/equipment/computeEquipmentStats';
 import { selectCharacterEnhancement } from 'src/features/character/enhancements/characterEnhancementSlice';
 import { selectCharacterEquipment } from 'src/features/character/equipment/characterEquipmentSlice';
 import { actionTypeStatMapping } from 'src/features/skill/actionTypeStatMapping';
