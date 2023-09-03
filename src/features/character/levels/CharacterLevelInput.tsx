@@ -19,7 +19,7 @@ export function CharacterLevelInput({ skillHrid }: CharacterLevelInputProps) {
   return (
     <div className="form-control" key={`${skillHrid}_key`}>
       <label className="label">
-        <span className="label-text">{skillName}</span>
+        <span className="label-text">{skillName} Level</span>
       </label>
       <input
         type="number"
