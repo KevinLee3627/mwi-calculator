@@ -77,6 +77,33 @@ export function SkillTable({
           });
           return efficiency * 100;
         }
+      }),
+      columnHelper.accessor((row) => row.dropTable, {
+        header: 'Drops',
+        id: 'dropTable',
+        cell: (info) => {
+          const dropTable = info.row.original.dropTable ?? [];
+          const rareDropTable = info.row.original.rareDropTable ?? [];
+          const combinedDropTable = [...dropTable, ...rareDropTable];
+          return (
+            <div>
+              {combinedDropTable?.map((drop) => {
+                const itemName = clientData.itemDetailMap[drop.itemHrid].name;
+                const dropRate = (drop.dropRate * 100).toFixed(2);
+                const dropQuantityBonus = 1 + (drinkStats['/buff_types/gathering'] ?? 0);
+                const minDropQuantity = (drop.minCount * dropQuantityBonus).toFixed(2);
+                const maxDropQuantity = (drop.maxCount * dropQuantityBonus).toFixed(2);
+                return (
+                  <div key={drop.itemHrid}>
+                    <span>
+                      {itemName} ({minDropQuantity}-{maxDropQuantity}) {dropRate}%
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        }
       })
     ],
     [columnHelper, actionTypeHrid, drinkStats, characterLevels, equipmentStats]
@@ -89,9 +116,9 @@ export function SkillTable({
   const table = useReactTable({
     data,
     columns,
+    state: { sorting },
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    state: { sorting },
     onSortingChange: setSorting
   });
 
