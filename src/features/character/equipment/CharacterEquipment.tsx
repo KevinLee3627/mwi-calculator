@@ -6,7 +6,7 @@ import { resetEnhancementLevels } from 'src/features/character/enhancements/char
 import { CharacterEquipmentSelect } from 'src/features/character/equipment/CharacterEquipmentSelect';
 import {
   PossibleCharacterEquipmentLocationHrid,
-  resetEquipment,
+  resetAllEquipment,
   selectCharacterEquipment
 } from 'src/features/character/equipment/characterEquipmentSlice';
 import { useAppDispatch } from 'src/hooks/useAppDispatch';
@@ -78,7 +78,7 @@ export function CharacterEquipment() {
         <button
           className="btn-error btn mt-4"
           onClick={(e) => {
-            dispatch(resetEquipment());
+            dispatch(resetAllEquipment());
             dispatch(resetEnhancementLevels());
             // preventDefault stops button from 'submitting' the form and thus
             // stops the modal from closing.
