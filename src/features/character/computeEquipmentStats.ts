@@ -16,15 +16,15 @@ export function computeEquipmentStats(
 
     const noncombatStats = item.equipmentDetail.noncombatStats;
     Object.entries(noncombatStats).forEach((entry) => {
-      const stat = entry[0] as keyof NonCombatStats;
-      const val = entry[1];
-      if (acc[stat] == null) acc[stat] = 0;
-      acc[stat] +=
-        val +
+      const statName = entry[0] as keyof NonCombatStats;
+      const baseStatValue = entry[1];
+      if (acc[statName] == null) acc[statName] = 0;
+      acc[statName] +=
+        baseStatValue +
         calculateEnhancedBonus(
           item,
           enhancementLevels[equipmentTypeToItemLocation(equipmentTypeHrid)],
-          stat
+          statName
         );
     });
 
