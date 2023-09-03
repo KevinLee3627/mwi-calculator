@@ -53,14 +53,20 @@ export function SkillTable({
         header: 'XP',
         cell: (info) => {
           const baseXp = info.row.original.experienceGain.value;
-          return computeSkillXp({ equipmentStats, drinkStats, baseXp });
+          const skillXp = computeSkillXp({ equipmentStats, drinkStats, baseXp });
+          return skillXp.toFixed(2);
         }
       }),
       columnHelper.accessor((row) => row.baseTimeCost, {
         header: 'Time (s)',
         cell: (info) => {
           const baseTime = info.row.original.baseTimeCost;
-          return computeSkillTime({ actionTypeHrid, equipmentStats, baseTime });
+          const skillTime = computeSkillTime({
+            actionTypeHrid,
+            equipmentStats,
+            baseTime
+          });
+          return skillTime.toFixed(2);
         }
       }),
       columnHelper.accessor((row) => row.levelRequirement.level, {
@@ -75,7 +81,7 @@ export function SkillTable({
             characterLevels,
             levelRequirement
           });
-          return efficiency * 100;
+          return (efficiency * 100).toFixed(2);
         }
       }),
       columnHelper.accessor((row) => row.dropTable, {
