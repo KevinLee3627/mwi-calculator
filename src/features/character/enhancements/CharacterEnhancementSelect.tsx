@@ -1,7 +1,7 @@
 import { Select } from 'src/components/Select';
 import {
   selectCharacterEnhancement,
-  setEnhancement
+  setEnhancementLevel
 } from 'src/features/character/enhancements/characterEnhancementSlice';
 import { PossibleCharacterEquipmentLocationHrid } from 'src/features/character/equipment/characterEquipmentSlice';
 import { useAppDispatch } from 'src/hooks/useAppDispatch';
@@ -32,7 +32,7 @@ export function CharacterEnhancementSelect({
         if (selected?.value == null) return;
 
         dispatch(
-          setEnhancement({
+          setEnhancementLevel({
             enhancementLevel: selected.value,
             locationHrid: itemLocationHrid
           })

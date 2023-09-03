@@ -46,7 +46,7 @@ export const characterEnhancementSlice = createSlice({
   }
 });
 
-export const { setEnhancementLevel: setEnhancement } = characterEnhancementSlice.actions;
+export const { setEnhancementLevel } = characterEnhancementSlice.actions;
 
 export const selectCharacterEnhancement = (state: RootState) =>
   state.characterEnhancement;
