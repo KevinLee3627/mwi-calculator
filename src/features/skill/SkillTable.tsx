@@ -12,8 +12,11 @@ import { ActionDetail } from 'src/core/actions/ActionDetail';
 import { NonCombatActionTypeHrid } from 'src/core/actions/NonCombatActionTypeHrid';
 import { clientData } from 'src/core/clientData';
 import { NonCombatStats } from 'src/core/items/NonCombatStats';
+import { NonCombatSkillHrid } from 'src/core/skills/NonCombatSkillHrid';
 import { computeEquipmentStats } from 'src/features/character/equipment/computeEquipmentStats';
+import { CharacterLevelState } from 'src/features/character/levels/characterLevelSlice';
 import {
+  actionTypeEfficiencyStatMapping,
   actionTypeSpeedStatMapping,
   actionTypeStatMapping
 } from 'src/features/skill/actionTypeStatMapping';
@@ -24,11 +27,13 @@ interface SkillTableProps {
   actionTypeHrid: NonCombatActionTypeHrid;
   equipmentStats: ReturnType<typeof computeEquipmentStats>;
   drinkStats: ReturnType<typeof computeDrinkStats>;
+  characterLevels: CharacterLevelState;
 }
 export function SkillTable({
   actionTypeHrid,
   equipmentStats,
-  drinkStats
+  drinkStats,
+  characterLevels
 }: SkillTableProps) {
   const relevantEquipmentStats = Object.fromEntries(
     Object.entries(equipmentStats).filter(
@@ -61,7 +66,7 @@ export function SkillTable({
         header: 'XP',
         cell: (info) => {
           const equipBonus = relevantEquipmentStats.skillingExperience ?? 0;
-          const drinkBonus = drinkStats['/buff_types/wisdom'];
+          const drinkBonus = drinkStats['/buff_types/wisdom'] ?? 0;
           const baseXp = info.row.original.experienceGain.value;
           return baseXp * (1 + equipBonus + drinkBonus);
         }
@@ -78,10 +83,28 @@ export function SkillTable({
       }),
       columnHelper.accessor((row) => row.levelRequirement.level, {
         header: 'Efficiency',
-        id: 'efficiency'
+        id: 'efficiency',
+        cell: (info) => {
+          const effStatName = actionTypeEfficiencyStatMapping[actionTypeHrid];
+          let equipBonus = 0;
+          if (effStatName == null) equipBonus = 0;
+          else equipBonus = relevantEquipmentStats[effStatName] ?? 0;
+
+          const drinkBonus = drinkStats['/buff_types/efficiency'] ?? 0;
+
+          const skillHrid = actionTypeHrid.replace(
+            '/action_type',
+            '/skill'
+          ) as NonCombatSkillHrid;
+          const levelRequirement = info.row.original.levelRequirement.level;
+          const levelBonus =
+            Math.max(characterLevels[skillHrid] - levelRequirement, 0) / 100;
+          console.log(equipBonus, drinkBonus, levelBonus);
+          return (equipBonus + drinkBonus + levelBonus) * 100;
+        }
       })
     ],
-    [columnHelper, relevantEquipmentStats, actionTypeHrid, drinkStats]
+    [columnHelper, relevantEquipmentStats, actionTypeHrid, drinkStats, characterLevels]
   );
 
   const [sorting, setSorting] = useState<SortingState>([

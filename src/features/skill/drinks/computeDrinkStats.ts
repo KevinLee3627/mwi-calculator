@@ -18,6 +18,6 @@ export function computeDrinkStats(
       acc[buff.typeHrid] += buff.flatBoost;
     });
     return acc;
-  }, {}) as Record<BuffTypeHrid, number>;
+  }, {}) as Partial<Record<BuffTypeHrid, number>>;
   return x;
 }

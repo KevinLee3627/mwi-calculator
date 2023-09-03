@@ -78,3 +78,18 @@ export const actionTypeSpeedStatMapping: Record<
   '/action_types/tailoring': 'tailoringSpeed',
   '/action_types/woodcutting': 'woodcuttingSpeed'
 };
+
+export const actionTypeEfficiencyStatMapping: Record<
+  NonCombatActionTypeHrid,
+  keyof NonCombatStats | null
+> = {
+  '/action_types/brewing': 'brewingEfficiency',
+  '/action_types/cheesesmithing': 'cheesesmithingEfficiency',
+  '/action_types/cooking': 'cookingEfficiency',
+  '/action_types/crafting': 'craftingEfficiency',
+  '/action_types/enhancing': null,
+  '/action_types/foraging': 'foragingEfficiency',
+  '/action_types/milking': 'milkingEfficiency',
+  '/action_types/tailoring': 'tailoringEfficiency',
+  '/action_types/woodcutting': 'woodcuttingEfficiency'
+};

@@ -3,6 +3,7 @@ import { NonCombatStats } from 'src/core/items/NonCombatStats';
 import { selectCharacterEnhancement } from 'src/features/character/enhancements/characterEnhancementSlice';
 import { selectCharacterEquipment } from 'src/features/character/equipment/characterEquipmentSlice';
 import { computeEquipmentStats } from 'src/features/character/equipment/computeEquipmentStats';
+import { selectCharacterLevel } from 'src/features/character/levels/characterLevelSlice';
 import { computeDrinkStats } from 'src/features/skill/drinks/computeDrinkStats';
 import { selectSkillDrinks } from 'src/features/skill/drinks/drinksSlice';
 import { SkillDrinksSelect } from 'src/features/skill/drinks/SkillDrinksSelect';
@@ -17,7 +18,7 @@ export function SkillPage({ actionTypeHrid }: SkillPageProps) {
   const equipment = useAppSelector(selectCharacterEquipment);
   const enhancementLevels = useAppSelector(selectCharacterEnhancement);
   const drinks = useAppSelector(selectSkillDrinks);
-
+  const levels = useAppSelector(selectCharacterLevel);
   const equipmentStats = computeEquipmentStats(equipment, enhancementLevels) as Record<
     keyof NonCombatStats,
     number
@@ -31,6 +32,7 @@ export function SkillPage({ actionTypeHrid }: SkillPageProps) {
         actionTypeHrid={actionTypeHrid}
         equipmentStats={equipmentStats}
         drinkStats={drinkStats}
+        characterLevels={levels}
       />
     </div>
   );
