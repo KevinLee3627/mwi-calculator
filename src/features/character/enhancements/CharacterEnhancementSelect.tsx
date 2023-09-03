@@ -20,7 +20,7 @@ export function CharacterEnhancementSelect({
   return (
     <Select
       name={`${itemLocationHrid}_select_enhancement`}
-      options={range(1, 20).map((val) => ({
+      options={range(0, 20).map((val) => ({
         label: `+${val.toString()}`,
         value: val
       }))}
