@@ -7,6 +7,6 @@ export interface ConsumableDetail {
   hitpointRestore: number;
   manapointRestore: number;
   recoveryDuration: number;
-  buffs: BuffDetail | null;
+  buffs: BuffDetail[] | null;
   defaultCombatTriggers: null; // TODO
 }
