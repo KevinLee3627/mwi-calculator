@@ -26,25 +26,30 @@ export function SkillDrinksSelect({ actionTypeHrid }: SkillDrinksSelectProps) {
     );
   }, [actionTypeHrid]);
   return (
-    <Select
-      isMulti
-      options={drinkChoices.map((drink) => ({ label: drink.name, value: drink }))}
-      defaultValue={
-        skillDrinks[actionTypeHrid]?.map((drink) => ({
-          label: drink.name,
-          value: drink
-        })) ?? []
-      }
-      onChange={(selected) => {
-        dispatch(
-          setSkillDrinks({ actionTypeHrid, drinks: selected.map((v) => v.value) })
-        );
-      }}
-      filterOption={(option) => {
-        return !skillDrinks[actionTypeHrid]?.some(
-          (drink) => drink.hrid === option.data.value.hrid
-        );
-      }}
-    />
+    <div className="form-control">
+      <label className="label">
+        <span className="label-text">Drinks</span>
+      </label>
+      <Select
+        isMulti
+        options={drinkChoices.map((drink) => ({ label: drink.name, value: drink }))}
+        defaultValue={
+          skillDrinks[actionTypeHrid]?.map((drink) => ({
+            label: drink.name,
+            value: drink
+          })) ?? []
+        }
+        onChange={(selected) => {
+          dispatch(
+            setSkillDrinks({ actionTypeHrid, drinks: selected.map((v) => v.value) })
+          );
+        }}
+        filterOption={(option) => {
+          return !skillDrinks[actionTypeHrid]?.some(
+            (drink) => drink.hrid === option.data.value.hrid
+          );
+        }}
+      />
+    </div>
   );
 }
