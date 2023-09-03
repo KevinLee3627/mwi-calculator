@@ -6,8 +6,11 @@ import { PossibleCharacterEquipmentLocationHrid } from 'src/features/character/e
 export const actionTypeToSkillHrid = (
   actionTypeHrid: ActionTypeHrid
 ): NonCombatSkillHrid =>
-  actionTypeHrid.replaceAll('action_type', 'skill') as NonCombatSkillHrid;
+  actionTypeHrid.replaceAll('action_types', 'skills') as NonCombatSkillHrid;
 // Converts EquipmentTypeHrid to ItemLocationHrid
+
+export const actionTypeToSkillName = (actionTypeHrid: ActionTypeHrid): string =>
+  actionTypeHrid.replaceAll('/action_types/', '');
 
 export const equipmentTypeToItemLocation = (
   equipmentTypeHrid: EquipmentTypeHrid
