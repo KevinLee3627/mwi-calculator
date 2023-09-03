@@ -40,6 +40,11 @@ export function SkillDrinksSelect({ actionTypeHrid }: SkillDrinksSelectProps) {
           setSkillDrinks({ actionTypeHrid, drinks: selected.map((v) => v.value) })
         );
       }}
+      filterOption={(option) => {
+        return !skillDrinks[actionTypeHrid]?.some(
+          (drink) => drink.hrid === option.data.value.hrid
+        );
+      }}
     />
   );
 }
