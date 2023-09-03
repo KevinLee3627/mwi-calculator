@@ -12,14 +12,13 @@ import { ActionDetail } from 'src/core/actions/ActionDetail';
 import { NonCombatActionTypeHrid } from 'src/core/actions/NonCombatActionTypeHrid';
 import { clientData } from 'src/core/clientData';
 import { NonCombatStats } from 'src/core/items/NonCombatStats';
-import { NonCombatSkillHrid } from 'src/core/skills/NonCombatSkillHrid';
 import { computeEquipmentStats } from 'src/features/character/equipment/computeEquipmentStats';
 import { CharacterLevelState } from 'src/features/character/levels/characterLevelSlice';
 import {
-  actionTypeEfficiencyStatMapping,
   actionTypeSpeedStatMapping,
   actionTypeStatMapping
 } from 'src/features/skill/actionTypeStatMapping';
+import { computeSkillEfficiency } from 'src/features/skill/computeSkillEfficiency';
 import { computeDrinkStats } from 'src/features/skill/drinks/computeDrinkStats';
 import { baseTimeToSeconds } from 'src/util/baseTimeToSeconds';
 
@@ -85,26 +84,26 @@ export function SkillTable({
         header: 'Efficiency',
         id: 'efficiency',
         cell: (info) => {
-          const effStatName = actionTypeEfficiencyStatMapping[actionTypeHrid];
-          let equipBonus = 0;
-          if (effStatName == null) equipBonus = 0;
-          else equipBonus = relevantEquipmentStats[effStatName] ?? 0;
-
-          const drinkBonus = drinkStats['/buff_types/efficiency'] ?? 0;
-
-          const skillHrid = actionTypeHrid.replace(
-            '/action_type',
-            '/skill'
-          ) as NonCombatSkillHrid;
           const levelRequirement = info.row.original.levelRequirement.level;
-          const levelBonus =
-            Math.max(characterLevels[skillHrid] - levelRequirement, 0) / 100;
-          console.log(equipBonus, drinkBonus, levelBonus);
-          return (equipBonus + drinkBonus + levelBonus) * 100;
+          const efficiency = computeSkillEfficiency({
+            actionTypeHrid,
+            equipmentStats,
+            drinkStats,
+            characterLevels,
+            levelRequirement
+          });
+          return efficiency * 100;
         }
       })
     ],
-    [columnHelper, relevantEquipmentStats, actionTypeHrid, drinkStats, characterLevels]
+    [
+      columnHelper,
+      relevantEquipmentStats,
+      actionTypeHrid,
+      drinkStats,
+      characterLevels,
+      equipmentStats
+    ]
   );
 
   const [sorting, setSorting] = useState<SortingState>([
