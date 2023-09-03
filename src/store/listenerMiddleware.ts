@@ -2,6 +2,7 @@ import { createListenerMiddleware } from '@reduxjs/toolkit';
 import { characterEnhancementSlice } from 'src/features/character/enhancements/characterEnhancementSlice';
 import { characterEquipmentSlice } from 'src/features/character/equipment/characterEquipmentSlice';
 import { characterLevelSlice } from 'src/features/character/levels/characterLevelSlice';
+import { skillDrinksSlice } from 'src/features/skill/drinks/drinksSlice';
 import { store } from 'src/store/store';
 
 export const characterLevelListenerMiddleware = createListenerMiddleware();
@@ -36,3 +37,13 @@ characterEnhancementListenerMiddleware.startListening({
     );
   }
 });
+
+export const skillDrinksListenerMiddleware = createListenerMiddleware();
+skillDrinksListenerMiddleware.startListening({
+  actionCreator: skillDrinksSlice.actions.setSkillDrinks,
+  effect: () => {
+    localStorage.setItem('skillDrinks', JSON.stringify(store.getState().skillDrinks));
+  }
+});
+
+skillDrinksSlice;
