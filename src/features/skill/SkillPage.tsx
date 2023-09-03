@@ -1,6 +1,7 @@
 import { NonCombatActionTypeHrid } from 'src/core/actions/NonCombatActionTypeHrid';
 import { clientData } from 'src/core/clientData';
 import { NonCombatStats } from 'src/core/items/NonCombatStats';
+import { CharacterEnhancementSelect } from 'src/features/character/enhancements/CharacterEnhancementSelect';
 import { selectCharacterEnhancement } from 'src/features/character/enhancements/characterEnhancementSlice';
 import { CharacterEquipmentSelect } from 'src/features/character/equipment/CharacterEquipmentSelect';
 import { selectCharacterEquipment } from 'src/features/character/equipment/characterEquipmentSlice';
@@ -46,6 +47,11 @@ export function SkillPage({ actionTypeHrid }: SkillPageProps) {
             possibleItems={
               itemLocationToItemMap[actionTypeToolLocationMapping[actionTypeHrid]]
             }
+          />
+        </div>
+        <div className="ml-4">
+          <CharacterEnhancementSelect
+            itemLocationHrid={actionTypeToolLocationMapping[actionTypeHrid]}
           />
         </div>
       </div>
