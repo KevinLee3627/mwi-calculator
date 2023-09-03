@@ -2,6 +2,7 @@ import { Select } from 'src/components/Select';
 import { clientData } from 'src/core/clientData';
 import { ItemDetail } from 'src/core/items/ItemDetail';
 import {
+  clearEquip,
   PossibleCharacterEquipmentLocationHrid,
   selectCharacterEquipment,
   setEquipment
@@ -37,14 +38,18 @@ export function CharacterEquipmentSelect({
         }}
         placeholder="test"
         onChange={(selected) => {
-          if (selected?.value == null) return;
-          dispatch(
-            setEquipment({
-              itemHrid: selected.value.hrid,
-              locationHrid: itemLocationHrid
-            })
-          );
+          if (selected?.value == null) {
+            dispatch(clearEquip({ locationHrid: itemLocationHrid }));
+          } else {
+            dispatch(
+              setEquipment({
+                itemHrid: selected.value.hrid,
+                locationHrid: itemLocationHrid
+              })
+            );
+          }
         }}
+        isClearable
       />
     </div>
   );

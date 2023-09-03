@@ -43,6 +43,10 @@ export interface SetEquipmentPayload {
   itemHrid: ItemHrid;
 }
 
+export interface ClearEquipPayload {
+  locationHrid: PossibleCharacterEquipmentLocationHrid;
+}
+
 export const characterEquipmentSlice = createSlice({
   name: 'characterEquipment',
   initialState: characterEquipmentInitialState,
@@ -51,10 +55,15 @@ export const characterEquipmentSlice = createSlice({
       const { payload } = action;
       state[payload.locationHrid] = clientData.itemDetailMap[payload.itemHrid];
     },
-    resetEquipment: () => characterEquipmentInitialState
+    clearEquip: (state, action: PayloadAction<ClearEquipPayload>) => {
+      const { payload } = action;
+      state[payload.locationHrid] = null;
+    },
+    resetAllEquipment: () => characterEquipmentInitialState
   }
 });
 
-export const { setEquipment, resetEquipment } = characterEquipmentSlice.actions;
+export const { setEquipment, clearEquip, resetAllEquipment } =
+  characterEquipmentSlice.actions;
 
 export const selectCharacterEquipment = (state: RootState) => state.characterEquipment;
