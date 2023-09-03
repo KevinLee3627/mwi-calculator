@@ -1,5 +1,3 @@
-import { useMemo } from 'react';
-import { clientData } from 'src/core/clientData';
 import { ItemDetail } from 'src/core/items/ItemDetail';
 import { CharacterEnhancementSelect } from 'src/features/character/enhancements/CharacterEnhancementSelect';
 import { resetEnhancementLevels } from 'src/features/character/enhancements/characterEnhancementSlice';
@@ -9,6 +7,7 @@ import {
   resetAllEquipment,
   selectCharacterEquipment
 } from 'src/features/character/equipment/characterEquipmentSlice';
+import { itemLocationToItemMap } from 'src/features/itemLocationToItemMap';
 import { useAppDispatch } from 'src/hooks/useAppDispatch';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 
@@ -17,22 +16,6 @@ export function CharacterEquipment() {
   const equipment = useAppSelector(selectCharacterEquipment);
 
   // Creates mapping between item location and items from client data
-  const itemMap = useMemo(() => {
-    return Object.values(clientData.itemDetailMap).reduce<Record<string, ItemDetail[]>>(
-      (acc, val) => {
-        if (val.equipmentDetail.type === '') return acc;
-
-        const location = val.equipmentDetail.type.split('/').at(-1);
-        if (location == null) return acc;
-        if (acc[location] == null) {
-          acc[location] = [];
-        }
-        acc[location].push(val);
-        return acc;
-      },
-      {}
-    );
-  }, []);
 
   function convertEquipToSelect(entry: [string, ItemDetail | null]) {
     const itemLocationHrid = entry[0] as PossibleCharacterEquipmentLocationHrid;
@@ -41,14 +24,12 @@ export function CharacterEquipment() {
     // types have the same suffixes but different prefixes.
     // ex: EquipmentTypeHrid = /equipment_type/head
     // ex: ItemLocationHrid = /item_location/head
-    const location = itemLocationHrid.split('/').at(-1);
 
-    if (location == null) return <></>;
     return (
       <div className="flex items-end gap-2" key={`${itemLocationHrid}_key`}>
         <CharacterEquipmentSelect
           itemLocationHrid={itemLocationHrid}
-          possibleItems={itemMap[location]}
+          possibleItems={itemLocationToItemMap[itemLocationHrid]}
         />
         <CharacterEnhancementSelect itemLocationHrid={itemLocationHrid} />
       </div>

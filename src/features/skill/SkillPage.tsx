@@ -1,4 +1,5 @@
 import { NonCombatActionTypeHrid } from 'src/core/actions/NonCombatActionTypeHrid';
+import { clientData } from 'src/core/clientData';
 import { NonCombatStats } from 'src/core/items/NonCombatStats';
 import { selectCharacterEnhancement } from 'src/features/character/enhancements/characterEnhancementSlice';
 import { CharacterEquipmentSelect } from 'src/features/character/equipment/CharacterEquipmentSelect';
@@ -6,6 +7,8 @@ import { selectCharacterEquipment } from 'src/features/character/equipment/chara
 import { computeEquipmentStats } from 'src/features/character/equipment/computeEquipmentStats';
 import { CharacterLevelInput } from 'src/features/character/levels/CharacterLevelInput';
 import { selectCharacterLevel } from 'src/features/character/levels/characterLevelSlice';
+import { itemLocationToItemMap } from 'src/features/itemLocationToItemMap';
+import { actionTypeToolLocationMapping } from 'src/features/skill/actionTypeStatMapping';
 import { computeDrinkStats } from 'src/features/skill/drinks/computeDrinkStats';
 import { selectSkillDrinks } from 'src/features/skill/drinks/drinksSlice';
 import { SkillDrinksSelect } from 'src/features/skill/drinks/SkillDrinksSelect';
@@ -39,10 +42,10 @@ export function SkillPage({ actionTypeHrid }: SkillPageProps) {
         </div>
         <div className="ml-4">
           <CharacterEquipmentSelect
-            itemLocationHrid={`/item_locations/${actionTypeHrid.replace(
-              '/action_type/',
-              ''
-            )}_tool/>`}
+            itemLocationHrid={actionTypeToolLocationMapping[actionTypeHrid]}
+            possibleItems={
+              itemLocationToItemMap[actionTypeToolLocationMapping[actionTypeHrid]]
+            }
           />
         </div>
       </div>
