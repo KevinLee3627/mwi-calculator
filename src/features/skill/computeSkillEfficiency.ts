@@ -19,10 +19,13 @@ export function computeSkillEfficiency({
   characterLevels,
   levelRequirement
 }: ComputeSkillEfficiencyParams) {
-  const effStatName = actionTypeEfficiencyStatMapping[actionTypeHrid];
+  const skillEffStatName = actionTypeEfficiencyStatMapping[actionTypeHrid];
   let equipBonus = 0;
-  if (effStatName == null) equipBonus = 0;
-  else equipBonus = equipmentStats[effStatName] ?? 0;
+  if (skillEffStatName == null) equipBonus = 0;
+  else equipBonus = equipmentStats[skillEffStatName] ?? 0;
+
+  // from necklace
+  equipBonus += equipmentStats['skillingEfficiency'] ?? 0;
 
   const drinkBonus = drinkStats['/buff_types/efficiency'] ?? 0;
 
