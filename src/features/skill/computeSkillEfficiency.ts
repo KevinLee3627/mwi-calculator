@@ -1,6 +1,5 @@
 import { NonCombatActionTypeHrid } from 'src/core/actions/NonCombatActionTypeHrid';
 import { BuffTypeHrid } from 'src/core/hrid/BuffTypeHrid';
-import { NonCombatSkillHrid } from 'src/core/skills/NonCombatSkillHrid';
 import { computeEquipmentStats } from 'src/features/character/equipment/computeEquipmentStats';
 import { CharacterLevelState } from 'src/features/character/levels/characterLevelSlice';
 import { actionTypeEfficiencyStatMapping } from 'src/features/skill/actionTypeStatMapping';

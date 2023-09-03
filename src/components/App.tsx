@@ -9,7 +9,7 @@ const App = () => {
       <Header />
       <CharacterLevels />
       <CharacterEquipment />
-      <SkillPage actionTypeHrid="/action_types/milking" />
+      <SkillPage actionTypeHrid="/action_types/woodcutting" />
     </>
   );
 };
