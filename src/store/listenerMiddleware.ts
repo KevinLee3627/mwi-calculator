@@ -20,7 +20,7 @@ export const characterEquipmentListenerMiddleware = createListenerMiddleware();
 characterEquipmentListenerMiddleware.startListening({
   matcher: isAnyOf(
     characterEquipmentSlice.actions.setEquipment,
-    characterEquipmentSlice.actions.resetEquipment
+    characterEquipmentSlice.actions.resetAllEquipment
   ),
   effect: (action) => {
     if (action.type === 'characterEquipment/setEquipment') {
