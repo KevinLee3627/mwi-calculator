@@ -9,6 +9,7 @@ import {
 import { useMemo, useState } from 'react';
 import { ActionDetail } from 'src/core/actions/ActionDetail';
 import { clientData } from 'src/core/clientData';
+import { baseTimeToSeconds } from 'src/util/baseTimeToSeconds';
 
 export function SkillTable() {
   const defaultData = useMemo(
@@ -25,12 +26,18 @@ export function SkillTable() {
 
   const columns = useMemo(
     () => [
-      columnHelper.accessor('name', { header: 'Action' }),
       columnHelper.accessor((row) => row.levelRequirement.level, {
         header: 'Level Req.',
         id: 'levelRequirement'
       }),
-      columnHelper.accessor((row) => row.experienceGain.value, { header: 'XP' })
+      columnHelper.accessor('name', { header: 'Action' }),
+      columnHelper.accessor((row) => row.experienceGain.value, {
+        header: 'XP'
+      }),
+      columnHelper.accessor((row) => row.baseTimeCost, {
+        header: 'Time (s)',
+        cell: (info) => baseTimeToSeconds(info.row.original.baseTimeCost)
+      })
     ],
     [columnHelper]
   );
@@ -50,7 +57,7 @@ export function SkillTable() {
 
   return (
     <div>
-      <table className="table">
+      <table className="table-zebra table">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
