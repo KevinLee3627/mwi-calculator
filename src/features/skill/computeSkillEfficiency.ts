@@ -4,6 +4,7 @@ import { computeEquipmentStats } from 'src/features/character/equipment/computeE
 import { CharacterLevelState } from 'src/features/character/levels/characterLevelSlice';
 import { actionTypeEfficiencyStatMapping } from 'src/features/skill/actionTypeStatMapping';
 import { computeDrinkStats } from 'src/features/skill/drinks/computeDrinkStats';
+import { actionTypeToSkillHrid } from 'src/util/hridConverters';
 
 interface ComputeSkillEfficiencyParams {
   actionTypeHrid: NonCombatActionTypeHrid;
@@ -29,10 +30,7 @@ export function computeSkillEfficiency({
 
   const drinkBonus = drinkStats['/buff_types/efficiency'] ?? 0;
 
-  const skillHrid = actionTypeHrid.replace(
-    '/action_type',
-    '/skill'
-  ) as NonCombatSkillHrid;
+  const skillHrid = actionTypeToSkillHrid(actionTypeHrid);
 
   const levelBonus = Math.max(characterLevels[skillHrid] - levelRequirement, 0) / 100;
   return equipBonus + drinkBonus + levelBonus;

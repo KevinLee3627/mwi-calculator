@@ -1,6 +1,7 @@
 import { NonCombatActionTypeHrid } from 'src/core/actions/NonCombatActionTypeHrid';
 import { NonCombatStats } from 'src/core/items/NonCombatStats';
 import { selectCharacterEnhancement } from 'src/features/character/enhancements/characterEnhancementSlice';
+import { CharacterEquipmentSelect } from 'src/features/character/equipment/CharacterEquipmentSelect';
 import { selectCharacterEquipment } from 'src/features/character/equipment/characterEquipmentSlice';
 import { computeEquipmentStats } from 'src/features/character/equipment/computeEquipmentStats';
 import { CharacterLevelInput } from 'src/features/character/levels/CharacterLevelInput';
@@ -11,7 +12,7 @@ import { SkillDrinksSelect } from 'src/features/skill/drinks/SkillDrinksSelect';
 import { SkillStats } from 'src/features/skill/SkillStats';
 import { SkillTable } from 'src/features/skill/SkillTable';
 import { useAppSelector } from 'src/hooks/useAppSelector';
-import { actionTypeToSkill } from 'src/util/actionTypeToSkill';
+import { actionTypeToSkillHrid } from 'src/util/hridConverters';
 
 interface SkillPageProps {
   actionTypeHrid: NonCombatActionTypeHrid;
@@ -30,11 +31,19 @@ export function SkillPage({ actionTypeHrid }: SkillPageProps) {
     <div className="mx-auto w-11/12">
       {/* <SkillStats actionTypeHrid={actionTypeHrid} /> */}
       <div className="flex items-end">
-        <div className="inline-block">
-          <CharacterLevelInput skillHrid={actionTypeToSkill(actionTypeHrid)} />
+        <div>
+          <CharacterLevelInput skillHrid={actionTypeToSkillHrid(actionTypeHrid)} />
         </div>
-        <div className="ml-4 inline-block">
+        <div className="ml-4">
           <SkillDrinksSelect actionTypeHrid={actionTypeHrid} />
+        </div>
+        <div className="ml-4">
+          <CharacterEquipmentSelect
+            itemLocationHrid={`/item_locations/${actionTypeHrid.replace(
+              '/action_type/',
+              ''
+            )}_tool/>`}
+          />
         </div>
       </div>
       <SkillTable

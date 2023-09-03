@@ -2,7 +2,7 @@ import { NonCombatStats } from 'src/core/items/NonCombatStats';
 import { CharacterEnhancementState } from 'src/features/character/enhancements/characterEnhancementSlice';
 import { calculateEnhancedBonus } from 'src/features/character/equipment/calculateEnhancedBonus';
 import { CharacterEquipmentState } from 'src/features/character/equipment/characterEquipmentSlice';
-import { equipmentTypeToItemLocation } from 'src/util/equipmentTypeToItemLocation';
+import { equipmentTypeToItemLocation } from 'src/util/hridConverters';
 
 export function computeEquipmentStats(
   equipment: CharacterEquipmentState,
