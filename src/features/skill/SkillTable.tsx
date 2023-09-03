@@ -11,11 +11,33 @@ import { useMemo, useState } from 'react';
 import { ActionDetail } from 'src/core/actions/ActionDetail';
 import { NonCombatActionTypeHrid } from 'src/core/actions/NonCombatActionTypeHrid';
 import { clientData } from 'src/core/clientData';
+import { NonCombatStats } from 'src/core/items/NonCombatStats';
+import { computeEquipmentStats } from 'src/features/character/equipment/computeEquipmentStats';
+import {
+  actionTypeSpeedStatMapping,
+  actionTypeStatMapping
+} from 'src/features/skill/actionTypeStatMapping';
+import { computeDrinkStats } from 'src/features/skill/drinks/computeDrinkStats';
 import { baseTimeToSeconds } from 'src/util/baseTimeToSeconds';
+
 interface SkillTableProps {
   actionTypeHrid: NonCombatActionTypeHrid;
+  equipmentStats: ReturnType<typeof computeEquipmentStats>;
+  drinkStats: ReturnType<typeof computeDrinkStats>;
 }
-export function SkillTable({ actionTypeHrid }: SkillTableProps) {
+export function SkillTable({
+  actionTypeHrid,
+  equipmentStats,
+  drinkStats
+}: SkillTableProps) {
+  const relevantEquipmentStats = Object.fromEntries(
+    Object.entries(equipmentStats).filter(
+      ([statName, statValue]) =>
+        statValue !== 0 &&
+        actionTypeStatMapping[actionTypeHrid][statName as keyof NonCombatStats] != null
+    )
+  ) as Partial<Record<keyof NonCombatStats, number>>;
+
   const defaultData = useMemo(
     () =>
       Object.values(clientData.actionDetailMap).filter(
@@ -38,10 +60,24 @@ export function SkillTable({ actionTypeHrid }: SkillTableProps) {
       columnHelper.accessor((row) => row.experienceGain.value, { header: 'XP' }),
       columnHelper.accessor((row) => row.baseTimeCost, {
         header: 'Time (s)',
-        cell: (info) => baseTimeToSeconds(info.row.original.baseTimeCost)
+        cell: (info) => {
+          const speedStatName = actionTypeSpeedStatMapping[actionTypeHrid];
+          if (relevantEquipmentStats[speedStatName] == null) {
+            return baseTimeToSeconds(info.row.original.baseTimeCost);
+          } else {
+            return baseTimeToSeconds(
+              info.row.original.baseTimeCost,
+              relevantEquipmentStats[speedStatName]
+            );
+          }
+        }
+      }),
+      columnHelper.accessor((row) => row.levelRequirement.level, {
+        header: 'Efficiency',
+        id: 'efficiency'
       })
     ],
-    [columnHelper]
+    [columnHelper, relevantEquipmentStats, actionTypeHrid]
   );
 
   const [sorting, setSorting] = useState<SortingState>([

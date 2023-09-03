@@ -29,6 +29,6 @@ export function computeEquipmentStats(
     });
 
     return acc;
-  }, {});
+  }, {}) as Record<keyof NonCombatStats, number>;
   return stats;
 }

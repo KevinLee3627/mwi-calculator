@@ -9,9 +9,9 @@ export function computeDrinkStats(
   // organize buffs given and their values
   const drinks = drinksState[actionTypeHrid];
   // TODO: How to handle error?
-  if (drinks == null) return;
+  if (drinks == null) return {} as Record<BuffTypeHrid, number>;
 
-  return drinks.reduce<Record<string, number>>((acc, drink) => {
+  const x = drinks.reduce<Record<string, number>>((acc, drink) => {
     // For each drink, add buffs to map
     drink.consumableDetail.buffs?.forEach((buff) => {
       if (acc[buff.typeHrid] == null) acc[buff.typeHrid] = 0;
@@ -19,4 +19,5 @@ export function computeDrinkStats(
     });
     return acc;
   }, {}) as Record<BuffTypeHrid, number>;
+  return x;
 }

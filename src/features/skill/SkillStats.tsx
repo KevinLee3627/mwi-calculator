@@ -19,12 +19,11 @@ export function SkillStats({ actionTypeHrid }: SkillStatsProps) {
   const drinksState = useAppSelector(selectSkillDrinks);
 
   const equipmentStats = computeEquipmentStats(equipment, enhancementLevels);
-
   const visibleEquipmentStats = Object.entries(equipmentStats)
     .filter(
       ([statName, statValue]) =>
         statValue !== 0 &&
-        actionTypeStatMapping[actionTypeHrid].includes(statName as keyof NonCombatStats)
+        actionTypeStatMapping[actionTypeHrid][statName as keyof NonCombatStats] != null
     )
     .map(([statName, statValue]) => (
       <p key={statName}>
@@ -33,7 +32,16 @@ export function SkillStats({ actionTypeHrid }: SkillStatsProps) {
     ));
 
   const x = computeDrinkStats(drinksState, actionTypeHrid);
-  console.log(x);
+  const visibleDrinkStats = Object.entries(x ?? {}).map(([buffTypeHrid, buffValue]) => (
+    <p key={buffTypeHrid}>
+      {buffTypeHrid}: {buffValue}
+    </p>
+  ));
 
-  return <div>{visibleEquipmentStats}</div>;
+  return (
+    <div>
+      {visibleEquipmentStats}
+      {visibleDrinkStats}
+    </div>
+  );
 }
