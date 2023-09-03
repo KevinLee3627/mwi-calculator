@@ -1,3 +1,4 @@
+import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/solid';
 import {
   createColumnHelper,
   flexRender,
@@ -65,15 +66,16 @@ export function SkillTable() {
                 <th key={header.id}>
                   {header.isPlaceholder ? null : (
                     <div
-                      className={
+                      className={`${
                         header.column.getCanSort() ? 'cursor-pointer select-none' : ''
-                      }
+                      } flex`}
                       onClick={header.column.getToggleSortingHandler()}
                     >
                       {flexRender(header.column.columnDef.header, header.getContext())}
-                      {{ asc: 'up', desc: 'down' }[
-                        header.column.getIsSorted() as string
-                      ] ?? null}
+                      {{
+                        asc: <ChevronUpIcon className="h-4 w-4" />,
+                        desc: <ChevronDownIcon className="h-4 w-4" />
+                      }[header.column.getIsSorted() as string] ?? null}
                     </div>
                   )}
                 </th>
