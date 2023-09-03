@@ -9,16 +9,19 @@ import {
 } from '@tanstack/react-table';
 import { useMemo, useState } from 'react';
 import { ActionDetail } from 'src/core/actions/ActionDetail';
+import { NonCombatActionTypeHrid } from 'src/core/actions/NonCombatActionTypeHrid';
 import { clientData } from 'src/core/clientData';
 import { baseTimeToSeconds } from 'src/util/baseTimeToSeconds';
-
-export function SkillTable() {
+interface SkillTableProps {
+  actionTypeHrid: NonCombatActionTypeHrid;
+}
+export function SkillTable({ actionTypeHrid }: SkillTableProps) {
   const defaultData = useMemo(
     () =>
       Object.values(clientData.actionDetailMap).filter(
-        (value) => value.type === '/action_types/milking'
+        (value) => value.type === actionTypeHrid
       ),
-    []
+    [actionTypeHrid]
   );
 
   const [data] = useState<ActionDetail[]>(defaultData);
@@ -32,9 +35,7 @@ export function SkillTable() {
         id: 'levelRequirement'
       }),
       columnHelper.accessor('name', { header: 'Action' }),
-      columnHelper.accessor((row) => row.experienceGain.value, {
-        header: 'XP'
-      }),
+      columnHelper.accessor((row) => row.experienceGain.value, { header: 'XP' }),
       columnHelper.accessor((row) => row.baseTimeCost, {
         header: 'Time (s)',
         cell: (info) => baseTimeToSeconds(info.row.original.baseTimeCost)
