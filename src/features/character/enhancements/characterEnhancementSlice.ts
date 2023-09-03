@@ -42,11 +42,13 @@ export const characterEnhancementSlice = createSlice({
     setEnhancementLevel: (state, action: PayloadAction<SetEnhancementPayload>) => {
       const { payload } = action;
       state[payload.locationHrid] = payload.enhancementLevel;
-    }
+    },
+    resetEnhancementLevels: () => characterEnhancementInitialState
   }
 });
 
-export const { setEnhancementLevel } = characterEnhancementSlice.actions;
+export const { setEnhancementLevel, resetEnhancementLevels } =
+  characterEnhancementSlice.actions;
 
 export const selectCharacterEnhancement = (state: RootState) =>
   state.characterEnhancement;

@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { clientData } from 'src/core/clientData';
 import { ItemDetail } from 'src/core/items/ItemDetail';
 import { CharacterEnhancementSelect } from 'src/features/character/enhancements/CharacterEnhancementSelect';
+import { resetEnhancementLevels } from 'src/features/character/enhancements/characterEnhancementSlice';
 import { CharacterEquipmentSelect } from 'src/features/character/equipment/CharacterEquipmentSelect';
 import {
   PossibleCharacterEquipmentLocationHrid,
@@ -76,8 +77,12 @@ export function CharacterEquipment() {
         </div>
         <button
           className="btn-error btn mt-4"
-          onClick={() => {
+          onClick={(e) => {
             dispatch(resetEquipment());
+            dispatch(resetEnhancementLevels());
+            // preventDefault stops button from 'submitting' the form and thus
+            // stops the modal from closing.
+            e.preventDefault();
           }}
         >
           RESET

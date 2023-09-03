@@ -37,11 +37,15 @@ characterEquipmentListenerMiddleware.startListening({
 export const characterEnhancementListenerMiddleware = createListenerMiddleware();
 characterEnhancementListenerMiddleware.startListening({
   actionCreator: characterEnhancementSlice.actions.setEnhancementLevel,
-  effect: () => {
-    localStorage.setItem(
-      'characterEnhancement',
-      JSON.stringify(store.getState().characterEnhancement)
-    );
+  effect: (action) => {
+    if (action.type === 'characterEnhancement/setEnhancementLevel') {
+      localStorage.setItem(
+        'characterEnhancement',
+        JSON.stringify(store.getState().characterEnhancement)
+      );
+    } else if (action.type === 'characterEnhancement/resetEnhancementLevels') {
+      localStorage.removeItem('characterEnhancement');
+    }
   }
 });
 

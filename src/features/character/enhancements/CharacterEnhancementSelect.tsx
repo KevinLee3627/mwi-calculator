@@ -24,7 +24,7 @@ export function CharacterEnhancementSelect({
         label: `+${val.toString()}`,
         value: val
       }))}
-      defaultValue={{
+      value={{
         label: `+${enhancement[itemLocationHrid]}`,
         value: enhancement[itemLocationHrid]
       }}
