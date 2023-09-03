@@ -57,19 +57,23 @@ export function SkillTable({
         id: 'levelRequirement'
       }),
       columnHelper.accessor('name', { header: 'Action' }),
-      columnHelper.accessor((row) => row.experienceGain.value, { header: 'XP' }),
+      columnHelper.accessor((row) => row.experienceGain.value, {
+        header: 'XP',
+        cell: (info) => {
+          const equipBonus = relevantEquipmentStats.skillingExperience ?? 0;
+          const drinkBonus = drinkStats['/buff_types/wisdom'];
+          const baseXp = info.row.original.experienceGain.value;
+          return baseXp * (1 + equipBonus + drinkBonus);
+        }
+      }),
       columnHelper.accessor((row) => row.baseTimeCost, {
         header: 'Time (s)',
         cell: (info) => {
           const speedStatName = actionTypeSpeedStatMapping[actionTypeHrid];
-          if (relevantEquipmentStats[speedStatName] == null) {
-            return baseTimeToSeconds(info.row.original.baseTimeCost);
-          } else {
-            return baseTimeToSeconds(
-              info.row.original.baseTimeCost,
-              relevantEquipmentStats[speedStatName]
-            );
-          }
+          const equipBonus = relevantEquipmentStats[speedStatName];
+          return equipBonus == null
+            ? baseTimeToSeconds(info.row.original.baseTimeCost)
+            : baseTimeToSeconds(info.row.original.baseTimeCost, equipBonus);
         }
       }),
       columnHelper.accessor((row) => row.levelRequirement.level, {
@@ -77,7 +81,7 @@ export function SkillTable({
         id: 'efficiency'
       })
     ],
-    [columnHelper, relevantEquipmentStats, actionTypeHrid]
+    [columnHelper, relevantEquipmentStats, actionTypeHrid, drinkStats]
   );
 
   const [sorting, setSorting] = useState<SortingState>([
