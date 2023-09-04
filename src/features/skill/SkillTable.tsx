@@ -101,9 +101,9 @@ export function SkillTable({
           const rareDropTable = info.row.original.rareDropTable ?? [];
           const combinedDropTable = [...dropTable, ...rareDropTable];
 
-          return (
+          const dropTableElem = (
             <div>
-              {combinedDropTable?.map((drop) => {
+              {dropTable?.map((drop) => {
                 const itemName = clientData.itemDetailMap[drop.itemHrid].name;
                 const dropRate = (drop.dropRate * 100).toFixed(2);
                 const teaDropQuantityBonus =
@@ -129,6 +129,37 @@ export function SkillTable({
                 );
               })}
             </div>
+          );
+
+          // TODO: Consider doing something not so copy/paste
+          const rareDropTableElem = (
+            <div>
+              {rareDropTable?.map((drop) => {
+                const itemName = clientData.itemDetailMap[drop.itemHrid].name;
+                const dropRate = (drop.dropRate * 100).toFixed(2);
+
+                const strippedItemHrid = drop.itemHrid.split('/').at(-1);
+                const icon = (
+                  <svg className="mr-1 inline h-4 w-4">
+                    <use href={`${svgHrefs.items}#${strippedItemHrid}`}></use>
+                  </svg>
+                );
+                return (
+                  <div key={drop.itemHrid}>
+                    <span>
+                      {icon} {itemName} ({drop.minCount}-{drop.maxCount}) {dropRate}%
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          );
+
+          return (
+            <>
+              {dropTableElem}
+              {rareDropTableElem}
+            </>
           );
         }
       })
