@@ -107,10 +107,39 @@ export function SkillTable({
           return skillTime.toFixed(2);
         }
       }),
+      columnHelper.accessor((row) => row.experienceGain.value / row.baseTimeCost, {
+        header: 'XP/hr',
+        id: 'xpPerHour',
+        cell: (info) => {
+          const baseXp = info.row.original.experienceGain.value;
+          const skillXp = computeSkillXp({ equipmentStats, drinkStats, baseXp });
+
+          const baseTime = info.row.original.baseTimeCost;
+          const skillTime = computeSkillTime({
+            actionTypeHrid,
+            equipmentStats,
+            baseTime
+          });
+
+          // Artisan Tea does not affect efficiency.
+          const levelRequirement = info.row.original.levelRequirement.level;
+          const efficiency = computeSkillEfficiency({
+            actionTypeHrid,
+            equipmentStats,
+            drinkStats,
+            characterLevels,
+            levelRequirement
+          });
+
+          const xpPerSecond = skillXp / (skillTime / (1 + efficiency));
+          return (xpPerSecond * 3600).toFixed(2);
+        }
+      }),
       columnHelper.accessor((row) => row.levelRequirement.level, {
         header: 'Efficiency',
         id: 'efficiency',
         cell: (info) => {
+          // Artisan Tea does not affect efficiency.
           const levelRequirement = info.row.original.levelRequirement.level;
           const efficiency = computeSkillEfficiency({
             actionTypeHrid,
