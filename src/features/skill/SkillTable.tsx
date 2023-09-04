@@ -62,12 +62,14 @@ export function SkillTable({
     if (actionFunctionHrid === '/action_functions/production')
       setColumnVisibility((columnVisibility) => ({
         ...columnVisibility,
-        inputItems: true
+        inputItems: true,
+        outputItems: true
       }));
     else {
       setColumnVisibility((columnVisibility) => ({
         ...columnVisibility,
-        inputItems: false
+        inputItems: false,
+        outputItems: false
       }));
     }
   }, [actionFunctionHrid]);
@@ -188,8 +190,23 @@ export function SkillTable({
         header: 'Input',
         id: 'inputItems',
         cell: (info) => {
-          const { inputItems } = info.row.original;
+          const { inputItems, upgradeItemHrid } = info.row.original;
           if (inputItems == null) return null;
+
+          const upgradeItemDetail =
+            upgradeItemHrid === '' ? null : clientData.itemDetailMap[upgradeItemHrid];
+          const strippedUpgradeItemHrid = upgradeItemHrid.split('/').at(-1);
+          const upgradeItemElem = upgradeItemDetail ? (
+            <div>
+              <span>
+                <svg className="mr-1 inline h-4 w-4">
+                  <use href={`${svgHrefs.items}#${strippedUpgradeItemHrid}`}></use>
+                </svg>
+                {upgradeItemDetail.name} (1)
+              </span>
+            </div>
+          ) : null;
+
           const itemElems = inputItems.map((item) => {
             const strippedItemHrid = item.itemHrid.split('/').at(-1);
             const itemDetail = clientData.itemDetailMap[item.itemHrid];
@@ -208,7 +225,11 @@ export function SkillTable({
             );
           });
 
-          return itemElems;
+          return (
+            <>
+              {upgradeItemElem} {itemElems}
+            </>
+          );
         }
       }),
       columnHelper.accessor((row) => row.outputItems, {
