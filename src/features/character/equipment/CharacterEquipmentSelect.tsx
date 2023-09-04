@@ -27,8 +27,10 @@ export function CharacterEquipmentSelect({
 
   if (location == null) return <></>;
   return (
-    <div className="flex-1">
-      <span>{itemLocationName}</span>
+    <div className="form-control">
+      <label className="label">
+        <span className="label-text">{itemLocationName}</span>
+      </label>
       <Select
         name={`${itemLocationHrid}_select`}
         options={possibleItems.map((item) => ({ label: item.name, value: item }))}

@@ -10,8 +10,8 @@ const App = () => {
       <div className="drawer lg:drawer-open">
         <input type="checkbox" id="drawer-sidebar" className="drawer-toggle" />
         <div className="drawer-content flex flex-col items-center justify-center">
-          <nav className="navbar w-full">
-            <div className="flex flex-1 lg:hidden">
+          <nav className="navbar w-full lg:hidden">
+            <div className="flex flex-1 ">
               <span
                 className="tooltip tooltip-bottom sticky top-0 before:text-xs before:content-[attr(data-tip)]"
                 data-tip="Menu"

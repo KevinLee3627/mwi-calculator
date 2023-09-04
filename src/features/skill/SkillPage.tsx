@@ -33,22 +33,20 @@ export function SkillPage({ actionTypeHrid }: SkillPageProps) {
   return (
     <div>
       {/* <SkillStats actionTypeHrid={actionTypeHrid} /> */}
-      <div className="flex flex-col items-start sm:flex-row sm:items-end">
-        <div>
+      <div className="flex max-w-fit flex-col items-start sm:flex-row sm:items-end">
+        <div className="ml-4 sm:ml-0">
           <CharacterLevelInput skillHrid={actionTypeToSkillHrid(actionTypeHrid)} />
         </div>
         <div className="ml-4">
           <SkillDrinksSelect actionTypeHrid={actionTypeHrid} />
         </div>
-        <div className="ml-4">
+        <div className="ml-4 flex items-end gap-2">
           <CharacterEquipmentSelect
             itemLocationHrid={actionTypeToolLocationMapping[actionTypeHrid]}
             possibleItems={
               itemLocationToItemMap[actionTypeToolLocationMapping[actionTypeHrid]]
             }
           />
-        </div>
-        <div className="ml-2">
           <CharacterEnhancementSelect
             itemLocationHrid={actionTypeToolLocationMapping[actionTypeHrid]}
           />
