@@ -1,3 +1,5 @@
+import { svgHrefs } from 'src/util/svgHrefs';
+
 export function Sidebar() {
   return (
     <div className="drawer-side">
@@ -14,7 +16,7 @@ export function Sidebar() {
                 modal.showModal();
               }}
             >
-              Set Loadout
+              Equipment
             </span>
           </li>
           <li>
@@ -26,20 +28,35 @@ export function Sidebar() {
                 modal.showModal();
               }}
             >
-              Set Levels
+              Levels
             </span>
           </li>
           <li>
             <h2 className="menu-title">Gathering</h2>
             <ul>
               <li>
-                <span>Milking</span>
+                <span>
+                  <svg className="h-4 w-4">
+                    <use href={`${svgHrefs.skills}#milking`}></use>
+                  </svg>
+                  Milking
+                </span>
               </li>
               <li>
-                <span>Foraging</span>
+                <span>
+                  <svg className="h-4 w-4">
+                    <use href={`${svgHrefs.skills}#foraging`}></use>
+                  </svg>
+                  Foraging
+                </span>
               </li>
               <li>
-                <span>Woodcutting</span>
+                <span>
+                  <svg className="h-4 w-4">
+                    <use href={`${svgHrefs.skills}#woodcutting`}></use>
+                  </svg>
+                  Woodcutting
+                </span>
               </li>
             </ul>
           </li>
@@ -47,19 +64,44 @@ export function Sidebar() {
             <h2 className="menu-title">Production</h2>
             <ul>
               <li>
-                <span>Cheesesmithing</span>
+                <span>
+                  <svg className="h-4 w-4">
+                    <use href={`${svgHrefs.skills}#cheesesmithing`}></use>
+                  </svg>
+                  Cheesesmithing
+                </span>
               </li>
               <li>
-                <span>Crafting</span>
+                <span>
+                  <svg className="h-4 w-4">
+                    <use href={`${svgHrefs.skills}#crafting`}></use>
+                  </svg>
+                  Crafting
+                </span>
               </li>
               <li>
-                <span>Tailoring</span>
+                <span>
+                  <svg className="h-4 w-4">
+                    <use href={`${svgHrefs.skills}#tailoring`}></use>
+                  </svg>
+                  Tailoring
+                </span>
               </li>
               <li>
-                <span>Cooking</span>
+                <span>
+                  <svg className="h-4 w-4">
+                    <use href={`${svgHrefs.skills}#cooking`}></use>
+                  </svg>
+                  Cooking
+                </span>
               </li>
               <li>
-                <span>Brewing</span>
+                <span>
+                  <svg className="h-4 w-4">
+                    <use href={`${svgHrefs.skills}#brewing`}></use>
+                  </svg>
+                  Brewing
+                </span>
               </li>
             </ul>
           </li>
@@ -67,7 +109,12 @@ export function Sidebar() {
             <h2 className="menu-title">Miscellanous</h2>
             <ul>
               <li>
-                <span>Enhancing</span>
+                <span>
+                  <svg className="h-4 w-4">
+                    <use href={`${svgHrefs.skills}#enhancing`}></use>
+                  </svg>
+                  Enhancing
+                </span>
               </li>
             </ul>
           </li>
