@@ -99,7 +99,6 @@ export function SkillTable({
         cell: (info) => {
           const dropTable = info.row.original.dropTable ?? [];
           const rareDropTable = info.row.original.rareDropTable ?? [];
-          const combinedDropTable = [...dropTable, ...rareDropTable];
 
           const dropTableElem = (
             <div>
@@ -182,8 +181,8 @@ export function SkillTable({
 
   return (
     <div>
-      <table className="table-zebra table">
-        <thead>
+      <table className="table-pin-rows table-zebra table">
+        <thead className="z-40">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (

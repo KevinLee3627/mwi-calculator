@@ -6,7 +6,7 @@ import { svgHrefs } from 'src/util/svgHrefs';
 
 export function Sidebar() {
   return (
-    <div className="drawer-side">
+    <div className="drawer-side z-50">
       <label htmlFor="drawer-sidebar" className="drawer-overlay"></label>
       <aside className=" bg-base-100 ">
         <div className="hidden pl-6 pt-4 font-extrabold lg:block">
