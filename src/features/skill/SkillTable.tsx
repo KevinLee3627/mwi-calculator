@@ -106,9 +106,13 @@ export function SkillTable({
               {combinedDropTable?.map((drop) => {
                 const itemName = clientData.itemDetailMap[drop.itemHrid].name;
                 const dropRate = (drop.dropRate * 100).toFixed(2);
-                const dropQuantityBonus = 1 + (drinkStats['/buff_types/gathering'] ?? 0);
-                const minDropQuantity = (drop.minCount * dropQuantityBonus).toFixed(2);
-                const maxDropQuantity = (drop.maxCount * dropQuantityBonus).toFixed(2);
+                const teaDropQuantityBonus =
+                  1 + (drinkStats['/buff_types/gathering'] ?? 0);
+                const equipDropQuantitybonus =
+                  1 + (equipmentStats['gatheringQuantity'] ?? 0);
+                const dropQuantitybonus = teaDropQuantityBonus + equipDropQuantitybonus;
+                const minDropQuantity = (drop.minCount * dropQuantitybonus).toFixed(2);
+                const maxDropQuantity = (drop.maxCount * dropQuantitybonus).toFixed(2);
 
                 const strippedItemHrid = drop.itemHrid.split('/').at(-1);
                 const icon = (
