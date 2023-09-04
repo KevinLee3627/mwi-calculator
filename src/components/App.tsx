@@ -17,7 +17,7 @@ const App = () => {
                 data-tip="Menu"
               >
                 <label className="btn-ghost btn-square btn" htmlFor="drawer-sidebar">
-                  <Bars3Icon className="h-6 w-6" />
+                  <Bars3Icon className="h-8 w-8" />
                 </label>
               </span>
               <div className="flex place-items-center gap-2">
@@ -27,7 +27,6 @@ const App = () => {
           </nav>
           <div className="flex-1">
             <SkillPage actionTypeHrid="/action_types/cheesesmithing" />
-            {/* <div>ls</div> */}
           </div>
         </div>
         <Sidebar />
