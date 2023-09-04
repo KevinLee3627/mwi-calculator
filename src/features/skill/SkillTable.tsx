@@ -7,7 +7,7 @@ import {
   SortingState,
   useReactTable
 } from '@tanstack/react-table';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ActionDetail } from 'src/core/actions/ActionDetail';
 import { NonCombatActionTypeHrid } from 'src/core/actions/NonCombatActionTypeHrid';
 import { clientData } from 'src/core/clientData';
@@ -38,7 +38,15 @@ export function SkillTable({
     [actionTypeHrid]
   );
 
-  const [data] = useState<ActionDetail[]>(defaultData);
+  const [data, setData] = useState<ActionDetail[]>(defaultData);
+
+  useEffect(() => {
+    setData(
+      Object.values(clientData.actionDetailMap).filter(
+        (value) => value.type === actionTypeHrid
+      )
+    );
+  }, [actionTypeHrid]);
 
   const columnHelper = useMemo(() => createColumnHelper<ActionDetail>(), []);
 

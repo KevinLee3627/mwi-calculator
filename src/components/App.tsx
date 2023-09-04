@@ -1,10 +1,18 @@
 import { Bars3Icon } from '@heroicons/react/24/solid';
 import { Sidebar } from 'src/components/Sidebar';
+import { NonCombatSkillHrid } from 'src/core/skills/NonCombatSkillHrid';
 import { CharacterEquipment } from 'src/features/character/equipment/CharacterEquipment';
 import { CharacterLevels } from 'src/features/character/levels/CharacterLevels';
+import { selectActiveSkillState } from 'src/features/navigation/activeSkillSlice';
 import { SkillPage } from 'src/features/skill/SkillPage';
+import { useAppSelector } from 'src/hooks/useAppSelector';
+import { skillHridToActionType } from 'src/util/hridConverters';
 
 const App = () => {
+  const activeSkillState = useAppSelector(selectActiveSkillState);
+  const activeSkill = Object.keys(activeSkillState).find(
+    (key) => activeSkillState[key as NonCombatSkillHrid]
+  ) as NonCombatSkillHrid;
   return (
     <>
       <div className="drawer lg:drawer-open">
@@ -26,7 +34,7 @@ const App = () => {
             </div>
           </nav>
           <div className="flex-1">
-            <SkillPage actionTypeHrid="/action_types/cheesesmithing" />
+            <SkillPage actionTypeHrid={skillHridToActionType(activeSkill)} />
           </div>
         </div>
         <Sidebar />

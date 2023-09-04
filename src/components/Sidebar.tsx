@@ -1,3 +1,7 @@
+import { clientData } from 'src/core/clientData';
+import { NonCombatSkillHrid } from 'src/core/skills/NonCombatSkillHrid';
+import { setActiveSkill } from 'src/features/navigation/activeSkillSlice';
+import { useAppDispatch } from 'src/hooks/useAppDispatch';
 import { svgHrefs } from 'src/util/svgHrefs';
 
 export function Sidebar() {
@@ -39,92 +43,52 @@ export function Sidebar() {
           <li>
             <h2 className="menu-title">Gathering</h2>
             <ul>
-              <li>
-                <span>
-                  <svg className="h-4 w-4">
-                    <use href={`${svgHrefs.skills}#milking`}></use>
-                  </svg>
-                  Milking
-                </span>
-              </li>
-              <li>
-                <span>
-                  <svg className="h-4 w-4">
-                    <use href={`${svgHrefs.skills}#foraging`}></use>
-                  </svg>
-                  Foraging
-                </span>
-              </li>
-              <li>
-                <span>
-                  <svg className="h-4 w-4">
-                    <use href={`${svgHrefs.skills}#woodcutting`}></use>
-                  </svg>
-                  Woodcutting
-                </span>
-              </li>
+              <SidebarSkillTab skillHrid="/skills/milking" />
+              <SidebarSkillTab skillHrid="/skills/foraging" />
+              <SidebarSkillTab skillHrid="/skills/woodcutting" />
             </ul>
           </li>
           <li>
             <h2 className="menu-title">Production</h2>
             <ul>
-              <li>
-                <span>
-                  <svg className="h-4 w-4">
-                    <use href={`${svgHrefs.skills}#cheesesmithing`}></use>
-                  </svg>
-                  Cheesesmithing
-                </span>
-              </li>
-              <li>
-                <span>
-                  <svg className="h-4 w-4">
-                    <use href={`${svgHrefs.skills}#crafting`}></use>
-                  </svg>
-                  Crafting
-                </span>
-              </li>
-              <li>
-                <span>
-                  <svg className="h-4 w-4">
-                    <use href={`${svgHrefs.skills}#tailoring`}></use>
-                  </svg>
-                  Tailoring
-                </span>
-              </li>
-              <li>
-                <span>
-                  <svg className="h-4 w-4">
-                    <use href={`${svgHrefs.skills}#cooking`}></use>
-                  </svg>
-                  Cooking
-                </span>
-              </li>
-              <li>
-                <span>
-                  <svg className="h-4 w-4">
-                    <use href={`${svgHrefs.skills}#brewing`}></use>
-                  </svg>
-                  Brewing
-                </span>
-              </li>
+              <SidebarSkillTab skillHrid="/skills/cheesesmithing" />
+              <SidebarSkillTab skillHrid="/skills/crafting" />
+              <SidebarSkillTab skillHrid="/skills/tailoring" />
+              <SidebarSkillTab skillHrid="/skills/cooking" />
+              <SidebarSkillTab skillHrid="/skills/brewing" />
             </ul>
           </li>
           <li>
             <h2 className="menu-title">Miscellanous</h2>
             <ul>
-              <li>
-                <span>
-                  <svg className="h-4 w-4">
-                    <use href={`${svgHrefs.skills}#enhancing`}></use>
-                  </svg>
-                  Enhancing
-                </span>
-              </li>
+              <SidebarSkillTab skillHrid="/skills/enhancing" />
             </ul>
           </li>
         </ul>
       </aside>
     </div>
+  );
+}
+
+interface SidebarSkillTabProps {
+  skillHrid: NonCombatSkillHrid;
+}
+function SidebarSkillTab({ skillHrid }: SidebarSkillTabProps) {
+  const dispatch = useAppDispatch();
+
+  const skillHridStripped = skillHrid.split('/').at(-1);
+  return (
+    <li
+      onClick={() => {
+        dispatch(setActiveSkill({ skillHrid }));
+      }}
+    >
+      <span>
+        <svg className="h-4 w-4">
+          <use href={`${svgHrefs.skills}#${skillHridStripped}`}></use>
+        </svg>
+        {clientData.skillDetailMap[skillHrid].name}
+      </span>
+    </li>
   );
 }
