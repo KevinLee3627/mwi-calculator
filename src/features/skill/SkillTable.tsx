@@ -184,11 +184,11 @@ export function SkillTable({
           );
         }
       }),
-      columnHelper.accessor((row) => row.function, {
+      columnHelper.accessor((row) => row.inputItems, {
         header: 'Input',
         id: 'inputItems',
         cell: (info) => {
-          const { inputItems, upgradeItemHrid } = info.row.original;
+          const { inputItems } = info.row.original;
           if (inputItems == null) return null;
           const itemElems = inputItems.map((item) => {
             const strippedItemHrid = item.itemHrid.split('/').at(-1);
@@ -203,6 +203,33 @@ export function SkillTable({
                     <use href={`${svgHrefs.items}#${strippedItemHrid}`}></use>
                   </svg>
                   {itemDetail.name} ({inputCost.toFixed(2)})
+                </span>
+              </div>
+            );
+          });
+
+          return itemElems;
+        }
+      }),
+      columnHelper.accessor((row) => row.outputItems, {
+        header: 'Output',
+        id: 'outputItems',
+        cell: (info) => {
+          const { outputItems, upgradeItemHrid } = info.row.original;
+          if (outputItems == null) return null;
+          const itemElems = outputItems.map((item) => {
+            const strippedItemHrid = item.itemHrid.split('/').at(-1);
+            const itemDetail = clientData.itemDetailMap[item.itemHrid];
+
+            const gourmetTeaBonus = drinkStats['/buff_types/gourmet'] ?? 0;
+            const output = item.count * (1 + gourmetTeaBonus);
+            return (
+              <div key={item.itemHrid}>
+                <span>
+                  <svg className="mr-1 inline h-4 w-4">
+                    <use href={`${svgHrefs.items}#${strippedItemHrid}`}></use>
+                  </svg>
+                  {itemDetail.name} ({output.toFixed(2)})
                 </span>
               </div>
             );
