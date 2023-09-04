@@ -79,7 +79,12 @@ export function SkillTable({
     () => [
       columnHelper.accessor((row) => row.levelRequirement.level, {
         header: 'Level Req.',
-        id: 'levelRequirement'
+        id: 'levelRequirement',
+        cell: (info) => {
+          const baseLevelReq = info.row.original.levelRequirement.level;
+          const artisanTeaPenalty = drinkStats['/buff_types/artisan'] ? 5 : 0;
+          return baseLevelReq + artisanTeaPenalty;
+        }
       }),
       columnHelper.accessor('name', { header: 'Action' }),
       columnHelper.accessor((row) => row.experienceGain.value, {
