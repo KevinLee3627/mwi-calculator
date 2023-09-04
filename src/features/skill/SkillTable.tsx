@@ -236,7 +236,7 @@ export function SkillTable({
         header: 'Output',
         id: 'outputItems',
         cell: (info) => {
-          const { outputItems, upgradeItemHrid } = info.row.original;
+          const { outputItems } = info.row.original;
           if (outputItems == null) return null;
           const itemElems = outputItems.map((item) => {
             const strippedItemHrid = item.itemHrid.split('/').at(-1);
