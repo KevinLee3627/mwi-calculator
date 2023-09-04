@@ -26,32 +26,16 @@ interface SkillTableProps {
   equipmentStats: ReturnType<typeof computeEquipmentStats>;
   drinkStats: ReturnType<typeof computeDrinkStats>;
   characterLevels: CharacterLevelState;
+  data: ActionDetail[];
 }
 export function SkillTable({
   actionTypeHrid,
   actionFunctionHrid,
   equipmentStats,
   drinkStats,
-  characterLevels
+  characterLevels,
+  data
 }: SkillTableProps) {
-  const defaultData = useMemo(
-    () =>
-      Object.values(clientData.actionDetailMap).filter(
-        (value) => value.type === actionTypeHrid
-      ),
-    [actionTypeHrid]
-  );
-
-  const [data, setData] = useState<ActionDetail[]>(defaultData);
-
-  useEffect(() => {
-    setData(
-      Object.values(clientData.actionDetailMap).filter(
-        (value) => value.type === actionTypeHrid
-      )
-    );
-  }, [actionTypeHrid]);
-
   const [sorting, setSorting] = useState<SortingState>([
     { id: 'levelRequirement', desc: false }
   ]);

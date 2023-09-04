@@ -1,4 +1,8 @@
+import { useMemo, useState } from 'react';
+import { Select } from 'src/components/Select';
 import { NonCombatActionTypeHrid } from 'src/core/actions/NonCombatActionTypeHrid';
+import { clientData } from 'src/core/clientData';
+import { ActionCategoryHrid } from 'src/core/hrid/ActionCategoryHrid';
 import { NonCombatStats } from 'src/core/items/NonCombatStats';
 import { CharacterEnhancementSelect } from 'src/features/character/enhancements/CharacterEnhancementSelect';
 import { selectCharacterEnhancement } from 'src/features/character/enhancements/characterEnhancementSlice';
@@ -15,7 +19,6 @@ import {
 import { computeDrinkStats } from 'src/features/skill/drinks/computeDrinkStats';
 import { selectSkillDrinks } from 'src/features/skill/drinks/drinksSlice';
 import { SkillDrinksSelect } from 'src/features/skill/drinks/SkillDrinksSelect';
-import { SkillStats } from 'src/features/skill/SkillStats';
 import { SkillTable } from 'src/features/skill/SkillTable';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import { actionTypeToSkillHrid } from 'src/util/hridConverters';
@@ -35,10 +38,27 @@ export function SkillPage({ actionTypeHrid }: SkillPageProps) {
   const drinkStats = computeDrinkStats(drinks, actionTypeHrid);
 
   const actionFunctionHrid = actionTypeActionFunctionMapping[actionTypeHrid];
+
+  const validActions = useMemo(
+    () =>
+      Object.values(clientData.actionDetailMap).filter(
+        (value) => value.type === actionTypeHrid
+      ),
+    [actionTypeHrid]
+  );
+  const actionCategoryHrids = useMemo(() => {
+    return Array.from(new Set(validActions.map((val) => val.category)));
+  }, [validActions]);
+
+  const [actionCategoryHrid, setActionCategoryHrid] = useState<ActionCategoryHrid>();
+  const tableData = useMemo(() => {
+    console.log(actionCategoryHrid);
+    if (actionCategoryHrid == null) return validActions;
+    else return validActions.filter((val) => val.category === actionCategoryHrid);
+  }, [validActions, actionCategoryHrid]);
   return (
     <div>
-      {/* <SkillStats actionTypeHrid={actionTypeHrid} /> */}
-      <div className="flex max-w-fit flex-col items-start sm:flex-row sm:items-end">
+      <div className="flex max-w-fit flex-col items-start sm:max-w-full sm:flex-row sm:items-end">
         <div className="ml-4 sm:ml-0">
           <CharacterLevelInput skillHrid={actionTypeToSkillHrid(actionTypeHrid)} />
         </div>
@@ -56,6 +76,21 @@ export function SkillPage({ actionTypeHrid }: SkillPageProps) {
             itemLocationHrid={actionTypeToolLocationMapping[actionTypeHrid]}
           />
         </div>
+        <div className="ml-4">
+          <label className="label">
+            <span className="label-text">Category</span>
+          </label>
+          <Select
+            options={actionCategoryHrids.map((category) => ({
+              label: clientData.actionCategoryDetailMap[category].name,
+              value: category
+            }))}
+            onChange={(selected) => {
+              setActionCategoryHrid(selected?.value);
+            }}
+            isClearable
+          />
+        </div>
       </div>
       <SkillTable
         actionTypeHrid={actionTypeHrid}
@@ -63,6 +98,7 @@ export function SkillPage({ actionTypeHrid }: SkillPageProps) {
         equipmentStats={equipmentStats}
         drinkStats={drinkStats}
         characterLevels={levels}
+        data={tableData}
       />
     </div>
   );
