@@ -2,9 +2,9 @@ export function Sidebar() {
   return (
     <div className="drawer-side">
       <label htmlFor="drawer-sidebar" className="drawer-overlay"></label>
-      <aside className="mt-4">
-        <span className="p-4 pl-6 font-extrabold">mwi-calculator</span>
-        <ul className="menu sticky bg-base-100 text-base-content">
+      <aside className=" bg-base-100 ">
+        <div className="hidden pl-6 pt-4 font-extrabold lg:block">mwi-calculator</div>
+        <ul className="menu sticky text-base-content">
           <li>
             <span
               onClick={() => {
