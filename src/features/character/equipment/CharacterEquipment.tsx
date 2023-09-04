@@ -31,7 +31,9 @@ export function CharacterEquipment() {
           itemLocationHrid={itemLocationHrid}
           possibleItems={itemLocationToItemMap[itemLocationHrid]}
         />
-        <CharacterEnhancementSelect itemLocationHrid={itemLocationHrid} />
+        <div className="min-w-fit">
+          <CharacterEnhancementSelect itemLocationHrid={itemLocationHrid} />
+        </div>
       </div>
     );
   }
