@@ -31,9 +31,9 @@ export function SkillPage({ actionTypeHrid }: SkillPageProps) {
   >;
   const drinkStats = computeDrinkStats(drinks, actionTypeHrid);
   return (
-    <div className="mx-auto w-11/12">
+    <div>
       {/* <SkillStats actionTypeHrid={actionTypeHrid} /> */}
-      <div className="flex items-end">
+      <div className="flex flex-col items-start sm:flex-row sm:items-end">
         <div>
           <CharacterLevelInput skillHrid={actionTypeToSkillHrid(actionTypeHrid)} />
         </div>
