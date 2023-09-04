@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Select } from 'src/components/Select';
 import { NonCombatActionTypeHrid } from 'src/core/actions/NonCombatActionTypeHrid';
 import { clientData } from 'src/core/clientData';
@@ -56,6 +56,12 @@ export function SkillPage({ actionTypeHrid }: SkillPageProps) {
     if (actionCategoryHrid == null) return validActions;
     else return validActions.filter((val) => val.category === actionCategoryHrid);
   }, [validActions, actionCategoryHrid]);
+
+  useEffect(() => {
+    // Resets the category dropdown when switching skills
+    setActionCategoryHrid(undefined);
+  }, [actionTypeHrid]);
+
   return (
     <div>
       <div className="flex max-w-fit flex-col items-start sm:max-w-full sm:flex-row sm:items-end">
@@ -81,6 +87,12 @@ export function SkillPage({ actionTypeHrid }: SkillPageProps) {
             <span className="label-text">Category</span>
           </label>
           <Select
+            value={{
+              label: actionCategoryHrid
+                ? clientData.actionCategoryDetailMap[actionCategoryHrid].name
+                : '',
+              value: actionCategoryHrid
+            }}
             options={actionCategoryHrids.map((category) => ({
               label: clientData.actionCategoryDetailMap[category].name,
               value: category
