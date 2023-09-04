@@ -1,7 +1,8 @@
 import { BuffTypeHrid } from 'src/core/hrid/BuffTypeHrid';
+import { BuffUniquesHrid } from 'src/core/hrid/BuffUniquesHrid';
 
 export interface BuffDetail {
-  uniqueHrid: null; // TODO
+  uniqueHrid: BuffUniquesHrid;
   typeHrid: BuffTypeHrid;
   ratioBoost: number;
   ratioBoostLevelBonus: number;
