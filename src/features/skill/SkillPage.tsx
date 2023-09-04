@@ -8,7 +8,10 @@ import { computeEquipmentStats } from 'src/features/character/equipment/computeE
 import { CharacterLevelInput } from 'src/features/character/levels/CharacterLevelInput';
 import { selectCharacterLevel } from 'src/features/character/levels/characterLevelSlice';
 import { itemLocationToItemMap } from 'src/features/itemLocationToItemMap';
-import { actionTypeToolLocationMapping } from 'src/features/skill/actionTypeStatMapping';
+import {
+  actionTypeActionFunctionMapping,
+  actionTypeToolLocationMapping
+} from 'src/features/skill/actionTypeStatMapping';
 import { computeDrinkStats } from 'src/features/skill/drinks/computeDrinkStats';
 import { selectSkillDrinks } from 'src/features/skill/drinks/drinksSlice';
 import { SkillDrinksSelect } from 'src/features/skill/drinks/SkillDrinksSelect';
@@ -30,6 +33,8 @@ export function SkillPage({ actionTypeHrid }: SkillPageProps) {
     number
   >;
   const drinkStats = computeDrinkStats(drinks, actionTypeHrid);
+
+  const actionFunctionHrid = actionTypeActionFunctionMapping[actionTypeHrid];
   return (
     <div>
       {/* <SkillStats actionTypeHrid={actionTypeHrid} /> */}
@@ -54,6 +59,7 @@ export function SkillPage({ actionTypeHrid }: SkillPageProps) {
       </div>
       <SkillTable
         actionTypeHrid={actionTypeHrid}
+        actionFunctionHrid={actionFunctionHrid}
         equipmentStats={equipmentStats}
         drinkStats={drinkStats}
         characterLevels={levels}

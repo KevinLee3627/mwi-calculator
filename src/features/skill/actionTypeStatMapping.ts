@@ -1,4 +1,5 @@
 import { NonCombatActionTypeHrid } from 'src/core/actions/NonCombatActionTypeHrid';
+import { ActionFunctionHrid } from 'src/core/hrid/ActionFunctionHrid';
 import { NonCombatStats } from 'src/core/items/NonCombatStats';
 import { PossibleCharacterEquipmentLocationHrid } from 'src/features/character/equipment/characterEquipmentSlice';
 
@@ -108,4 +109,19 @@ export const actionTypeToolLocationMapping: Record<
   '/action_types/milking': '/item_locations/milking_tool',
   '/action_types/tailoring': '/item_locations/tailoring_tool',
   '/action_types/woodcutting': '/item_locations/woodcutting_tool'
+};
+
+export const actionTypeActionFunctionMapping: Record<
+  NonCombatActionTypeHrid,
+  ActionFunctionHrid
+> = {
+  '/action_types/brewing': '/action_functions/production',
+  '/action_types/cheesesmithing': '/action_functions/production',
+  '/action_types/cooking': '/action_functions/production',
+  '/action_types/crafting': '/action_functions/production',
+  '/action_types/enhancing': '/action_functions/enhancing',
+  '/action_types/foraging': '/action_functions/gathering',
+  '/action_types/milking': '/action_functions/gathering',
+  '/action_types/tailoring': '/action_functions/production',
+  '/action_types/woodcutting': '/action_functions/gathering'
 };

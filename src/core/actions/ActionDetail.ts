@@ -21,8 +21,8 @@ export interface ActionDetail {
   dropTable: null | DropTableEntry[];
   rareDropTable: null | DropTableEntry[];
   upgradeItemHrid: '' | ItemHrid;
-  inputItems: InputItem[];
-  outputItems: InputItem[]; // TODO - Rename?
+  inputItems: InputItem[] | null;
+  outputItems: InputItem[] | null; // TODO - Rename?
   monsterSpawnInfo: MonsterSpawnInfo;
   sortIndex: number;
 }

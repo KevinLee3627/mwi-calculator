@@ -11,6 +11,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { ActionDetail } from 'src/core/actions/ActionDetail';
 import { NonCombatActionTypeHrid } from 'src/core/actions/NonCombatActionTypeHrid';
 import { clientData } from 'src/core/clientData';
+import { ActionFunctionHrid } from 'src/core/hrid/ActionFunctionHrid';
 import { computeEquipmentStats } from 'src/features/character/equipment/computeEquipmentStats';
 import { CharacterLevelState } from 'src/features/character/levels/characterLevelSlice';
 import { computeSkillEfficiency } from 'src/features/skill/computeSkillEfficiency';
@@ -21,12 +22,14 @@ import { svgHrefs } from 'src/util/svgHrefs';
 
 interface SkillTableProps {
   actionTypeHrid: NonCombatActionTypeHrid;
+  actionFunctionHrid: ActionFunctionHrid;
   equipmentStats: ReturnType<typeof computeEquipmentStats>;
   drinkStats: ReturnType<typeof computeDrinkStats>;
   characterLevels: CharacterLevelState;
 }
 export function SkillTable({
   actionTypeHrid,
+  actionFunctionHrid,
   equipmentStats,
   drinkStats,
   characterLevels
@@ -49,8 +52,27 @@ export function SkillTable({
     );
   }, [actionTypeHrid]);
 
-  const columnHelper = useMemo(() => createColumnHelper<ActionDetail>(), []);
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: 'levelRequirement', desc: false }
+  ]);
+  const [columnVisibility, setColumnVisibility] = useState({});
 
+  useEffect(() => {
+    console.log(`Changed!`);
+    if (actionFunctionHrid === '/action_functions/production')
+      setColumnVisibility((columnVisibility) => ({
+        ...columnVisibility,
+        inputItems: true
+      }));
+    else {
+      setColumnVisibility((columnVisibility) => ({
+        ...columnVisibility,
+        inputItems: false
+      }));
+    }
+  }, [actionFunctionHrid]);
+
+  const columnHelper = useMemo(() => createColumnHelper<ActionDetail>(), []);
   const columns = useMemo(
     () => [
       columnHelper.accessor((row) => row.levelRequirement.level, {
@@ -161,22 +183,46 @@ export function SkillTable({
             </>
           );
         }
+      }),
+      columnHelper.accessor((row) => row.function, {
+        header: 'Input',
+        id: 'inputItems',
+        cell: (info) => {
+          const { inputItems, upgradeItemHrid } = info.row.original;
+          if (inputItems == null) return null;
+          const itemElems = inputItems.map((item) => {
+            const strippedItemHrid = item.itemHrid.split('/').at(-1);
+            const itemDetail = clientData.itemDetailMap[item.itemHrid];
+
+            const artisanTeaBonus = drinkStats['/buff_types/artisan'] ?? 0;
+            const inputCost = item.count * (1 - artisanTeaBonus);
+            return (
+              <div key={item.itemHrid}>
+                <span>
+                  <svg className="mr-1 inline h-4 w-4">
+                    <use href={`${svgHrefs.items}#${strippedItemHrid}`}></use>
+                  </svg>
+                  {itemDetail.name} ({inputCost.toFixed(2)})
+                </span>
+              </div>
+            );
+          });
+
+          return itemElems;
+        }
       })
     ],
     [columnHelper, actionTypeHrid, drinkStats, characterLevels, equipmentStats]
   );
 
-  const [sorting, setSorting] = useState<SortingState>([
-    { id: 'levelRequirement', desc: false }
-  ]);
-
   const table = useReactTable({
     data,
     columns,
-    state: { sorting },
+    state: { sorting, columnVisibility },
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    onSortingChange: setSorting
+    onSortingChange: setSorting,
+    onColumnVisibilityChange: setColumnVisibility
   });
 
   return (
