@@ -48,7 +48,7 @@ export function SkillPage({ actionTypeHrid }: SkillPageProps) {
             }
           />
         </div>
-        <div className="ml-4">
+        <div className="ml-2">
           <CharacterEnhancementSelect
             itemLocationHrid={actionTypeToolLocationMapping[actionTypeHrid]}
           />
