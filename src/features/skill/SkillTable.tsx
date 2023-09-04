@@ -137,18 +137,20 @@ export function SkillTable({
               {headerGroup.headers.map((header) => (
                 <th key={header.id}>
                   {header.isPlaceholder ? null : (
-                    <div
-                      className={`${
-                        header.column.getCanSort() ? 'cursor-pointer select-none' : ''
-                      } flex`}
-                      onClick={header.column.getToggleSortingHandler()}
-                    >
-                      {flexRender(header.column.columnDef.header, header.getContext())}
-                      {{
-                        asc: <ChevronUpIcon className="h-4 w-4" />,
-                        desc: <ChevronDownIcon className="h-4 w-4" />
-                      }[header.column.getIsSorted() as string] ?? null}
-                    </div>
+                    <>
+                      <div
+                        className={`${
+                          header.column.getCanSort() ? 'cursor-pointer select-none' : ''
+                        } flex`}
+                        onClick={header.column.getToggleSortingHandler()}
+                      >
+                        {flexRender(header.column.columnDef.header, header.getContext())}
+                        {{
+                          asc: <ChevronUpIcon className="h-4 w-4" />,
+                          desc: <ChevronDownIcon className="h-4 w-4" />
+                        }[header.column.getIsSorted() as string] ?? null}
+                      </div>
+                    </>
                   )}
                 </th>
               ))}
