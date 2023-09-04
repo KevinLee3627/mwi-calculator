@@ -6,6 +6,7 @@ import {
 } from 'src/features/character/levels/characterLevelSlice';
 import { useAppDispatch } from 'src/hooks/useAppDispatch';
 import { useAppSelector } from 'src/hooks/useAppSelector';
+import { svgHrefs } from 'src/util/svgHrefs';
 
 interface CharacterLevelInputProps {
   skillHrid: NonCombatSkillHrid;
@@ -16,10 +17,20 @@ export function CharacterLevelInput({ skillHrid }: CharacterLevelInputProps) {
   const levels = useAppSelector(selectCharacterLevel);
   const dispatch = useAppDispatch();
 
+  const skillHridStripped = skillHrid.replace('/skills/', '');
+  const icon = (
+    <svg className="mr-1 inline h-4 w-4" key={`${skillHrid}_icon_key`}>
+      <use href={`${svgHrefs.skills}#${skillHridStripped}`}></use>
+    </svg>
+  );
+
   return (
     <div className="form-control" key={`${skillHrid}_key`}>
       <label className="label">
-        <span className="label-text">{skillName} Level</span>
+        <span className="label-text">
+          {icon}
+          {skillName} Level
+        </span>
       </label>
       <input
         type="number"

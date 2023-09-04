@@ -5,6 +5,7 @@ import { clientData } from 'src/core/clientData';
 import { selectSkillDrinks, setSkillDrinks } from 'src/features/skill/drinks/drinksSlice';
 import { useAppDispatch } from 'src/hooks/useAppDispatch';
 import { useAppSelector } from 'src/hooks/useAppSelector';
+import { svgHrefs } from 'src/util/svgHrefs';
 
 interface SkillDrinksSelectProps {
   actionTypeHrid: NonCombatActionTypeHrid;
@@ -25,10 +26,22 @@ export function SkillDrinksSelect({ actionTypeHrid }: SkillDrinksSelectProps) {
         item.consumableDetail.usableInActionTypeMap[actionTypeHrid] === true
     );
   }, [actionTypeHrid]);
+
+  const drinkIcons = skillDrinks[actionTypeHrid]?.map((drink) => {
+    const drinkHridStripped = drink.hrid.replace('/items/', '');
+    return (
+      <svg className="inline h-4 w-4" key={drink.hrid}>
+        <use href={`${svgHrefs.items}#${drinkHridStripped}`}></use>
+      </svg>
+    );
+  });
   return (
     <div className="form-control">
       <label className="label">
-        <span className="label-text">Drinks</span>
+        <span className="label-text">
+          Drinks
+          {drinkIcons}
+        </span>
       </label>
       <Select
         isMulti

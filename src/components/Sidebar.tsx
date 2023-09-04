@@ -5,7 +5,12 @@ export function Sidebar() {
     <div className="drawer-side">
       <label htmlFor="drawer-sidebar" className="drawer-overlay"></label>
       <aside className=" bg-base-100 ">
-        <div className="hidden pl-6 pt-4 font-extrabold lg:block">mwi-calculator</div>
+        <div className="hidden pl-6 pt-4 font-extrabold lg:block">
+          <svg className="mr-1 inline h-4 w-4">
+            <use href={`${svgHrefs.chat_icons}#book`}></use>
+          </svg>
+          mwi-calculator
+        </div>
         <ul className="menu sticky text-base-content">
           <li>
             <span

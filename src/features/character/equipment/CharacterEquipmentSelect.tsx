@@ -9,6 +9,7 @@ import {
 } from 'src/features/character/equipment/characterEquipmentSlice';
 import { useAppDispatch } from 'src/hooks/useAppDispatch';
 import { useAppSelector } from 'src/hooks/useAppSelector';
+import { svgHrefs } from 'src/util/svgHrefs';
 
 interface CharacterEquipmentSelectProps {
   itemLocationHrid: PossibleCharacterEquipmentLocationHrid;
@@ -24,12 +25,18 @@ export function CharacterEquipmentSelect({
 
   const itemLocationName = clientData.itemLocationDetailMap[itemLocationHrid].name;
   const location = itemLocationHrid.split('/').at(-1);
+  const itemHridStripped = equipment[itemLocationHrid]?.hrid.replace('/items/', '');
 
   if (location == null) return <></>;
   return (
     <div className="form-control">
       <label className="label">
-        <span className="label-text">{itemLocationName}</span>
+        <span className="label-text">
+          <svg className="mr-1 inline h-4 w-4">
+            <use href={`${svgHrefs.items}#${itemHridStripped}`}></use>
+          </svg>
+          {itemLocationName}
+        </span>
       </label>
       <Select
         name={`${itemLocationHrid}_select`}
