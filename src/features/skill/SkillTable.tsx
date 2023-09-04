@@ -17,6 +17,7 @@ import { computeSkillEfficiency } from 'src/features/skill/computeSkillEfficienc
 import { computeSkillTime } from 'src/features/skill/computeSkillTime';
 import { computeSkillXp } from 'src/features/skill/computeSkillXp';
 import { computeDrinkStats } from 'src/features/skill/drinks/computeDrinkStats';
+import { svgHrefs } from 'src/util/svgHrefs';
 
 interface SkillTableProps {
   actionTypeHrid: NonCombatActionTypeHrid;
@@ -99,6 +100,7 @@ export function SkillTable({
           const dropTable = info.row.original.dropTable ?? [];
           const rareDropTable = info.row.original.rareDropTable ?? [];
           const combinedDropTable = [...dropTable, ...rareDropTable];
+
           return (
             <div>
               {combinedDropTable?.map((drop) => {
@@ -107,10 +109,17 @@ export function SkillTable({
                 const dropQuantityBonus = 1 + (drinkStats['/buff_types/gathering'] ?? 0);
                 const minDropQuantity = (drop.minCount * dropQuantityBonus).toFixed(2);
                 const maxDropQuantity = (drop.maxCount * dropQuantityBonus).toFixed(2);
+
+                const strippedItemHrid = drop.itemHrid.split('/').at(-1);
+                const icon = (
+                  <svg className="mr-1 inline h-4 w-4">
+                    <use href={`${svgHrefs.items}#${strippedItemHrid}`}></use>
+                  </svg>
+                );
                 return (
                   <div key={drop.itemHrid}>
                     <span>
-                      {itemName} ({minDropQuantity}-{maxDropQuantity}) {dropRate}%
+                      {icon} {itemName} ({minDropQuantity}-{maxDropQuantity}) {dropRate}%
                     </span>
                   </div>
                 );
