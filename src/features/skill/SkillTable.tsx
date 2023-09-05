@@ -329,27 +329,29 @@ export function SkillTable({
   return (
     <div>
       <div className="flex items-end gap-2 ">
-        <div>
-          <label className="label">
-            <span className="label-text">Category</span>
-          </label>
-          <Select
-            value={{
-              label: actionCategoryHrid
-                ? clientData.actionCategoryDetailMap[actionCategoryHrid].name
-                : '',
-              value: actionCategoryHrid
-            }}
-            options={actionCategoryHrids.map((category) => ({
-              label: clientData.actionCategoryDetailMap[category].name,
-              value: category
-            }))}
-            onChange={(selected) => {
-              setActionCategoryHrid(selected?.value);
-            }}
-            isClearable
-          />
-        </div>
+        {actionFunctionHrid === '/action_functions/production' && (
+          <div>
+            <label className="label">
+              <span className="label-text">Category</span>
+            </label>
+            <Select
+              value={{
+                label: actionCategoryHrid
+                  ? clientData.actionCategoryDetailMap[actionCategoryHrid].name
+                  : '',
+                value: actionCategoryHrid
+              }}
+              options={actionCategoryHrids.map((category) => ({
+                label: clientData.actionCategoryDetailMap[category].name,
+                value: category
+              }))}
+              onChange={(selected) => {
+                setActionCategoryHrid(selected?.value);
+              }}
+              isClearable
+            />
+          </div>
+        )}
         <div className="dropdown">
           <label tabIndex={0} className="btn-primary btn-outline btn mt-2">
             Column Select
