@@ -1,8 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Select } from 'src/components/Select';
+import { useMemo } from 'react';
 import { NonCombatActionTypeHrid } from 'src/core/actions/NonCombatActionTypeHrid';
 import { clientData } from 'src/core/clientData';
-import { ActionCategoryHrid } from 'src/core/hrid/ActionCategoryHrid';
 import { NonCombatStats } from 'src/core/items/NonCombatStats';
 import { CharacterEnhancementSelect } from 'src/features/character/enhancements/CharacterEnhancementSelect';
 import { selectCharacterEnhancement } from 'src/features/character/enhancements/characterEnhancementSlice';
