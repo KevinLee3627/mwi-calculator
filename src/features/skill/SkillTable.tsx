@@ -8,9 +8,11 @@ import {
   useReactTable
 } from '@tanstack/react-table';
 import { useEffect, useMemo, useState } from 'react';
+import { Select } from 'src/components/Select';
 import { ActionDetail } from 'src/core/actions/ActionDetail';
 import { NonCombatActionTypeHrid } from 'src/core/actions/NonCombatActionTypeHrid';
 import { clientData } from 'src/core/clientData';
+import { ActionCategoryHrid } from 'src/core/hrid/ActionCategoryHrid';
 import { ActionFunctionHrid } from 'src/core/hrid/ActionFunctionHrid';
 import { computeEquipmentStats } from 'src/features/character/equipment/computeEquipmentStats';
 import { CharacterLevelState } from 'src/features/character/levels/characterLevelSlice';
@@ -36,27 +38,6 @@ export function SkillTable({
   characterLevels,
   data
 }: SkillTableProps) {
-  const [sorting, setSorting] = useState<SortingState>([
-    { id: 'levelRequirement', desc: false }
-  ]);
-  const [columnVisibility, setColumnVisibility] = useState({});
-
-  useEffect(() => {
-    if (actionFunctionHrid === '/action_functions/production')
-      setColumnVisibility((columnVisibility) => ({
-        ...columnVisibility,
-        inputItems: true,
-        outputItems: true
-      }));
-    else {
-      setColumnVisibility((columnVisibility) => ({
-        ...columnVisibility,
-        inputItems: false,
-        outputItems: false
-      }));
-    }
-  }, [actionFunctionHrid]);
-
   const columnHelper = useMemo(() => createColumnHelper<ActionDetail>(), []);
   const columns = useMemo(
     () => [
@@ -280,8 +261,45 @@ export function SkillTable({
     [columnHelper, actionTypeHrid, drinkStats, characterLevels, equipmentStats]
   );
 
+  const actionCategoryHrids = useMemo(
+    () => Array.from(new Set(data.map((val) => val.category))),
+    [data]
+  );
+
+  const [actionCategoryHrid, setActionCategoryHrid] = useState<ActionCategoryHrid>();
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: 'levelRequirement', desc: false }
+  ]);
+  const [columnVisibility, setColumnVisibility] = useState({});
+
+  useEffect(() => {
+    if (actionFunctionHrid === '/action_functions/production')
+      setColumnVisibility((columnVisibility) => ({
+        ...columnVisibility,
+        inputItems: true,
+        outputItems: true
+      }));
+    else {
+      setColumnVisibility((columnVisibility) => ({
+        ...columnVisibility,
+        inputItems: false,
+        outputItems: false
+      }));
+    }
+  }, [actionFunctionHrid]);
+
+  useEffect(() => {
+    // Resets the category dropdown when switching skills
+    setActionCategoryHrid(undefined);
+  }, [actionTypeHrid]);
+
+  const dataFilteredByCategory = useMemo(() => {
+    if (actionCategoryHrid == null) return data;
+    else return data.filter((val) => val.category === actionCategoryHrid);
+  }, [data, actionCategoryHrid]);
+
   const table = useReactTable({
-    data,
+    data: dataFilteredByCategory,
     columns,
     state: { sorting, columnVisibility },
     getCoreRowModel: getCoreRowModel(),
@@ -310,27 +328,50 @@ export function SkillTable({
 
   return (
     <div>
-      <div className="dropdown">
-        <label tabIndex={0} className="btn-primary btn-outline btn mt-2">
-          Column Select
-        </label>
-        <ul
-          tabIndex={0}
-          className="dropdown-content menu rounded-box z-50 bg-base-200 p-2 shadow"
-        >
-          <li className="mb-2">
-            <label>
-              <input
-                type="checkbox"
-                className="checkbox"
-                checked={table.getIsAllColumnsVisible()}
-                onChange={table.getToggleAllColumnsVisibilityHandler()}
-              />
-              Toggle All
-            </label>
-          </li>
-          {columnVisibilityCheckboxes}
-        </ul>
+      <div className="flex items-end gap-2 ">
+        <div>
+          <label className="label">
+            <span className="label-text">Category</span>
+          </label>
+          <Select
+            value={{
+              label: actionCategoryHrid
+                ? clientData.actionCategoryDetailMap[actionCategoryHrid].name
+                : '',
+              value: actionCategoryHrid
+            }}
+            options={actionCategoryHrids.map((category) => ({
+              label: clientData.actionCategoryDetailMap[category].name,
+              value: category
+            }))}
+            onChange={(selected) => {
+              setActionCategoryHrid(selected?.value);
+            }}
+            isClearable
+          />
+        </div>
+        <div className="dropdown">
+          <label tabIndex={0} className="btn-primary btn-outline btn mt-2">
+            Column Select
+          </label>
+          <ul
+            tabIndex={0}
+            className="dropdown-content menu rounded-box z-50 bg-base-200 p-2 shadow"
+          >
+            <li className="mb-2">
+              <label>
+                <input
+                  type="checkbox"
+                  className="checkbox"
+                  checked={table.getIsAllColumnsVisible()}
+                  onChange={table.getToggleAllColumnsVisibilityHandler()}
+                />
+                Toggle All
+              </label>
+            </li>
+            {columnVisibilityCheckboxes}
+          </ul>
+        </div>
       </div>
       <table className="table-pin-rows table-zebra table">
         <thead className="z-40">

@@ -39,28 +39,13 @@ export function SkillPage({ actionTypeHrid }: SkillPageProps) {
 
   const actionFunctionHrid = actionTypeActionFunctionMapping[actionTypeHrid];
 
-  const validActions = useMemo(
+  const tableData = useMemo(
     () =>
       Object.values(clientData.actionDetailMap).filter(
         (value) => value.type === actionTypeHrid
       ),
     [actionTypeHrid]
   );
-  const actionCategoryHrids = useMemo(() => {
-    return Array.from(new Set(validActions.map((val) => val.category)));
-  }, [validActions]);
-
-  const [actionCategoryHrid, setActionCategoryHrid] = useState<ActionCategoryHrid>();
-  const tableData = useMemo(() => {
-    console.log(actionCategoryHrid);
-    if (actionCategoryHrid == null) return validActions;
-    else return validActions.filter((val) => val.category === actionCategoryHrid);
-  }, [validActions, actionCategoryHrid]);
-
-  useEffect(() => {
-    // Resets the category dropdown when switching skills
-    setActionCategoryHrid(undefined);
-  }, [actionTypeHrid]);
 
   return (
     <div>
@@ -80,27 +65,6 @@ export function SkillPage({ actionTypeHrid }: SkillPageProps) {
           />
           <CharacterEnhancementSelect
             itemLocationHrid={actionTypeToolLocationMapping[actionTypeHrid]}
-          />
-        </div>
-        <div className="ml-4">
-          <label className="label">
-            <span className="label-text">Category</span>
-          </label>
-          <Select
-            value={{
-              label: actionCategoryHrid
-                ? clientData.actionCategoryDetailMap[actionCategoryHrid].name
-                : '',
-              value: actionCategoryHrid
-            }}
-            options={actionCategoryHrids.map((category) => ({
-              label: clientData.actionCategoryDetailMap[category].name,
-              value: category
-            }))}
-            onChange={(selected) => {
-              setActionCategoryHrid(selected?.value);
-            }}
-            isClearable
           />
         </div>
       </div>
