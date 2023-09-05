@@ -20,6 +20,7 @@ import { computeSkillEfficiency } from 'src/features/skill/computeSkillEfficienc
 import { computeSkillTime } from 'src/features/skill/computeSkillTime';
 import { computeSkillXp } from 'src/features/skill/computeSkillXp';
 import { computeDrinkStats } from 'src/features/skill/drinks/computeDrinkStats';
+import { actionTypeToSkillHrid } from 'src/util/hridConverters';
 import { svgHrefs } from 'src/util/svgHrefs';
 
 interface SkillTableProps {
@@ -38,6 +39,16 @@ export function SkillTable({
   characterLevels,
   data
 }: SkillTableProps) {
+  const [targetLevel, setTargetLevel] = useState(
+    characterLevels[actionTypeToSkillHrid(actionTypeHrid)] + 1
+  );
+  const [currentXp, setCurrentXp] = useState(1);
+  const [actionCategoryHrid, setActionCategoryHrid] = useState<ActionCategoryHrid>();
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: 'levelRequirement', desc: false }
+  ]);
+  const [columnVisibility, setColumnVisibility] = useState({});
+
   const columnHelper = useMemo(() => createColumnHelper<ActionDetail>(), []);
   const columns = useMemo(
     () => [
@@ -113,6 +124,51 @@ export function SkillTable({
             levelRequirement
           });
           return `${(efficiency * 100).toFixed(2)}%`;
+        }
+      }),
+      columnHelper.display({
+        header: '# Actions to Target',
+        id: 'actionsToTarget',
+        cell: (info) => {
+          const xpTable = clientData.levelExperienceTable;
+          const xpDifference = xpTable[targetLevel] - currentXp;
+          const xpPerAction = computeSkillXp({
+            equipmentStats,
+            drinkStats,
+            baseXp: info.row.original.experienceGain.value
+          });
+          return Math.ceil(xpDifference / xpPerAction);
+        }
+      }),
+      columnHelper.display({
+        header: 'Time to Target (s)',
+        id: 'timeToTarget',
+        cell: (info) => {
+          const xpTable = clientData.levelExperienceTable;
+          const xpDifference = xpTable[targetLevel] - currentXp;
+          const { experienceGain, levelRequirement, baseTimeCost } = info.row.original;
+          const xpPerAction = computeSkillXp({
+            equipmentStats,
+            drinkStats,
+            baseXp: experienceGain.value
+          });
+          const efficiency = computeSkillEfficiency({
+            actionTypeHrid,
+            equipmentStats,
+            drinkStats,
+            characterLevels,
+            levelRequirement: levelRequirement.level
+          });
+          const timePerAction = computeSkillTime({
+            actionTypeHrid,
+            equipmentStats,
+            baseTime: baseTimeCost
+          });
+
+          const numberOfActions = xpDifference / xpPerAction;
+          const effectiveTimePerAction = timePerAction / (1 + efficiency);
+          const secondsToTarget = Math.ceil(numberOfActions * effectiveTimePerAction);
+          return secondsToTarget;
         }
       }),
       columnHelper.accessor((row) => row.dropTable, {
@@ -258,19 +314,21 @@ export function SkillTable({
         }
       })
     ],
-    [columnHelper, actionTypeHrid, drinkStats, characterLevels, equipmentStats]
+    [
+      columnHelper,
+      actionTypeHrid,
+      drinkStats,
+      characterLevels,
+      equipmentStats,
+      currentXp,
+      targetLevel
+    ]
   );
 
   const actionCategoryHrids = useMemo(
     () => Array.from(new Set(data.map((val) => val.category))),
     [data]
   );
-
-  const [actionCategoryHrid, setActionCategoryHrid] = useState<ActionCategoryHrid>();
-  const [sorting, setSorting] = useState<SortingState>([
-    { id: 'levelRequirement', desc: false }
-  ]);
-  const [columnVisibility, setColumnVisibility] = useState({});
 
   useEffect(() => {
     if (actionFunctionHrid === '/action_functions/production')
@@ -305,8 +363,7 @@ export function SkillTable({
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     onSortingChange: setSorting,
-    onColumnVisibilityChange: setColumnVisibility,
-    debugColumns: true
+    onColumnVisibilityChange: setColumnVisibility
   });
 
   const columnVisibilityCheckboxes = table.getAllLeafColumns().map((col) => {
@@ -352,6 +409,36 @@ export function SkillTable({
             />
           </div>
         )}
+        <div className="flex gap-2">
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">Current XP</span>
+            </label>
+            <input
+              type="number"
+              className="input-bordered input-primary input"
+              inputMode="numeric"
+              min={0}
+              max={clientData.levelExperienceTable.at(-1)}
+              value={currentXp}
+              onChange={(e) => setCurrentXp(parseInt(e.target.value, 10))}
+            />
+          </div>
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">Target Level</span>
+            </label>
+            <input
+              type="number"
+              className="input-bordered input-primary input"
+              inputMode="numeric"
+              min={characterLevels[actionTypeToSkillHrid(actionTypeHrid)] + 1}
+              max={200}
+              value={targetLevel}
+              onChange={(e) => setTargetLevel(parseInt(e.target.value, 10))}
+            />
+          </div>
+        </div>
         <div className="dropdown">
           <label tabIndex={0} className="btn-primary btn-outline btn mt-2">
             Column Select
@@ -375,7 +462,7 @@ export function SkillTable({
           </ul>
         </div>
       </div>
-      <table className="table-pin-rows table-zebra table">
+      <table className="table-pin-rows table-zebra mt-1 table">
         <thead className="z-40">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
