@@ -28,7 +28,7 @@ export function Select<
       {...props}
       theme={customTheme}
       styles={{
-        control: (base) => ({ ...base, height: '3rem', minHeight: '3rem' }),
+        control: (base) => ({ ...base, minHeight: '3rem' }),
         // Stops table header from overlapping dropdown menus
         menu: (base) => ({ ...base, zIndex: 50 })
       }}
