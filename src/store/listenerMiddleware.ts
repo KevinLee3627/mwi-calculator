@@ -4,6 +4,7 @@ import { characterEquipmentSlice } from 'src/features/character/equipment/charac
 import { characterLevelSlice } from 'src/features/character/levels/characterLevelSlice';
 import { activeSkillSlice } from 'src/features/navigation/activeSkillSlice';
 import { skillDrinksSlice } from 'src/features/skill/drinks/drinksSlice';
+import { targetLevelSlice } from 'src/features/skill/targets/targetLevelSlice';
 import { store } from 'src/store/store';
 
 export const characterLevelListenerMiddleware = createListenerMiddleware();
@@ -63,5 +64,13 @@ activeSkillListenerMiddleware.startListening({
   actionCreator: activeSkillSlice.actions.setActiveSkill,
   effect: () => {
     localStorage.setItem('activeSkill', JSON.stringify(store.getState().activeSkill));
+  }
+});
+
+export const targetLevelListenerMiddleware = createListenerMiddleware();
+targetLevelListenerMiddleware.startListening({
+  actionCreator: targetLevelSlice.actions.setTargetLevel,
+  effect: () => {
+    localStorage.setItem('targetLevel', JSON.stringify(store.getState().targetLevel));
   }
 });

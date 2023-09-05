@@ -20,6 +20,12 @@ import { computeSkillEfficiency } from 'src/features/skill/computeSkillEfficienc
 import { computeSkillTime } from 'src/features/skill/computeSkillTime';
 import { computeSkillXp } from 'src/features/skill/computeSkillXp';
 import { computeDrinkStats } from 'src/features/skill/drinks/computeDrinkStats';
+import {
+  selectTargetLevel,
+  setTargetLevel
+} from 'src/features/skill/targets/targetLevelSlice';
+import { useAppDispatch } from 'src/hooks/useAppDispatch';
+import { useAppSelector } from 'src/hooks/useAppSelector';
 import { actionTypeToSkillHrid } from 'src/util/hridConverters';
 import { svgHrefs } from 'src/util/svgHrefs';
 
@@ -39,9 +45,8 @@ export function SkillTable({
   characterLevels,
   data
 }: SkillTableProps) {
-  const [targetLevel, setTargetLevel] = useState(
-    characterLevels[actionTypeToSkillHrid(actionTypeHrid)] + 1
-  );
+  const dispatch = useAppDispatch();
+  const targetLevelState = useAppSelector(selectTargetLevel);
   const [currentXp, setCurrentXp] = useState(1);
   const [actionCategoryHrid, setActionCategoryHrid] = useState<ActionCategoryHrid>();
   const [sorting, setSorting] = useState<SortingState>([
@@ -131,6 +136,9 @@ export function SkillTable({
         id: 'actionsToTarget',
         cell: (info) => {
           const xpTable = clientData.levelExperienceTable;
+          const skillHrid = actionTypeToSkillHrid(actionTypeHrid);
+          const targetLevel = targetLevelState[skillHrid];
+          if (targetLevel == null) return;
           const xpDifference = xpTable[targetLevel] - currentXp;
           const xpPerAction = computeSkillXp({
             equipmentStats,
@@ -145,6 +153,9 @@ export function SkillTable({
         id: 'timeToTarget',
         cell: (info) => {
           const xpTable = clientData.levelExperienceTable;
+          const skillHrid = actionTypeToSkillHrid(actionTypeHrid);
+          const targetLevel = targetLevelState[skillHrid];
+          if (targetLevel == null) return;
           const xpDifference = xpTable[targetLevel] - currentXp;
           const { experienceGain, levelRequirement, baseTimeCost } = info.row.original;
           const xpPerAction = computeSkillXp({
@@ -321,7 +332,7 @@ export function SkillTable({
       characterLevels,
       equipmentStats,
       currentXp,
-      targetLevel
+      targetLevelState
     ]
   );
 
@@ -434,8 +445,15 @@ export function SkillTable({
               inputMode="numeric"
               min={characterLevels[actionTypeToSkillHrid(actionTypeHrid)] + 1}
               max={200}
-              value={targetLevel}
-              onChange={(e) => setTargetLevel(parseInt(e.target.value, 10))}
+              value={targetLevelState[actionTypeToSkillHrid(actionTypeHrid)] ?? undefined}
+              onChange={(e) => {
+                dispatch(
+                  setTargetLevel({
+                    nonCombatSkillHrid: actionTypeToSkillHrid(actionTypeHrid),
+                    level: parseInt(e.target.value, 10)
+                  })
+                );
+              }}
             />
           </div>
         </div>

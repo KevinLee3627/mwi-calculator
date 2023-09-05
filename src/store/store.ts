@@ -20,11 +20,16 @@ import {
   skillDrinksSlice
 } from 'src/features/skill/drinks/drinksSlice';
 import {
+  targetLevelInitialState,
+  targetLevelSlice
+} from 'src/features/skill/targets/targetLevelSlice';
+import {
   activeSkillListenerMiddleware,
   characterEnhancementListenerMiddleware,
   characterEquipmentListenerMiddleware,
   characterLevelListenerMiddleware,
-  skillDrinksListenerMiddleware
+  skillDrinksListenerMiddleware,
+  targetLevelListenerMiddleware
 } from 'src/store/listenerMiddleware';
 
 const tryLocalStorage = (key: string, fallback: object) =>
@@ -38,7 +43,8 @@ export const store = configureStore({
     characterEquipment: characterEquipmentSlice.reducer,
     characterEnhancement: characterEnhancementSlice.reducer,
     skillDrinks: skillDrinksSlice.reducer,
-    activeSkill: activeSkillSlice.reducer
+    activeSkill: activeSkillSlice.reducer,
+    targetLevel: targetLevelSlice.reducer
   },
   middleware: (getDefaultMiddleware) => [
     ...getDefaultMiddleware(),
@@ -46,7 +52,8 @@ export const store = configureStore({
     characterEquipmentListenerMiddleware.middleware,
     characterEnhancementListenerMiddleware.middleware,
     skillDrinksListenerMiddleware.middleware,
-    activeSkillListenerMiddleware.middleware
+    activeSkillListenerMiddleware.middleware,
+    targetLevelListenerMiddleware.middleware
   ],
   preloadedState: {
     characterLevel: tryLocalStorage('characterLevel', characterLevelInitialState),
@@ -59,7 +66,8 @@ export const store = configureStore({
       characterEnhancementInitialState
     ),
     skillDrinks: tryLocalStorage('skillDrinks', skillDrinksInitialState),
-    activeSkill: tryLocalStorage('activeSkill', activeSkillInitialState)
+    activeSkill: tryLocalStorage('activeSkill', activeSkillInitialState),
+    targetLevel: tryLocalStorage('targetLevel', targetLevelInitialState)
   }
 });
 
