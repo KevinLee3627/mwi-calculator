@@ -42,7 +42,6 @@ export function SkillTable({
   const [columnVisibility, setColumnVisibility] = useState({});
 
   useEffect(() => {
-    console.log(`Changed!`);
     if (actionFunctionHrid === '/action_functions/production')
       setColumnVisibility((columnVisibility) => ({
         ...columnVisibility,
@@ -288,11 +287,51 @@ export function SkillTable({
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     onSortingChange: setSorting,
-    onColumnVisibilityChange: setColumnVisibility
+    onColumnVisibilityChange: setColumnVisibility,
+    debugColumns: true
+  });
+
+  const columnVisibilityCheckboxes = table.getAllLeafColumns().map((col) => {
+    const header = col.columnDef.header ?? '';
+    return (
+      <li key={col.id}>
+        <label>
+          <input
+            type="checkbox"
+            className="checkbox"
+            checked={col.getIsVisible()}
+            onChange={col.getToggleVisibilityHandler()}
+          />
+          {header.toString()}
+        </label>
+      </li>
+    );
   });
 
   return (
     <div>
+      <div className="dropdown">
+        <label tabIndex={0} className="btn-primary btn-outline btn mt-2">
+          Column Select
+        </label>
+        <ul
+          tabIndex={0}
+          className="dropdown-content menu rounded-box z-50 bg-base-200 p-2 shadow"
+        >
+          <li className="mb-2">
+            <label>
+              <input
+                type="checkbox"
+                className="checkbox"
+                checked={table.getIsAllColumnsVisible()}
+                onChange={table.getToggleAllColumnsVisibilityHandler()}
+              />
+              Toggle All
+            </label>
+          </li>
+          {columnVisibilityCheckboxes}
+        </ul>
+      </div>
       <table className="table-pin-rows table-zebra table">
         <thead className="z-40">
           {table.getHeaderGroups().map((headerGroup) => (
