@@ -4,6 +4,7 @@ import { NonCombatSkillHrid } from 'src/core/skills/NonCombatSkillHrid';
 import { CharacterEquipment } from 'src/features/character/equipment/CharacterEquipment';
 import { CharacterLevels } from 'src/features/character/levels/CharacterLevels';
 import { selectActiveSkillState } from 'src/features/navigation/activeSkillSlice';
+import { EnhancePage } from 'src/features/skill/EnhancePage';
 import { SkillPage } from 'src/features/skill/SkillPage';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import { skillHridToActionType } from 'src/util/hridConverters';
@@ -13,6 +14,12 @@ const App = () => {
   const activeSkill = Object.keys(activeSkillState).find(
     (key) => activeSkillState[key as NonCombatSkillHrid]
   ) as NonCombatSkillHrid;
+  const activePage =
+    activeSkill === '/skills/enhancing' ? (
+      <EnhancePage />
+    ) : (
+      <SkillPage actionTypeHrid={skillHridToActionType(activeSkill)} />
+    );
   return (
     <>
       <div className="drawer lg:drawer-open">
@@ -33,9 +40,7 @@ const App = () => {
               </div>
             </div>
           </nav>
-          <div className="flex-1">
-            <SkillPage actionTypeHrid={skillHridToActionType(activeSkill)} />
-          </div>
+          <div className="flex-1">{activePage}</div>
         </div>
         <Sidebar />
 

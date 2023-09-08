@@ -20,7 +20,6 @@ import { computeSkillEfficiency } from 'src/features/skill/computeSkillEfficienc
 import { computeSkillTime } from 'src/features/skill/computeSkillTime';
 import { computeSkillXp } from 'src/features/skill/computeSkillXp';
 import { computeDrinkStats } from 'src/features/skill/drinks/computeDrinkStats';
-import { EnhancingTable } from 'src/features/skill/EnhancingTable';
 import {
   selectTargetLevel,
   setTargetLevel
@@ -529,13 +528,5 @@ export function SkillTable({
         </table>
       </div>
     );
-  } else {
-    return (
-      <EnhancingTable
-        characterLevels={characterLevels}
-        drinkStats={drinkStats}
-        equipmentStats={equipmentStats}
-      />
-    );
-  }
+  } else return <div>wtf happened</div>;
 }
