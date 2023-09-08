@@ -19,9 +19,6 @@ interface EnhancingTableProps {
   targetLevel: number;
 }
 
-// enhancementLevel being the level you want to enhance an item to, not the
-// player's enhancement level
-
 export function EnhancingTable({
   equipmentStats,
   drinkStats,
@@ -41,6 +38,10 @@ export function EnhancingTable({
   const toolBonus = equipmentStats.enhancingSuccess;
 
   // binomial distribution stuff? been too long since I took any stats...
+
+  // Credit for math code goes to https://github.com/tristo7/cowculator/
+  // HELP: If anyone would like to help explain the math behind this code
+  // I would really appreciate it...
 
   const FAIL_XP = 0.1;
   const TARGET_COL = range(0, 21 - 1);
