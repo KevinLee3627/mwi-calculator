@@ -22,10 +22,14 @@ export const characterEquipmentListenerMiddleware = createListenerMiddleware();
 characterEquipmentListenerMiddleware.startListening({
   matcher: isAnyOf(
     characterEquipmentSlice.actions.setEquipment,
+    characterEquipmentSlice.actions.clearEquip,
     characterEquipmentSlice.actions.resetAllEquipment
   ),
   effect: (action) => {
-    if (action.type === 'characterEquipment/setEquipment') {
+    if (
+      action.type === 'characterEquipment/setEquipment' ||
+      action.type === 'characterEquipment/clearEquip'
+    ) {
       localStorage.setItem(
         'characterEquipment',
         JSON.stringify(store.getState().characterEquipment)
