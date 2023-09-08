@@ -11,6 +11,7 @@ import {
   characterLevelInitialState,
   characterLevelSlice
 } from 'src/features/character/levels/characterLevelSlice';
+import { marketApi } from 'src/features/market/services/market';
 import {
   activeSkillInitialState,
   activeSkillSlice
@@ -44,7 +45,8 @@ export const store = configureStore({
     characterEnhancement: characterEnhancementSlice.reducer,
     skillDrinks: skillDrinksSlice.reducer,
     activeSkill: activeSkillSlice.reducer,
-    targetLevel: targetLevelSlice.reducer
+    targetLevel: targetLevelSlice.reducer,
+    [marketApi.reducerPath]: marketApi.reducer
   },
   middleware: (getDefaultMiddleware) => [
     ...getDefaultMiddleware(),
@@ -53,7 +55,8 @@ export const store = configureStore({
     characterEnhancementListenerMiddleware.middleware,
     skillDrinksListenerMiddleware.middleware,
     activeSkillListenerMiddleware.middleware,
-    targetLevelListenerMiddleware.middleware
+    targetLevelListenerMiddleware.middleware,
+    marketApi.middleware
   ],
   preloadedState: {
     characterLevel: tryLocalStorage('characterLevel', characterLevelInitialState),
