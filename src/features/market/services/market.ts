@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { MarketData } from 'src/core/market/MarketData';
+import { MedianMarketData } from 'src/core/market/MedianMarketData';
 
 export const marketApi = createApi({
   reducerPath: 'marketApi',
@@ -10,8 +11,11 @@ export const marketApi = createApi({
     // TODO: Is this how it's done...?
     getMarketData: builder.query<MarketData, string>({
       query: () => 'milkyapi.json'
+    }),
+    getMedianMarketData: builder.query<MedianMarketData, string>({
+      query: () => 'medianmarket.json'
     })
   })
 });
 
-export const { useGetMarketDataQuery } = marketApi;
+export const { useGetMarketDataQuery, useGetMedianMarketDataQuery } = marketApi;

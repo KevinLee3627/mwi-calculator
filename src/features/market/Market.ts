@@ -1,11 +1,12 @@
 import { clientData } from 'src/core/clientData';
 import { ItemHrid } from 'src/core/hrid/ItemHrid';
 import { MarketData } from 'src/core/market/MarketData';
+import { MedianMarketData } from 'src/core/market/MedianMarketData';
 
 export class Market {
-  marketData: MarketData;
+  marketData: MarketData | MedianMarketData;
 
-  constructor(marketData: MarketData) {
+  constructor(marketData: MarketData | MedianMarketData) {
     this.marketData = marketData;
   }
 
@@ -18,9 +19,9 @@ export class Market {
     if (hrid == null) return 0;
     if (hrid === '/items/coin') return 1;
     // TODO: Add overrides
-    const { ask, bid, vendor } = this.getEntry(hrid);
+    const { ask, bid } = this.getEntry(hrid);
     if (ask === -1 && bid === -1) {
-      return vendor;
+      return clientData.itemDetailMap[hrid].sellPrice;
     } else if (ask === -1) {
       return bid;
     } else if (bid === -1) {
