@@ -20,6 +20,7 @@ import { computeSkillEfficiency } from 'src/features/skill/computeSkillEfficienc
 import { computeSkillTime } from 'src/features/skill/computeSkillTime';
 import { computeSkillXp } from 'src/features/skill/computeSkillXp';
 import { computeDrinkStats } from 'src/features/skill/drinks/computeDrinkStats';
+import { EnhancingTable } from 'src/features/skill/EnhancingTable';
 import {
   selectTargetLevel,
   setTargetLevel
@@ -37,6 +38,7 @@ interface SkillTableProps {
   characterLevels: CharacterLevelState;
   data: ActionDetail[];
 }
+
 export function SkillTable({
   actionTypeHrid,
   actionFunctionHrid,
@@ -394,131 +396,146 @@ export function SkillTable({
     );
   });
 
-  return (
-    <div>
-      <div className="flex items-end gap-2 ">
-        {actionFunctionHrid === '/action_functions/production' && (
-          <div>
-            <label className="label">
-              <span className="label-text">Category</span>
-            </label>
-            <Select
-              value={{
-                label: actionCategoryHrid
-                  ? clientData.actionCategoryDetailMap[actionCategoryHrid].name
-                  : '',
-                value: actionCategoryHrid
-              }}
-              options={actionCategoryHrids.map((category) => ({
-                label: clientData.actionCategoryDetailMap[category].name,
-                value: category
-              }))}
-              onChange={(selected) => {
-                setActionCategoryHrid(selected?.value);
-              }}
-              isClearable
-            />
-          </div>
-        )}
-        <div className="flex gap-2">
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text">Current XP</span>
-            </label>
-            <input
-              type="number"
-              className="input-bordered input-primary input"
-              inputMode="numeric"
-              min={0}
-              max={clientData.levelExperienceTable.at(-1)}
-              value={currentXp}
-              onChange={(e) => setCurrentXp(parseInt(e.target.value, 10))}
-            />
-          </div>
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text">Target Level</span>
-            </label>
-            <input
-              type="number"
-              className="input-bordered input-primary input"
-              inputMode="numeric"
-              min={characterLevels[actionTypeToSkillHrid(actionTypeHrid)] + 1}
-              max={200}
-              value={targetLevelState[actionTypeToSkillHrid(actionTypeHrid)] ?? undefined}
-              onChange={(e) => {
-                dispatch(
-                  setTargetLevel({
-                    nonCombatSkillHrid: actionTypeToSkillHrid(actionTypeHrid),
-                    level: parseInt(e.target.value, 10)
-                  })
-                );
-              }}
-            />
-          </div>
-        </div>
-        <div className="dropdown">
-          <label tabIndex={0} className="btn-primary btn-outline btn mt-2">
-            Column Select
-          </label>
-          <ul
-            tabIndex={0}
-            className="dropdown-content menu rounded-box z-50 bg-base-200 p-2 shadow"
-          >
-            <li className="mb-2">
-              <label>
-                <input
-                  type="checkbox"
-                  className="checkbox"
-                  checked={table.getIsAllColumnsVisible()}
-                  onChange={table.getToggleAllColumnsVisibilityHandler()}
-                />
-                Toggle All
+  if (actionTypeHrid !== '/action_types/enhancing') {
+    return (
+      <div>
+        <div className="flex items-end gap-2 ">
+          {actionFunctionHrid === '/action_functions/production' && (
+            <div>
+              <label className="label">
+                <span className="label-text">Category</span>
               </label>
-            </li>
-            {columnVisibilityCheckboxes}
-          </ul>
+              <Select
+                value={{
+                  label: actionCategoryHrid
+                    ? clientData.actionCategoryDetailMap[actionCategoryHrid].name
+                    : '',
+                  value: actionCategoryHrid
+                }}
+                options={actionCategoryHrids.map((category) => ({
+                  label: clientData.actionCategoryDetailMap[category].name,
+                  value: category
+                }))}
+                onChange={(selected) => {
+                  setActionCategoryHrid(selected?.value);
+                }}
+                isClearable
+              />
+            </div>
+          )}
+          <div className="flex gap-2">
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Current XP</span>
+              </label>
+              <input
+                type="number"
+                className="input-bordered input-primary input"
+                inputMode="numeric"
+                min={0}
+                max={clientData.levelExperienceTable.at(-1)}
+                value={currentXp}
+                onChange={(e) => setCurrentXp(parseInt(e.target.value, 10))}
+              />
+            </div>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Target Level</span>
+              </label>
+              <input
+                type="number"
+                className="input-bordered input-primary input"
+                inputMode="numeric"
+                min={characterLevels[actionTypeToSkillHrid(actionTypeHrid)] + 1}
+                max={200}
+                value={
+                  targetLevelState[actionTypeToSkillHrid(actionTypeHrid)] ?? undefined
+                }
+                onChange={(e) => {
+                  dispatch(
+                    setTargetLevel({
+                      nonCombatSkillHrid: actionTypeToSkillHrid(actionTypeHrid),
+                      level: parseInt(e.target.value, 10)
+                    })
+                  );
+                }}
+              />
+            </div>
+          </div>
+          <div className="dropdown">
+            <label tabIndex={0} className="btn-primary btn-outline btn mt-2">
+              Column Select
+            </label>
+            <ul
+              tabIndex={0}
+              className="dropdown-content menu rounded-box z-50 bg-base-200 p-2 shadow"
+            >
+              <li className="mb-2">
+                <label>
+                  <input
+                    type="checkbox"
+                    className="checkbox"
+                    checked={table.getIsAllColumnsVisible()}
+                    onChange={table.getToggleAllColumnsVisibilityHandler()}
+                  />
+                  Toggle All
+                </label>
+              </li>
+              {columnVisibilityCheckboxes}
+            </ul>
+          </div>
         </div>
+        <table className="table-pin-rows table-zebra mt-1 table">
+          <thead className="z-40">
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <th key={header.id}>
+                    {header.isPlaceholder ? null : (
+                      <>
+                        <div
+                          className={`${
+                            header.column.getCanSort() ? 'cursor-pointer select-none' : ''
+                          } flex`}
+                          onClick={header.column.getToggleSortingHandler()}
+                        >
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                          {{
+                            asc: <ChevronUpIcon className="h-4 w-4" />,
+                            desc: <ChevronDownIcon className="h-4 w-4" />
+                          }[header.column.getIsSorted() as string] ?? null}
+                        </div>
+                      </>
+                    )}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.map((row) => (
+              <tr key={row.id} className="hover">
+                {row.getVisibleCells().map((cell) => (
+                  <td key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
-      <table className="table-pin-rows table-zebra mt-1 table">
-        <thead className="z-40">
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th key={header.id}>
-                  {header.isPlaceholder ? null : (
-                    <>
-                      <div
-                        className={`${
-                          header.column.getCanSort() ? 'cursor-pointer select-none' : ''
-                        } flex`}
-                        onClick={header.column.getToggleSortingHandler()}
-                      >
-                        {flexRender(header.column.columnDef.header, header.getContext())}
-                        {{
-                          asc: <ChevronUpIcon className="h-4 w-4" />,
-                          desc: <ChevronDownIcon className="h-4 w-4" />
-                        }[header.column.getIsSorted() as string] ?? null}
-                      </div>
-                    </>
-                  )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id} className="hover">
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
+    );
+  } else {
+    return (
+      <EnhancingTable
+        characterLevels={characterLevels}
+        drinkStats={drinkStats}
+        equipmentStats={equipmentStats}
+      />
+    );
+  }
 }
