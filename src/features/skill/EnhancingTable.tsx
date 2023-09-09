@@ -1,15 +1,12 @@
-import { useMemo } from 'react';
 import { clientData } from 'src/core/clientData';
 import { InputItem } from 'src/core/items/InputItem';
 import { ItemDetail } from 'src/core/items/ItemDetail';
 import { computeEquipmentStats } from 'src/features/character/equipment/computeEquipmentStats';
 import { CharacterLevelState } from 'src/features/character/levels/characterLevelSlice';
 import { Market } from 'src/features/market/Market';
-import {
-  useGetMarketDataQuery,
-  useGetMedianMarketDataQuery
-} from 'src/features/market/services/market';
+import { useGetMedianMarketDataQuery } from 'src/features/market/services/market';
 import { computeDrinkStats } from 'src/features/skill/drinks/computeDrinkStats';
+import { findLastIndex } from 'src/util/findLastIndex';
 import { range } from 'src/util/range';
 interface EnhancingTableProps {
   equipmentStats: ReturnType<typeof computeEquipmentStats>;
@@ -157,7 +154,7 @@ export function EnhancingTable({
     return acc;
   }, []);
 
-  const protLevel = [...costCol].reverse().findIndex((val, i) => val <= inflectionCol[i]);
+  const protLevel = findLastIndex(costCol, (val, i) => val <= inflectionCol[i]);
   const actionsCol = TARGET_COL.reduce<number[]>((acc, val) => {
     if (val <= protLevel) {
       acc.push(costCol[val] / costPerEnhance);
@@ -312,7 +309,7 @@ export function EnhancingTable({
           </tr>
           <tr>
             <th>Average Actions</th>
-            <td>{(actionsCol[targetLevel], 2)}</td>
+            <td>{actionsCol[targetLevel]}</td>
           </tr>
           <tr>
             <th>Average Time</th>

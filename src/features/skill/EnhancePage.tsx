@@ -19,6 +19,7 @@ import { SkillDrinksSelect } from 'src/features/skill/drinks/SkillDrinksSelect';
 import { EnhancingTable } from 'src/features/skill/EnhancingTable';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import { actionTypeToSkillHrid } from 'src/util/hridConverters';
+import { range } from 'src/util/range';
 
 export function EnhancePage() {
   const actionTypeHrid: ActionTypeHrid = '/action_types/enhancing';
@@ -46,6 +47,8 @@ export function EnhancePage() {
   const [chosenItem, setChosenItem] = useState<ItemDetail>(
     clientData.itemDetailMap['/items/holy_brush']
   );
+
+  const [targetLevel, setTargetLevel] = useState<number>(1);
 
   return (
     <div>
@@ -81,13 +84,23 @@ export function EnhancePage() {
             }
           />
         </div>
+        <div>
+          <label className="label">
+            <span className="label-text">Target Level</span>
+          </label>
+          <Select
+            options={range(1, 20).map((val) => ({ label: val.toString(), value: val }))}
+            value={{ label: targetLevel?.toString() ?? '', value: targetLevel }}
+            onChange={(selected) => setTargetLevel(selected?.value ?? 1)}
+          />
+        </div>
       </div>
       <EnhancingTable
         characterLevels={levels}
         drinkStats={drinkStats}
         equipmentStats={equipmentStats}
         itemToEnhance={chosenItem ?? clientData.itemDetailMap['/items/holy_brush']}
-        targetLevel={5}
+        targetLevel={targetLevel}
       />
     </div>
   );
