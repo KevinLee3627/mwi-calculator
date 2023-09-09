@@ -155,12 +155,13 @@ export function EnhancingTable({
   }, []);
 
   const protLevel = findLastIndex(costCol, (val, i) => val <= inflectionCol[i]);
-  const actionsCol = TARGET_COL.reduce<number[]>((acc, val) => {
-    if (val <= protLevel) {
-      acc.push(costCol[val] / costPerEnhance);
+  const actionsCol = TARGET_COL.reduce<number[]>((acc, x) => {
+    if (x <= protLevel) {
+      acc.push(costCol[x] / costPerEnhance);
     } else {
       const back = acc[acc.length - 1];
-      acc.push((back + 1 - (1 - pCol[val])) / pCol[val]);
+      const back2 = acc[acc.length - 2];
+      acc.push((back + 1 - (1 - pCol[x]) * back2) / pCol[x]);
     }
     return acc;
   }, []);
@@ -350,12 +351,12 @@ export function EnhancingTable({
                 <td>{sCol[x].toFixed(10)}</td>
                 <td>{zCol[x].toFixed(10)}</td>
                 <td>{tCol[x]}</td>
-                <td>{costCol[x]}</td>
-                <td>{inflectionCol[x]}</td>
-                <td>{actionsCol[x]}</td>
-                <td>{protUsedCol[x]}</td>
-                <td>{criticalCol[x].toFixed(4)}</td>
-                <td>{expectedCostCol[x]}</td>
+                <td>{costCol[x].toFixed(2)}</td>
+                <td>{inflectionCol[x].toFixed(2)}</td>
+                <td>{Math.ceil(actionsCol[x])}</td>
+                <td>{protUsedCol[x].toFixed(2)}</td>
+                <td>{criticalCol[x]}</td>
+                <td>{expectedCostCol[x].toFixed(3)}</td>
               </tr>
             );
           })}
