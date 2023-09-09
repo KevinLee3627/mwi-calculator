@@ -1,8 +1,8 @@
+import { GameIcon } from 'src/components/GameIcon';
 import { clientData } from 'src/core/clientData';
 import { NonCombatSkillHrid } from 'src/core/skills/NonCombatSkillHrid';
 import { setActiveSkill } from 'src/features/navigation/activeSkillSlice';
 import { useAppDispatch } from 'src/hooks/useAppDispatch';
-import { svgHrefs } from 'src/util/svgHrefs';
 
 export function Sidebar() {
   return (
@@ -10,9 +10,7 @@ export function Sidebar() {
       <label htmlFor="drawer-sidebar" className="drawer-overlay"></label>
       <aside className=" bg-base-100 ">
         <div className="hidden pl-6 pt-4 font-extrabold lg:block">
-          <svg className="mr-1 inline h-4 w-4">
-            <use href={`${svgHrefs.chat_icons}#book`}></use>
-          </svg>
+          <GameIcon svgSetName="chat_icons" iconName="book" />
           mwi-calculator
         </div>
         <ul className="menu sticky text-base-content">
@@ -84,9 +82,7 @@ function SidebarSkillTab({ skillHrid }: SidebarSkillTabProps) {
       }}
     >
       <span>
-        <svg className="h-4 w-4">
-          <use href={`${svgHrefs.skills}#${skillHridStripped}`}></use>
-        </svg>
+        <GameIcon svgSetName="skills" iconName={skillHridStripped ?? ''} />
         {clientData.skillDetailMap[skillHrid].name}
       </span>
     </li>

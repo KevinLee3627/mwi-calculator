@@ -1,3 +1,4 @@
+import { GameIcon } from 'src/components/GameIcon';
 import { Select } from 'src/components/Select';
 import { clientData } from 'src/core/clientData';
 import { ItemDetail } from 'src/core/items/ItemDetail';
@@ -9,7 +10,6 @@ import {
 } from 'src/features/character/equipment/characterEquipmentSlice';
 import { useAppDispatch } from 'src/hooks/useAppDispatch';
 import { useAppSelector } from 'src/hooks/useAppSelector';
-import { svgHrefs } from 'src/util/svgHrefs';
 
 interface CharacterEquipmentSelectProps {
   itemLocationHrid: PossibleCharacterEquipmentLocationHrid;
@@ -32,9 +32,7 @@ export function CharacterEquipmentSelect({
     <div className="form-control">
       <label className="label">
         <span className="label-text">
-          <svg className="mr-1 inline h-4 w-4">
-            <use href={`${svgHrefs.items}#${itemHridStripped}`}></use>
-          </svg>
+          <GameIcon svgSetName="items" iconName={itemHridStripped ?? ''} />
           {itemLocationName}
         </span>
       </label>

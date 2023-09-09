@@ -8,6 +8,7 @@ import {
   useReactTable
 } from '@tanstack/react-table';
 import { useEffect, useMemo, useState } from 'react';
+import { GameIcon } from 'src/components/GameIcon';
 import { Select } from 'src/components/Select';
 import { ActionDetail } from 'src/core/actions/ActionDetail';
 import { NonCombatActionTypeHrid } from 'src/core/actions/NonCombatActionTypeHrid';
@@ -27,7 +28,6 @@ import {
 import { useAppDispatch } from 'src/hooks/useAppDispatch';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import { actionTypeToSkillHrid } from 'src/util/hridConverters';
-import { svgHrefs } from 'src/util/svgHrefs';
 
 interface SkillTableProps {
   actionTypeHrid: NonCombatActionTypeHrid;
@@ -205,10 +205,9 @@ export function SkillTable({
 
                 const strippedItemHrid = drop.itemHrid.split('/').at(-1);
                 const icon = (
-                  <svg className="mr-1 inline h-4 w-4">
-                    <use href={`${svgHrefs.items}#${strippedItemHrid}`}></use>
-                  </svg>
+                  <GameIcon svgSetName="items" iconName={strippedItemHrid ?? ''} />
                 );
+
                 return (
                   <div key={drop.itemHrid}>
                     <span>
@@ -229,9 +228,7 @@ export function SkillTable({
 
                 const strippedItemHrid = drop.itemHrid.split('/').at(-1);
                 const icon = (
-                  <svg className="mr-1 inline h-4 w-4">
-                    <use href={`${svgHrefs.items}#${strippedItemHrid}`}></use>
-                  </svg>
+                  <GameIcon svgSetName="items" iconName={strippedItemHrid ?? ''} />
                 );
                 return (
                   <div key={drop.itemHrid}>
@@ -262,12 +259,13 @@ export function SkillTable({
           const upgradeItemDetail =
             upgradeItemHrid === '' ? null : clientData.itemDetailMap[upgradeItemHrid];
           const strippedUpgradeItemHrid = upgradeItemHrid.split('/').at(-1);
+          const icon = (
+            <GameIcon svgSetName="items" iconName={strippedUpgradeItemHrid ?? ''} />
+          );
           const upgradeItemElem = upgradeItemDetail ? (
             <div>
               <span>
-                <svg className="mr-1 inline h-4 w-4">
-                  <use href={`${svgHrefs.items}#${strippedUpgradeItemHrid}`}></use>
-                </svg>
+                {icon}
                 {upgradeItemDetail.name} (1)
               </span>
             </div>
@@ -282,9 +280,7 @@ export function SkillTable({
             return (
               <div key={item.itemHrid}>
                 <span>
-                  <svg className="mr-1 inline h-4 w-4">
-                    <use href={`${svgHrefs.items}#${strippedItemHrid}`}></use>
-                  </svg>
+                  <GameIcon svgSetName="items" iconName={strippedItemHrid ?? ''} />
                   {itemDetail.name} ({inputCost.toFixed(2)})
                 </span>
               </div>
@@ -313,9 +309,7 @@ export function SkillTable({
             return (
               <div key={item.itemHrid}>
                 <span>
-                  <svg className="mr-1 inline h-4 w-4">
-                    <use href={`${svgHrefs.items}#${strippedItemHrid}`}></use>
-                  </svg>
+                  <GameIcon svgSetName="items" iconName={strippedItemHrid ?? ''} />
                   {itemDetail.name} ({output.toFixed(2)})
                 </span>
               </div>

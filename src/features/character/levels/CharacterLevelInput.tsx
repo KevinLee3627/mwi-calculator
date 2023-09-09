@@ -1,3 +1,4 @@
+import { GameIcon } from 'src/components/GameIcon';
 import { clientData } from 'src/core/clientData';
 import { NonCombatSkillHrid } from 'src/core/skills/NonCombatSkillHrid';
 import {
@@ -6,7 +7,6 @@ import {
 } from 'src/features/character/levels/characterLevelSlice';
 import { useAppDispatch } from 'src/hooks/useAppDispatch';
 import { useAppSelector } from 'src/hooks/useAppSelector';
-import { svgHrefs } from 'src/util/svgHrefs';
 
 interface CharacterLevelInputProps {
   skillHrid: NonCombatSkillHrid;
@@ -18,11 +18,7 @@ export function CharacterLevelInput({ skillHrid }: CharacterLevelInputProps) {
   const dispatch = useAppDispatch();
 
   const skillHridStripped = skillHrid.replace('/skills/', '');
-  const icon = (
-    <svg className="mr-1 inline h-4 w-4" key={`${skillHrid}_icon_key`}>
-      <use href={`${svgHrefs.skills}#${skillHridStripped}`}></use>
-    </svg>
-  );
+  const icon = <GameIcon svgSetName="skills" iconName={skillHridStripped ?? ''} />;
 
   return (
     <div className="form-control" key={`${skillHrid}_key`}>
