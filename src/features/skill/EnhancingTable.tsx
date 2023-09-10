@@ -208,7 +208,7 @@ export function EnhancingTable({
   const protectionItemRows = protectionItems.map((x) => {
     const marketItem = clientData.itemDetailMap[x.itemHrid];
     return (
-      <tr key={marketItem.hrid}>
+      <tr key={marketItem.hrid} className="hover">
         <td>{marketItem.name}</td>
         <td>{market.getEntry(marketItem.hrid).ask}</td>
         <td>{market.getEntry(marketItem.hrid).bid}</td>
@@ -220,12 +220,12 @@ export function EnhancingTable({
   const marketRows = itemToEnhance?.enhancementCosts?.map((x) => {
     if (x.itemHrid === '/items/coin') {
       return (
-        <tr key={'override/enhancing/' + x.itemHrid}>
+        <tr key={'override/enhancing/' + x.itemHrid} className="hover">
           <td>Coin</td>
           <td>{x.count}</td>
           <td colSpan={2} />
           <td>1</td>
-          <td>{actionsCol[targetLevel] * x.count}</td>
+          <td>{(actionsCol[targetLevel] * x.count).toFixed(2)}</td>
         </tr>
       );
     }
@@ -235,7 +235,7 @@ export function EnhancingTable({
       itemOverrides?.[x.itemHrid] ?? market.getApproxValue(x.itemHrid);
 
     return (
-      <tr key={'override/enhancing/' + x.itemHrid}>
+      <tr key={'override/enhancing/' + x.itemHrid} className="hover">
         <td>{marketItem.name}</td>
         <td>{x.count}</td>
         <td>{market.getEntry(marketItem.hrid).ask}</td>
@@ -254,96 +254,118 @@ export function EnhancingTable({
             }}
           />
         </td>
-        <td>{actionsCol[targetLevel] * x.count}</td>
+        <td>{(actionsCol[targetLevel] * x.count).toFixed(2)}</td>
       </tr>
     );
   });
 
   return (
-    <div>
-      <div className="w-6/12 bg-base-100 p-4 shadow-xl">
-        <h2 className="card-title">Results</h2>
-        <table className="table">
-          <tbody>
-            <tr className="hover">
-              <th>Time/Action (s)</th>
-              <td>{actionTimer}</td>
-            </tr>
-            <tr className="hover">
-              <th>Avg XP/Action</th>
-              <td>{averageEnhanceXp.toFixed(2)}</td>
-            </tr>
-            <tr className="hover">
-              <th>XP/hr</th>
-              <td>{(averageEnhanceXp * 3600) / actionTimer}</td>
-            </tr>
-            <tr className="hover">
-              <th>Protection Level</th>
-              <td>{protLevel}</td>
-            </tr>
-            <tr className="hover">
-              <th>Protections Used</th>
-              <td>{protUsedCol[targetLevel].toFixed(2)}</td>
-            </tr>
-            <tr className="hover">
-              <th>Average Actions</th>
-              <td>{Math.ceil(actionsCol[targetLevel])}</td>
-            </tr>
-            <tr className="hover">
-              <th>Average Time</th>
-              <td>{(actionsCol[targetLevel] * actionTimer).toFixed(2)}</td>
-            </tr>
-            <tr className="hover">
-              <th>Average Cost</th>
-              <td>{cost.toFixed(2)}</td>
-            </tr>
-            <tr className="hover">
-              <th>Average Total XP</th>
-              <td>{(actionsCol[targetLevel] * averageEnhanceXp).toFixed(2)}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Item</th>
-            <th>Count</th>
-            <th>Ask</th>
-            <th>Bid</th>
-            <th>Value</th>
-            <th>Average Used</th>
-          </tr>
-        </thead>
-        <tbody>
-          {marketRows}
-          <tr>
-            <th colSpan={4}>Total</th>
-            <td>{costPerEnhance}</td>
-          </tr>
-        </tbody>
-      </table>
+    <div className="grid auto-rows-min gap-2 sm:grid-cols-2">
       <div>
-        <input
-          className="input-primary input"
-          type="text"
-          value={protectionCost.toString()}
-          onChange={(e) => {
-            const overrideVal = e.target.value;
-            setProtOverride(parseInt(overrideVal, 10));
-          }}
-        />
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Item</th>
-              <th>Ask</th>
-              <th>Bid</th>
-              <th>Vendor</th>
-            </tr>
-          </thead>
-          <tbody>{protectionItemRows}</tbody>
-        </table>
+        {/* Results Table */}
+        <div className="card flex-col bg-neutral shadow-xl">
+          <div className="card-body">
+            <h2 className="card-title">Results</h2>
+            <table className="table">
+              <tbody>
+                <tr className="hover">
+                  <th>Time/Action (s)</th>
+                  <td>{actionTimer}</td>
+                </tr>
+                <tr className="hover">
+                  <th>Avg XP/Action</th>
+                  <td>{averageEnhanceXp.toFixed(2)}</td>
+                </tr>
+                <tr className="hover">
+                  <th>XP/hr</th>
+                  <td>{((averageEnhanceXp * 3600) / actionTimer).toFixed(2)}</td>
+                </tr>
+                <tr className="hover">
+                  <th>Protection Level</th>
+                  <td>{protLevel}</td>
+                </tr>
+                <tr className="hover">
+                  <th>Protections Used</th>
+                  <td>{protUsedCol[targetLevel].toFixed(2)}</td>
+                </tr>
+                <tr className="hover">
+                  <th>Average Actions</th>
+                  <td>{Math.ceil(actionsCol[targetLevel])}</td>
+                </tr>
+                <tr className="hover">
+                  <th>Average Time</th>
+                  <td>{(actionsCol[targetLevel] * actionTimer).toFixed(2)}</td>
+                </tr>
+                <tr className="hover">
+                  <th>Average Cost</th>
+                  <td>{cost.toFixed(2)}</td>
+                </tr>
+                <tr className="hover">
+                  <th>Average Total XP</th>
+                  <td>{(actionsCol[targetLevel] * averageEnhanceXp).toFixed(2)}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div>
+        {/* Item Costs Table */}
+        <div className="card mb-2 bg-neutral text-neutral-content">
+          <div className="card-body">
+            <h2 className="card-title text-left">Enhancement Costs</h2>
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Count</th>
+                  <th>Ask</th>
+                  <th>Bid</th>
+                  <th>Value</th>
+                  <th>Average Used</th>
+                </tr>
+              </thead>
+              <tbody>
+                {marketRows}
+                <tr>
+                  <th colSpan={4}>Total</th>
+                  <td>{costPerEnhance}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        {/* Protection Costs Table */}
+        <div className="card bg-neutral text-neutral-content">
+          <div className="card-body">
+            <h2 className="card-title text-left">Protection Costs</h2>
+            <div>
+              <label className="label">
+                <span className="label-text">Protection Cost</span>
+              </label>
+              <input
+                className="input-primary input"
+                type="text"
+                value={protectionCost.toString()}
+                onChange={(e) => {
+                  const overrideVal = e.target.value;
+                  setProtOverride(parseInt(overrideVal, 10));
+                }}
+              />
+            </div>
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Ask</th>
+                  <th>Bid</th>
+                  <th>Vendor</th>
+                </tr>
+              </thead>
+              <tbody>{protectionItemRows}</tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   );

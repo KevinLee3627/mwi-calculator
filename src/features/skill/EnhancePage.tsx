@@ -70,6 +70,8 @@ export function EnhancePage() {
             itemLocationHrid={actionTypeToolLocationMapping[actionTypeHrid]}
           />
         </div>
+      </div>
+      <div className="flex gap-4">
         <div>
           <label className="label">
             <span className="label-text">Item to enhance</span>
@@ -95,13 +97,15 @@ export function EnhancePage() {
           />
         </div>
       </div>
-      <EnhancingTable
-        characterLevels={levels}
-        drinkStats={drinkStats}
-        equipmentStats={equipmentStats}
-        itemToEnhance={chosenItem ?? clientData.itemDetailMap['/items/holy_brush']}
-        targetLevel={targetLevel}
-      />
+      <div className="mt-4">
+        <EnhancingTable
+          characterLevels={levels}
+          drinkStats={drinkStats}
+          equipmentStats={equipmentStats}
+          itemToEnhance={chosenItem ?? clientData.itemDetailMap['/items/holy_brush']}
+          targetLevel={targetLevel}
+        />
+      </div>
     </div>
   );
 }
