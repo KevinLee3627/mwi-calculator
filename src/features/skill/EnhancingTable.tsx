@@ -25,7 +25,8 @@ export function EnhancingTable({
   itemToEnhance,
   targetLevel
 }: EnhancingTableProps) {
-  const [overrides, setOverrides] = useState<Partial<Record<ItemHrid, number>>>();
+  const [itemOverrides, setItemOverrides] = useState<Partial<Record<ItemHrid, number>>>();
+  const [protOverride, setProtOverride] = useState<number>();
 
   const { data: marketData, error, isLoading } = useGetMedianMarketDataQuery('');
   if (error || isLoading || marketData == null) return <div>Error getting market</div>;
@@ -107,7 +108,7 @@ export function EnhancingTable({
   const costPerEnhance =
     itemToEnhance.enhancementCosts?.reduce((acc, val) => {
       const enhancementItemCost =
-        overrides?.[val.itemHrid] ?? market.getApproxValue(val.itemHrid);
+        itemOverrides?.[val.itemHrid] ?? market.getApproxValue(val.itemHrid);
 
       return acc + enhancementItemCost * val.count;
     }, 0) ?? 1;
@@ -124,8 +125,8 @@ export function EnhancingTable({
     ...extraProtectionItems
   ];
 
-  const protectionCost = /* protCostOverride || */ protectionItems.reduce((acc, val) => {
-    const cost = market?.getApproxValue(val.itemHrid) ?? -1;
+  const protectionCost = protectionItems.reduce((acc, val) => {
+    const cost = protOverride ?? market.getApproxValue(val.itemHrid);
     if (acc === -1 || cost < acc) return cost;
     return acc;
   }, -1);
@@ -204,8 +205,6 @@ export function EnhancingTable({
     (itemToEnhance.itemLevel + 10) *
     (drinkStats['/buff_types/wisdom'] ?? 1);
 
-  // console.table({ x1: X(1), z0: Z(0), z1: Z(1), z5: Z(5), s0: S(0), s1: S(1), s5: S(5) });
-
   const protectionItemRows = protectionItems.map((x) => {
     const marketItem = clientData.itemDetailMap[x.itemHrid];
     return (
@@ -224,7 +223,7 @@ export function EnhancingTable({
         <tr key={'override/enhancing/' + x.itemHrid}>
           <td>Coin</td>
           <td>{x.count}</td>
-          <td colSpan={3} />
+          <td colSpan={2} />
           <td>1</td>
           <td>{actionsCol[targetLevel] * x.count}</td>
         </tr>
@@ -233,7 +232,7 @@ export function EnhancingTable({
 
     const marketItem = clientData.itemDetailMap[x.itemHrid];
     const enhancementItemCost =
-      overrides?.[x.itemHrid] ?? market.getApproxValue(x.itemHrid);
+      itemOverrides?.[x.itemHrid] ?? market.getApproxValue(x.itemHrid);
 
     return (
       <tr key={'override/enhancing/' + x.itemHrid}>
@@ -248,7 +247,7 @@ export function EnhancingTable({
             value={enhancementItemCost.toString()}
             onChange={(e) => {
               const overrideVal = e.target.value;
-              setOverrides((value) => {
+              setItemOverrides((value) => {
                 if (value != null) return { ...value, [marketItem.hrid]: overrideVal };
                 else return {};
               });
@@ -319,23 +318,33 @@ export function EnhancingTable({
         <tbody>
           {marketRows}
           <tr>
-            <th colSpan={5}>Total</th>
+            <th colSpan={4}>Total</th>
             <td>{costPerEnhance}</td>
-            <td>lol</td>
           </tr>
         </tbody>
       </table>
-      <table>
-        <thead>
-          <tr>
-            <th>Item</th>
-            <th>Ask</th>
-            <th>Bid</th>
-            <th>Vendor</th>
-          </tr>
-        </thead>
-        <tbody>{protectionItemRows}</tbody>
-      </table>
+      <div>
+        <input
+          className="input-primary input"
+          type="text"
+          value={protectionCost.toString()}
+          onChange={(e) => {
+            const overrideVal = e.target.value;
+            setProtOverride(parseInt(overrideVal, 10));
+          }}
+        />
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Ask</th>
+              <th>Bid</th>
+              <th>Vendor</th>
+            </tr>
+          </thead>
+          <tbody>{protectionItemRows}</tbody>
+        </table>
+      </div>
     </div>
   );
 }
