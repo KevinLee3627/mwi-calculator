@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { clientData } from 'src/core/clientData';
+import { ItemHrid } from 'src/core/hrid/ItemHrid';
 import { InputItem } from 'src/core/items/InputItem';
 import { ItemDetail } from 'src/core/items/ItemDetail';
 import { computeEquipmentStats } from 'src/features/character/equipment/computeEquipmentStats';
@@ -23,6 +25,8 @@ export function EnhancingTable({
   itemToEnhance,
   targetLevel
 }: EnhancingTableProps) {
+  const [overrides, setOverrides] = useState<Partial<Record<ItemHrid, number>>>();
+
   const { data: marketData, error, isLoading } = useGetMedianMarketDataQuery('');
   if (error || isLoading || marketData == null) return <div>Error getting market</div>;
 
@@ -31,7 +35,6 @@ export function EnhancingTable({
   const characterEnhancingLevel = characterLevels['/skills/enhancing'];
   const enhancingTeaLevelBonus = drinkStats['/buff_types/enhancing_level'] ?? 0;
   const effectiveEnhancingLevel = characterEnhancingLevel + enhancingTeaLevelBonus;
-
   const toolBonus = equipmentStats.enhancingSuccess;
 
   // binomial distribution stuff? been too long since I took any stats...
@@ -103,7 +106,10 @@ export function EnhancingTable({
 
   const costPerEnhance =
     itemToEnhance.enhancementCosts?.reduce((acc, val) => {
-      return acc + market.getApproxValue(val.itemHrid) * val.count;
+      const enhancementItemCost =
+        overrides?.[val.itemHrid] ?? market.getApproxValue(val.itemHrid);
+
+      return acc + enhancementItemCost * val.count;
     }, 0) ?? 1;
 
   const extraProtectionItems: InputItem[] =
@@ -226,22 +232,28 @@ export function EnhancingTable({
     }
 
     const marketItem = clientData.itemDetailMap[x.itemHrid];
+    const enhancementItemCost =
+      overrides?.[x.itemHrid] ?? market.getApproxValue(x.itemHrid);
+
     return (
       <tr key={'override/enhancing/' + x.itemHrid}>
         <td>{marketItem.name}</td>
         <td>{x.count}</td>
         <td>{market.getEntry(marketItem.hrid).ask}</td>
         <td>{market.getEntry(marketItem.hrid).bid}</td>
-        <td>{marketItem.sellPrice}</td>
         <td>
-          {/* <NumberInput
-            hideControls
-            placeholder={market.getApproxValue(x.itemHrid)}
-            disabled={x.itemHrid === '/items/coin'}
-            value={priceOverrides[x.itemHrid]}
-
-          /> */}
-          {market.getApproxValue(x.itemHrid)}
+          <input
+            className="input-primary input"
+            type="text"
+            value={enhancementItemCost.toString()}
+            onChange={(e) => {
+              const overrideVal = e.target.value;
+              setOverrides((value) => {
+                if (value != null) return { ...value, [marketItem.hrid]: overrideVal };
+                else return {};
+              });
+            }}
+          />
         </td>
         <td>{actionsCol[targetLevel] * x.count}</td>
       </tr>
@@ -250,6 +262,49 @@ export function EnhancingTable({
 
   return (
     <div>
+      <div className="w-6/12 bg-base-100 p-4 shadow-xl">
+        <h2 className="card-title">Results</h2>
+        <table className="table">
+          <tbody>
+            <tr className="hover">
+              <th>Time/Action (s)</th>
+              <td>{actionTimer}</td>
+            </tr>
+            <tr className="hover">
+              <th>Avg XP/Action</th>
+              <td>{averageEnhanceXp.toFixed(2)}</td>
+            </tr>
+            <tr className="hover">
+              <th>XP/hr</th>
+              <td>{(averageEnhanceXp * 3600) / actionTimer}</td>
+            </tr>
+            <tr className="hover">
+              <th>Protection Level</th>
+              <td>{protLevel}</td>
+            </tr>
+            <tr className="hover">
+              <th>Protections Used</th>
+              <td>{protUsedCol[targetLevel].toFixed(2)}</td>
+            </tr>
+            <tr className="hover">
+              <th>Average Actions</th>
+              <td>{Math.ceil(actionsCol[targetLevel])}</td>
+            </tr>
+            <tr className="hover">
+              <th>Average Time</th>
+              <td>{(actionsCol[targetLevel] * actionTimer).toFixed(2)}</td>
+            </tr>
+            <tr className="hover">
+              <th>Average Cost</th>
+              <td>{cost.toFixed(2)}</td>
+            </tr>
+            <tr className="hover">
+              <th>Average Total XP</th>
+              <td>{(actionsCol[targetLevel] * averageEnhanceXp).toFixed(2)}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <table className="table">
         <thead>
           <tr>
@@ -257,7 +312,6 @@ export function EnhancingTable({
             <th>Count</th>
             <th>Ask</th>
             <th>Bid</th>
-            <th>Vendor</th>
             <th>Value</th>
             <th>Average Used</th>
           </tr>
@@ -281,86 +335,6 @@ export function EnhancingTable({
           </tr>
         </thead>
         <tbody>{protectionItemRows}</tbody>
-      </table>
-      <table>
-        <tbody>
-          <tr>
-            <th>time/action</th>
-            <td>{actionTimer}</td>
-          </tr>
-          <tr>
-            <th>avg xp/action</th>
-            <td>{averageEnhanceXp.toFixed(2)}</td>
-          </tr>
-          <tr>
-            <th>coin/xp</th>
-            <td>{costPerEnhance / averageEnhanceXp}</td>
-          </tr>
-          <tr>
-            <th>xp/hr</th>
-            <td>{(averageEnhanceXp * 3600) / actionTimer}</td>
-          </tr>
-          <tr>
-            <th>Prot Level</th>
-            <td>{protLevel}</td>
-          </tr>
-          <tr>
-            <th>Prots Used</th>
-            <td>{protUsedCol[targetLevel].toFixed(2)}</td>
-          </tr>
-          <tr>
-            <th>Average Actions</th>
-            <td>{actionsCol[targetLevel]}</td>
-          </tr>
-          <tr>
-            <th>Average Time</th>
-            <td>{actionsCol[targetLevel] * actionTimer}</td>
-          </tr>
-          <tr>
-            <th>Average Cost</th>
-            <td>{cost}</td>
-          </tr>
-          <tr>
-            <th>Average Total xp</th>
-            <td>{actionsCol[targetLevel] * averageEnhanceXp}</td>
-          </tr>
-        </tbody>
-      </table>
-      <table className="mt-24">
-        <thead>
-          <tr>
-            <th>Target</th>
-            <th>Mod Probability</th>
-            <th>S(N)</th>
-            <th>Z(N)</th>
-            <th>T(N)</th>
-            <th>Cost Target</th>
-            <th>Inflection</th>
-            <th>Actions</th>
-            <th>Protections</th>
-            <th>Critical</th>
-            <th>Average Cost</th>
-          </tr>
-        </thead>
-        <tbody>
-          {TARGET_COL.map((x) => {
-            return (
-              <tr key={'enhancing/results/' + x}>
-                <td>{x}</td>
-                <td>{pCol[x].toFixed(5)}</td>
-                <td>{sCol[x].toFixed(10)}</td>
-                <td>{zCol[x].toFixed(10)}</td>
-                <td>{tCol[x]}</td>
-                <td>{costCol[x].toFixed(2)}</td>
-                <td>{inflectionCol[x].toFixed(2)}</td>
-                <td>{Math.ceil(actionsCol[x])}</td>
-                <td>{protUsedCol[x].toFixed(2)}</td>
-                <td>{criticalCol[x]}</td>
-                <td>{expectedCostCol[x].toFixed(3)}</td>
-              </tr>
-            );
-          })}
-        </tbody>
       </table>
     </div>
   );
