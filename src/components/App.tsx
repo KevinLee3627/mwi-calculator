@@ -3,7 +3,6 @@ import { Sidebar } from 'src/components/Sidebar';
 import { NonCombatSkillHrid } from 'src/core/skills/NonCombatSkillHrid';
 import { CharacterEquipment } from 'src/features/character/equipment/CharacterEquipment';
 import { CharacterLevels } from 'src/features/character/levels/CharacterLevels';
-import { EditLoadoutModal } from 'src/features/character/loadouts/EditLoadoutModal';
 import { selectActiveSkillState } from 'src/features/navigation/activeSkillSlice';
 import { EnhancePage } from 'src/features/skill/EnhancePage';
 import { SkillPage } from 'src/features/skill/SkillPage';
@@ -47,7 +46,6 @@ const App = () => {
 
         <CharacterLevels />
         <CharacterEquipment />
-        <EditLoadoutModal />
       </div>
     </>
   );
