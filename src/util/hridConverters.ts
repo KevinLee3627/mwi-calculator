@@ -2,7 +2,7 @@ import { NonCombatActionTypeHrid } from 'src/core/actions/NonCombatActionTypeHri
 import { ActionTypeHrid } from 'src/core/hrid/ActionTypeHrid';
 import { EquipmentTypeHrid } from 'src/core/hrid/EquipmentTypeHrid';
 import { NonCombatSkillHrid } from 'src/core/skills/NonCombatSkillHrid';
-import { PossibleCharacterEquipmentLocationHrid } from 'src/features/character/equipment/characterEquipmentSlice';
+import { PossibleCharacterEquipmentLocationHrid } from 'src/features/character/loadouts/loadoutSlice';
 
 export const actionTypeToSkillHrid = (
   actionTypeHrid: NonCombatActionTypeHrid

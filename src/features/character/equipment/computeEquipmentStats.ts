@@ -1,11 +1,13 @@
 import { NonCombatStats } from 'src/core/items/NonCombatStats';
-import { CharacterEnhancementState } from 'src/features/character/enhancements/characterEnhancementSlice';
 import { calculateEnhancedBonus } from 'src/features/character/equipment/calculateEnhancedBonus';
-import { CharacterEquipmentState } from 'src/features/character/equipment/characterEquipmentSlice';
+import {
+  CharacterEnhancementState,
+  Loadout
+} from 'src/features/character/loadouts/loadoutSlice';
 import { equipmentTypeToItemLocation } from 'src/util/hridConverters';
 
 export function computeEquipmentStats(
-  equipment: CharacterEquipmentState,
+  equipment: Loadout['equipment'],
   enhancementLevels: CharacterEnhancementState
 ) {
   // Look through all player equipment and gather the bonuses up

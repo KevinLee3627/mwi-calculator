@@ -5,9 +5,9 @@ import { ItemDetail } from 'src/core/items/ItemDetail';
 import {
   clearEquip,
   PossibleCharacterEquipmentLocationHrid,
-  selectCharacterEquipment,
-  setEquipment
-} from 'src/features/character/equipment/characterEquipmentSlice';
+  selectActiveLoadout,
+  setEquip
+} from 'src/features/character/loadouts/loadoutSlice';
 import { useAppDispatch } from 'src/hooks/useAppDispatch';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 
@@ -20,19 +20,23 @@ export function CharacterEquipmentSelect({
   itemLocationHrid,
   possibleItems
 }: CharacterEquipmentSelectProps) {
-  const equipment = useAppSelector(selectCharacterEquipment);
+  const loadout = useAppSelector(selectActiveLoadout);
   const dispatch = useAppDispatch();
-
   const itemLocationName = clientData.itemLocationDetailMap[itemLocationHrid].name;
   const location = itemLocationHrid.split('/').at(-1);
-  const itemHridStripped = equipment[itemLocationHrid]?.hrid.replace('/items/', '');
+  const itemHridStripped = loadout.equipment[itemLocationHrid]?.hrid.replace(
+    '/items/',
+    ''
+  );
 
   if (location == null) return <></>;
   return (
     <div className="form-control">
       <label className="label">
         <span className="label-text">
-          <GameIcon svgSetName="items" iconName={itemHridStripped ?? ''} />
+          {itemHridStripped ? (
+            <GameIcon svgSetName="items" iconName={itemHridStripped ?? ''} />
+          ) : null}
           {itemLocationName}
         </span>
       </label>
@@ -40,8 +44,8 @@ export function CharacterEquipmentSelect({
         name={`${itemLocationHrid}_select`}
         options={possibleItems.map((item) => ({ label: item.name, value: item }))}
         value={{
-          label: equipment[itemLocationHrid]?.name,
-          value: equipment[itemLocationHrid]
+          label: loadout.equipment[itemLocationHrid]?.name,
+          value: loadout.equipment[itemLocationHrid]
         }}
         placeholder="test"
         onChange={(selected) => {
@@ -49,7 +53,7 @@ export function CharacterEquipmentSelect({
             dispatch(clearEquip({ locationHrid: itemLocationHrid }));
           } else {
             dispatch(
-              setEquipment({
+              setEquip({
                 itemHrid: selected.value.hrid,
                 locationHrid: itemLocationHrid
               })

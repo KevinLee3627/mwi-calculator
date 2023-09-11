@@ -3,12 +3,11 @@ import { NonCombatActionTypeHrid } from 'src/core/actions/NonCombatActionTypeHri
 import { clientData } from 'src/core/clientData';
 import { NonCombatStats } from 'src/core/items/NonCombatStats';
 import { CharacterEnhancementSelect } from 'src/features/character/enhancements/CharacterEnhancementSelect';
-import { selectCharacterEnhancement } from 'src/features/character/enhancements/characterEnhancementSlice';
 import { CharacterEquipmentSelect } from 'src/features/character/equipment/CharacterEquipmentSelect';
-import { selectCharacterEquipment } from 'src/features/character/equipment/characterEquipmentSlice';
 import { computeEquipmentStats } from 'src/features/character/equipment/computeEquipmentStats';
 import { CharacterLevelInput } from 'src/features/character/levels/CharacterLevelInput';
 import { selectCharacterLevel } from 'src/features/character/levels/characterLevelSlice';
+import { selectActiveLoadout } from 'src/features/character/loadouts/loadoutSlice';
 import { itemLocationToItemMap } from 'src/features/itemLocationToItemMap';
 import {
   actionTypeActionFunctionMapping,
@@ -25,14 +24,13 @@ interface SkillPageProps {
   actionTypeHrid: NonCombatActionTypeHrid;
 }
 export function SkillPage({ actionTypeHrid }: SkillPageProps) {
-  const equipment = useAppSelector(selectCharacterEquipment);
-  const enhancementLevels = useAppSelector(selectCharacterEnhancement);
+  const loadout = useAppSelector(selectActiveLoadout);
   const drinks = useAppSelector(selectSkillDrinks);
   const levels = useAppSelector(selectCharacterLevel);
-  const equipmentStats = computeEquipmentStats(equipment, enhancementLevels) as Record<
-    keyof NonCombatStats,
-    number
-  >;
+  const equipmentStats = computeEquipmentStats(
+    loadout.equipment,
+    loadout.enhancementLevels
+  ) as Record<keyof NonCombatStats, number>;
   const drinkStats = computeDrinkStats(drinks, actionTypeHrid);
 
   const actionFunctionHrid = actionTypeActionFunctionMapping[actionTypeHrid];

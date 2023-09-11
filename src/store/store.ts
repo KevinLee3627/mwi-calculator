@@ -1,16 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import {
-  characterEnhancementInitialState,
-  characterEnhancementSlice
-} from 'src/features/character/enhancements/characterEnhancementSlice';
-import {
-  characterEquipmentInitialState,
-  characterEquipmentSlice
-} from 'src/features/character/equipment/characterEquipmentSlice';
-import {
   characterLevelInitialState,
   characterLevelSlice
 } from 'src/features/character/levels/characterLevelSlice';
+import {
+  loadoutInitialState,
+  loadoutSlice
+} from 'src/features/character/loadouts/loadoutSlice';
 import { marketApi } from 'src/features/market/services/market';
 import {
   activeSkillInitialState,
@@ -26,9 +22,8 @@ import {
 } from 'src/features/skill/targets/targetLevelSlice';
 import {
   activeSkillListenerMiddleware,
-  characterEnhancementListenerMiddleware,
-  characterEquipmentListenerMiddleware,
   characterLevelListenerMiddleware,
+  loadoutListenerMiddleware,
   skillDrinksListenerMiddleware,
   targetLevelListenerMiddleware
 } from 'src/store/listenerMiddleware';
@@ -41,8 +36,7 @@ const tryLocalStorage = (key: string, fallback: object) =>
 export const store = configureStore({
   reducer: {
     characterLevel: characterLevelSlice.reducer,
-    characterEquipment: characterEquipmentSlice.reducer,
-    characterEnhancement: characterEnhancementSlice.reducer,
+    loadout: loadoutSlice.reducer,
     skillDrinks: skillDrinksSlice.reducer,
     activeSkill: activeSkillSlice.reducer,
     targetLevel: targetLevelSlice.reducer,
@@ -51,8 +45,7 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) => [
     ...getDefaultMiddleware(),
     characterLevelListenerMiddleware.middleware,
-    characterEquipmentListenerMiddleware.middleware,
-    characterEnhancementListenerMiddleware.middleware,
+    loadoutListenerMiddleware.middleware,
     skillDrinksListenerMiddleware.middleware,
     activeSkillListenerMiddleware.middleware,
     targetLevelListenerMiddleware.middleware,
@@ -60,14 +53,7 @@ export const store = configureStore({
   ],
   preloadedState: {
     characterLevel: tryLocalStorage('characterLevel', characterLevelInitialState),
-    characterEquipment: tryLocalStorage(
-      'characterEquipment',
-      characterEquipmentInitialState
-    ),
-    characterEnhancement: tryLocalStorage(
-      'characterEnhancement',
-      characterEnhancementInitialState
-    ),
+    loadout: tryLocalStorage('loadout', loadoutInitialState),
     skillDrinks: tryLocalStorage('skillDrinks', skillDrinksInitialState),
     activeSkill: tryLocalStorage('activeSkill', activeSkillInitialState),
     targetLevel: tryLocalStorage('targetLevel', targetLevelInitialState)
