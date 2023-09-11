@@ -15,6 +15,7 @@ import { NonCombatActionTypeHrid } from 'src/core/actions/NonCombatActionTypeHri
 import { clientData } from 'src/core/clientData';
 import { ActionCategoryHrid } from 'src/core/hrid/ActionCategoryHrid';
 import { ActionFunctionHrid } from 'src/core/hrid/ActionFunctionHrid';
+import { ActionHrid } from 'src/core/hrid/ActionHrid';
 import { computeEquipmentStats } from 'src/features/character/equipment/computeEquipmentStats';
 import { CharacterLevelState } from 'src/features/character/levels/characterLevelSlice';
 import { computeSkillEfficiency } from 'src/features/skill/computeSkillEfficiency';
@@ -38,6 +39,13 @@ interface SkillTableProps {
   data: ActionDetail[];
 }
 
+interface ActionStat {
+  xp: number;
+  efficiency: number;
+  time: number;
+  actionHrid: ActionHrid;
+}
+
 export function SkillTable({
   actionTypeHrid,
   actionFunctionHrid,
@@ -56,9 +64,49 @@ export function SkillTable({
   ]);
   const [columnVisibility, setColumnVisibility] = useState({});
 
+  const dataFilteredByCategory = useMemo(() => {
+    if (actionCategoryHrid == null) return data;
+    else return data.filter((val) => val.category === actionCategoryHrid);
+  }, [data, actionCategoryHrid]);
+
+  const actionStats = useMemo(() => {
+    return dataFilteredByCategory.reduce<Record<string, ActionStat>>((acc, action) => {
+      const xp = computeSkillXp({
+        equipmentStats,
+        drinkStats,
+        baseXp: action.experienceGain.value
+      });
+      const efficiency = computeSkillEfficiency({
+        actionTypeHrid,
+        equipmentStats,
+        drinkStats,
+        characterLevels,
+        levelRequirement: action.levelRequirement.level
+      });
+      const time = computeSkillTime({
+        actionTypeHrid,
+        equipmentStats,
+        baseTime: action.baseTimeCost
+      });
+      acc[action.hrid] = {
+        actionHrid: action.hrid,
+        xp,
+        efficiency,
+        time
+      };
+      return acc;
+    }, {});
+  }, [
+    dataFilteredByCategory,
+    actionTypeHrid,
+    characterLevels,
+    drinkStats,
+    equipmentStats
+  ]);
+
   const columnHelper = useMemo(() => createColumnHelper<ActionDetail>(), []);
-  const columns = useMemo(
-    () => [
+  const columns = useMemo(() => {
+    return [
       columnHelper.accessor((row) => row.levelRequirement.level, {
         header: 'Level Req.',
         id: 'levelRequirement',
@@ -71,67 +119,26 @@ export function SkillTable({
       columnHelper.accessor('name', { header: 'Action' }),
       columnHelper.accessor((row) => row.experienceGain.value, {
         header: 'XP',
-        cell: (info) => {
-          const baseXp = info.row.original.experienceGain.value;
-          const skillXp = computeSkillXp({ equipmentStats, drinkStats, baseXp });
-          return skillXp.toFixed(2);
-        }
+        cell: (info) => actionStats[info.row.original.hrid].xp.toFixed(2)
       }),
       columnHelper.accessor((row) => row.baseTimeCost, {
         header: 'Time (s)',
-        cell: (info) => {
-          const baseTime = info.row.original.baseTimeCost;
-          const skillTime = computeSkillTime({
-            actionTypeHrid,
-            equipmentStats,
-            baseTime
-          });
-          return skillTime.toFixed(2);
-        }
+        cell: (info) => actionStats[info.row.original.hrid].time.toFixed(2)
       }),
       columnHelper.accessor((row) => row.experienceGain.value / row.baseTimeCost, {
         header: 'XP/hr',
         id: 'xpPerHour',
         cell: (info) => {
-          const baseXp = info.row.original.experienceGain.value;
-          const skillXp = computeSkillXp({ equipmentStats, drinkStats, baseXp });
-
-          const baseTime = info.row.original.baseTimeCost;
-          const skillTime = computeSkillTime({
-            actionTypeHrid,
-            equipmentStats,
-            baseTime
-          });
-
-          // Artisan Tea does not affect efficiency.
-          const levelRequirement = info.row.original.levelRequirement.level;
-          const efficiency = computeSkillEfficiency({
-            actionTypeHrid,
-            equipmentStats,
-            drinkStats,
-            characterLevels,
-            levelRequirement
-          });
-
-          const xpPerSecond = skillXp / (skillTime / (1 + efficiency));
+          const { hrid } = info.row.original;
+          const { xp, time, efficiency } = actionStats[hrid];
+          const xpPerSecond = xp / (time / (1 + efficiency));
           return (xpPerSecond * 3600).toFixed(2);
         }
       }),
       columnHelper.accessor((row) => row.levelRequirement.level, {
         header: 'Efficiency',
         id: 'efficiency',
-        cell: (info) => {
-          // Artisan Tea does not affect efficiency.
-          const levelRequirement = info.row.original.levelRequirement.level;
-          const efficiency = computeSkillEfficiency({
-            actionTypeHrid,
-            equipmentStats,
-            drinkStats,
-            characterLevels,
-            levelRequirement
-          });
-          return `${(efficiency * 100).toFixed(2)}%`;
-        }
+        cell: (info) => actionStats[info.row.original.hrid].efficiency.toFixed(2)
       }),
       columnHelper.accessor((row) => row.dropTable, {
         header: 'Drops/hr',
@@ -139,21 +146,13 @@ export function SkillTable({
         cell: (info) => {
           const dropTable = info.row.original.dropTable ?? [];
           const rareDropTable = info.row.original.rareDropTable ?? [];
+          const hrid = info.row.original.hrid;
 
-          const efficiency = computeSkillEfficiency({
-            actionTypeHrid,
-            equipmentStats,
-            drinkStats,
-            characterLevels,
-            levelRequirement: info.row.original.levelRequirement.level
-          });
+          const efficiency = actionStats[hrid].efficiency;
 
           const secondsPerHour = 3600;
-          const secondsPerAction = computeSkillTime({
-            actionTypeHrid,
-            equipmentStats,
-            baseTime: info.row.original.baseTimeCost
-          });
+          const secondsPerAction = actionStats[hrid].time;
+
           const actionsPerHour = (secondsPerHour / secondsPerAction) * (1 + efficiency);
           const dropTableElem = (
             <div>
@@ -175,7 +174,7 @@ export function SkillTable({
                 return (
                   <div key={drop.itemHrid}>
                     <span>
-                      {icon} {itemName} {dropsPerHour.toFixed(3)}
+                      {icon} {itemName} ({dropsPerHour.toFixed(3)})
                     </span>
                   </div>
                 );
@@ -199,7 +198,7 @@ export function SkillTable({
 
                 return (
                   <div key={drop.itemHrid}>
-                    {icon} {itemName} {dropsPerHour.toFixed(3)}
+                    {icon} {itemName} ({dropsPerHour.toFixed(3)})
                   </div>
                 );
               })}
@@ -218,16 +217,13 @@ export function SkillTable({
         header: '# Actions to Target Level',
         id: 'actionsToTarget',
         cell: (info) => {
+          const { hrid } = info.row.original;
           const xpTable = clientData.levelExperienceTable;
           const skillHrid = actionTypeToSkillHrid(actionTypeHrid);
           const targetLevel = targetLevelState[skillHrid];
           if (targetLevel == null) return;
           const xpDifference = xpTable[targetLevel] - currentXp;
-          const xpPerAction = computeSkillXp({
-            equipmentStats,
-            drinkStats,
-            baseXp: info.row.original.experienceGain.value
-          });
+          const xpPerAction = actionStats[hrid].xp;
           return Math.ceil(xpDifference / xpPerAction);
         }
       }),
@@ -240,24 +236,10 @@ export function SkillTable({
           const targetLevel = targetLevelState[skillHrid];
           if (targetLevel == null) return;
           const xpDifference = xpTable[targetLevel] - currentXp;
-          const { experienceGain, levelRequirement, baseTimeCost } = info.row.original;
-          const xpPerAction = computeSkillXp({
-            equipmentStats,
-            drinkStats,
-            baseXp: experienceGain.value
-          });
-          const efficiency = computeSkillEfficiency({
-            actionTypeHrid,
-            equipmentStats,
-            drinkStats,
-            characterLevels,
-            levelRequirement: levelRequirement.level
-          });
-          const timePerAction = computeSkillTime({
-            actionTypeHrid,
-            equipmentStats,
-            baseTime: baseTimeCost
-          });
+          const { hrid } = info.row.original;
+          const xpPerAction = actionStats[hrid].xp;
+          const efficiency = actionStats[hrid].efficiency;
+          const timePerAction = actionStats[hrid].time;
 
           const numberOfActions = xpDifference / xpPerAction;
           const effectiveTimePerAction = timePerAction / (1 + efficiency);
@@ -269,20 +251,9 @@ export function SkillTable({
         header: `Time to finish ${numActions} actions (s)`,
         id: 'timeToFinishActions',
         cell: (info) => {
-          const { levelRequirement, baseTimeCost } = info.row.original;
-
-          const efficiency = computeSkillEfficiency({
-            actionTypeHrid,
-            equipmentStats,
-            drinkStats,
-            characterLevels,
-            levelRequirement: levelRequirement.level
-          });
-          const timePerAction = computeSkillTime({
-            actionTypeHrid,
-            equipmentStats,
-            baseTime: baseTimeCost
-          });
+          const { hrid } = info.row.original;
+          const efficiency = actionStats[hrid].efficiency;
+          const timePerAction = actionStats[hrid].time;
 
           const effectiveTimePerAction = timePerAction / (1 + efficiency);
           const totalSeconds = effectiveTimePerAction * numActions;
@@ -355,18 +326,17 @@ export function SkillTable({
           return itemElems;
         }
       })
-    ],
-    [
-      columnHelper,
-      actionTypeHrid,
-      drinkStats,
-      characterLevels,
-      equipmentStats,
-      currentXp,
-      targetLevelState,
-      numActions
-    ]
-  );
+    ];
+  }, [
+    columnHelper,
+    actionTypeHrid,
+    drinkStats,
+    equipmentStats,
+    currentXp,
+    targetLevelState,
+    numActions,
+    actionStats
+  ]);
 
   const actionCategoryHrids = useMemo(
     () => Array.from(new Set(data.map((val) => val.category))),
@@ -393,11 +363,6 @@ export function SkillTable({
     // Resets the category dropdown when switching skills
     setActionCategoryHrid(undefined);
   }, [actionTypeHrid]);
-
-  const dataFilteredByCategory = useMemo(() => {
-    if (actionCategoryHrid == null) return data;
-    else return data.filter((val) => val.category === actionCategoryHrid);
-  }, [data, actionCategoryHrid]);
 
   const table = useReactTable({
     data: dataFilteredByCategory,
