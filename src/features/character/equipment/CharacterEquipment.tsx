@@ -5,6 +5,7 @@ import {
   XMarkIcon
 } from '@heroicons/react/24/solid';
 import { useState } from 'react';
+import { CreatableSelect } from 'src/components/CreatableSelect';
 import { Select } from 'src/components/Select';
 import { ItemDetail } from 'src/core/items/ItemDetail';
 import { CharacterEnhancementSelect } from 'src/features/character/enhancements/CharacterEnhancementSelect';
@@ -57,20 +58,21 @@ export function CharacterEquipment() {
   return (
     <dialog id="characterEquipmentModal" className="modal modal-bottom sm:modal-middle">
       <form method="dialog" className="modal-box sm:min-w-max">
-        <label className="label">
-          <span className="label-text">Loadout ({loadout.name})</span>
-        </label>
+        <h1 className="text-lg font-bold">
+          Loadout{' '}
+          <span className="text-base font-normal">(Type to create new loadout)</span>
+        </h1>
         <div className="mb-2 flex gap-4">
           {showNameInput ? (
             <input
               type="text"
-              className="input-primary input"
+              className="input-primary input flex-1"
               placeholder={loadout.name}
               value={nameInputValue}
               onChange={(e) => setNameInputValue(e.target.value)}
             />
           ) : (
-            <Select
+            <CreatableSelect
               className="flex-1"
               options={Object.values(allLoadouts).map((loadout) => ({
                 value: loadout,
@@ -79,6 +81,9 @@ export function CharacterEquipment() {
               value={{ value: loadout, label: loadout.name }}
               onChange={(newValue) => {
                 dispatch(setActiveLoadout({ id: newValue?.value.id ?? 0 }));
+              }}
+              onCreateOption={(inputValue) => {
+                dispatch(createLoadout({ name: inputValue }));
               }}
             />
           )}
@@ -98,6 +103,7 @@ export function CharacterEquipment() {
             <button
               className="btn-primary btn-outline btn"
               onClick={(e) => {
+                setNameInputValue(loadout.name);
                 setShowNameInput(true);
                 e.preventDefault();
               }}
@@ -125,25 +131,11 @@ export function CharacterEquipment() {
                 dispatch(deleteLoadout({ id: loadout.id }));
                 e.preventDefault();
               }}
-              disabled={
-                Object.values(allLoadouts).length === 1 || loadout.name === 'default'
-              }
+              disabled={Object.values(allLoadouts).length === 1 || loadout.id === 0}
             >
               <TrashIcon className="h-4 w-4" />
             </button>
           )}
-
-          {/* <button
-            // Create Loadout
-            className="btn-success btn-outline btn"
-            onClick={(e) => {
-              const newName = `New Loadout ${Object.values(allLoadouts).length + 1}`;
-              dispatch(createLoadout({ name: newName }));
-              e.preventDefault();
-            }}
-          >
-            <PlusIcon className="h-4 w-4" />
-          </button> */}
         </div>
         <div className="gap-12 sm:flex">
           <div>

@@ -141,6 +141,7 @@ export const loadoutSlice = createSlice({
         equipment: characterEquipmentInitialState,
         enhancementLevels: characterEnhancementInitialState
       };
+      state.activeLoadoutId = id;
     },
     setActiveLoadout: (state, action: PayloadAction<SetActiveLoadoutPayload>) => {
       const { payload } = action;
