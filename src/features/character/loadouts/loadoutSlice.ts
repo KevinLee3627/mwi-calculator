@@ -69,22 +69,22 @@ export const characterEnhancementInitialState: CharacterEnhancementState = {
 };
 
 export interface Loadout {
-  id: string;
+  id: number;
   name: string;
   equipment: CharacterEquipmentState;
   enhancementLevels: CharacterEnhancementState;
 }
 
 export type LoadoutState = {
-  activeLoadoutId: string;
+  activeLoadoutId: number;
   loadouts: Record<string, Loadout>;
 };
 
 export const loadoutInitialState: LoadoutState = {
-  activeLoadoutId: createId('default'),
+  activeLoadoutId: 0,
   loadouts: {
-    loadout_default: {
-      id: createId('default'),
+    0: {
+      id: 0,
       name: 'default',
       equipment: characterEquipmentInitialState,
       enhancementLevels: characterEnhancementInitialState
@@ -98,15 +98,15 @@ interface CreateLoadoutPayload {
 }
 
 interface SetActiveLoadoutPayload {
-  name: string;
+  id: number;
 }
 
 interface DeleteLoadoutPayload {
-  name: string;
+  id: number;
 }
 
 interface RenameLoadoutPayload {
-  oldName: Loadout['name'];
+  id: number;
   newName: Loadout['name'];
 }
 
@@ -134,7 +134,7 @@ export const loadoutSlice = createSlice({
   reducers: {
     createLoadout: (state, action: PayloadAction<CreateLoadoutPayload>) => {
       const { payload } = action;
-      const id = createId(payload.name);
+      const id = Object.keys(state.loadouts).length;
       state.loadouts[id] = {
         id,
         name: payload.name,
@@ -144,18 +144,17 @@ export const loadoutSlice = createSlice({
     },
     setActiveLoadout: (state, action: PayloadAction<SetActiveLoadoutPayload>) => {
       const { payload } = action;
-      state.activeLoadoutId = createId(payload.name);
+      state.activeLoadoutId = payload.id;
     },
     deleteLoadout: (state, action: PayloadAction<DeleteLoadoutPayload>) => {
-      delete state.loadouts[createId(action.payload.name)];
-      state.activeLoadoutId = createId(
-        Object.values(state.loadouts).at(-1)?.name ?? 'default'
-      );
+      const { payload } = action;
+      delete state.loadouts[payload.id];
+      state.activeLoadoutId = Object.values(state.loadouts).at(-1)?.id ?? 0;
     },
     renameLoadout: (state, action: PayloadAction<RenameLoadoutPayload>) => {
       const { loadouts } = state;
       const { payload } = action;
-      loadouts[createId(payload.oldName)].name = payload.newName;
+      loadouts[payload.id].name = payload.newName;
     },
     setEquip: (state, action: PayloadAction<SetEquipPayload>) => {
       const { loadouts, activeLoadoutId } = state;

@@ -59,7 +59,7 @@ export function CharacterEquipment() {
             }))}
             value={{ value: loadout, label: loadout.name }}
             onChange={(newValue) => {
-              dispatch(setActiveLoadout({ name: newValue?.value.name ?? 'default' }));
+              dispatch(setActiveLoadout({ id: newValue?.value.id ?? 0 }));
             }}
           />
 
@@ -67,7 +67,10 @@ export function CharacterEquipment() {
             // Delete Loadout
             // eslint-disable-next-line tailwindcss/classnames-order, prettier/prettier
             className="btn-outline btn-error btn"
-            onClick={() => dispatch(deleteLoadout({ name: loadout.name }))}
+            onClick={(e) => {
+              dispatch(deleteLoadout({ id: loadout.id }));
+              e.preventDefault();
+            }}
             disabled={
               Object.values(allLoadouts).length === 1 || loadout.name === 'default'
             }
