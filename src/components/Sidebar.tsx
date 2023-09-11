@@ -4,6 +4,11 @@ import { NonCombatSkillHrid } from 'src/core/skills/NonCombatSkillHrid';
 import { setActiveSkill } from 'src/features/navigation/activeSkillSlice';
 import { useAppDispatch } from 'src/hooks/useAppDispatch';
 
+function openModal(modalId: string) {
+  const modal = document.getElementById(modalId) as HTMLDialogElement;
+  modal.showModal();
+}
+
 export function Sidebar() {
   return (
     <div className="drawer-side z-50">
@@ -15,28 +20,13 @@ export function Sidebar() {
         </div>
         <ul className="menu sticky text-base-content">
           <li>
-            <span
-              onClick={() => {
-                const modal = document.getElementById(
-                  'characterEquipmentModal'
-                ) as HTMLDialogElement;
-                modal.showModal();
-              }}
-            >
-              Equipment
-            </span>
+            <span onClick={() => openModal('characterEquipmentModal')}>Equipment</span>
           </li>
           <li>
-            <span
-              onClick={() => {
-                const modal = document.getElementById(
-                  'characterLevelModal'
-                ) as HTMLDialogElement;
-                modal.showModal();
-              }}
-            >
-              Levels
-            </span>
+            <span onClick={() => openModal('characterLevelModal')}>Levels</span>
+          </li>
+          <li>
+            <span onClick={() => openModal('communityBuffsModal')}>Community Buffs</span>
           </li>
           <li>
             <h2 className="menu-title">Gathering</h2>
