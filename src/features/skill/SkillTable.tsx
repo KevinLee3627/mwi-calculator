@@ -249,9 +249,7 @@ export function SkillTable({
 
                 return (
                   <div key={drop.itemHrid}>
-                    <span>
-                      {icon} {itemName} {dropsPerHour.toFixed(3)}
-                    </span>
+                    {icon} {itemName} {dropsPerHour.toFixed(3)}
                   </div>
                 );
               })}
@@ -281,10 +279,8 @@ export function SkillTable({
           );
           const upgradeItemElem = upgradeItemDetail ? (
             <div>
-              <span>
-                {icon}
-                {upgradeItemDetail.name} (1)
-              </span>
+              {icon}
+              {upgradeItemDetail.name} (1)
             </div>
           ) : null;
 
@@ -296,10 +292,10 @@ export function SkillTable({
             const inputCost = item.count * (1 - artisanTeaBonus);
             return (
               <div key={item.itemHrid}>
-                <span>
-                  <GameIcon svgSetName="items" iconName={strippedItemHrid ?? ''} />
-                  {itemDetail.name} ({inputCost.toFixed(2)})
-                </span>
+                {strippedItemHrid && (
+                  <GameIcon svgSetName="items" iconName={strippedItemHrid} />
+                )}
+                {itemDetail.name} ({inputCost.toFixed(2)})
               </div>
             );
           });
@@ -325,10 +321,8 @@ export function SkillTable({
             const output = item.count * (1 + gourmetTeaBonus);
             return (
               <div key={item.itemHrid}>
-                <span>
-                  <GameIcon svgSetName="items" iconName={strippedItemHrid ?? ''} />
-                  {itemDetail.name} ({output.toFixed(2)})
-                </span>
+                <GameIcon svgSetName="items" iconName={strippedItemHrid ?? ''} />
+                {itemDetail.name} ({output.toFixed(2)})
               </div>
             );
           });
