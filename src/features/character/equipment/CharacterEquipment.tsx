@@ -1,4 +1,10 @@
-import { PlusIcon, TrashIcon } from '@heroicons/react/24/solid';
+import {
+  CheckIcon,
+  PencilSquareIcon,
+  TrashIcon,
+  XMarkIcon
+} from '@heroicons/react/24/solid';
+import { useState } from 'react';
 import { Select } from 'src/components/Select';
 import { ItemDetail } from 'src/core/items/ItemDetail';
 import { CharacterEnhancementSelect } from 'src/features/character/enhancements/CharacterEnhancementSelect';
@@ -7,6 +13,7 @@ import {
   createLoadout,
   deleteLoadout,
   PossibleCharacterEquipmentLocationHrid,
+  renameLoadout,
   resetLoadout,
   selectActiveLoadout,
   selectAllLoadouts,
@@ -21,6 +28,9 @@ export function CharacterEquipment() {
   const loadout = useAppSelector(selectActiveLoadout);
   const allLoadouts = useAppSelector(selectAllLoadouts);
 
+  const [nameInputValue, setNameInputValue] = useState('');
+  const [showNameInput, setShowNameInput] = useState(false);
+  console.log(showNameInput);
   function convertEquipToSelect(entry: [string, ItemDetail | null]) {
     const itemLocationHrid = entry[0] as PossibleCharacterEquipmentLocationHrid;
 
@@ -51,33 +61,79 @@ export function CharacterEquipment() {
           <span className="label-text">Loadout ({loadout.name})</span>
         </label>
         <div className="mb-2 flex gap-4">
-          <Select
-            className="flex-1"
-            options={Object.values(allLoadouts).map((loadout) => ({
-              value: loadout,
-              label: loadout.name
-            }))}
-            value={{ value: loadout, label: loadout.name }}
-            onChange={(newValue) => {
-              dispatch(setActiveLoadout({ id: newValue?.value.id ?? 0 }));
-            }}
-          />
+          {showNameInput ? (
+            <input
+              type="text"
+              className="input-primary input"
+              placeholder={loadout.name}
+              value={nameInputValue}
+              onChange={(e) => setNameInputValue(e.target.value)}
+            />
+          ) : (
+            <Select
+              className="flex-1"
+              options={Object.values(allLoadouts).map((loadout) => ({
+                value: loadout,
+                label: loadout.name
+              }))}
+              value={{ value: loadout, label: loadout.name }}
+              onChange={(newValue) => {
+                dispatch(setActiveLoadout({ id: newValue?.value.id ?? 0 }));
+              }}
+            />
+          )}
+          {showNameInput ? (
+            <button
+              className="btn-success btn-outline btn"
+              onClick={(e) => {
+                dispatch(renameLoadout({ id: loadout.id, newName: nameInputValue }));
+                setNameInputValue('');
+                setShowNameInput(false);
+                e.preventDefault();
+              }}
+            >
+              <CheckIcon className="h-4 w-4" />
+            </button>
+          ) : (
+            <button
+              className="btn-primary btn-outline btn"
+              onClick={(e) => {
+                setShowNameInput(true);
+                e.preventDefault();
+              }}
+            >
+              <PencilSquareIcon className="h-4 w-4" />
+            </button>
+          )}
+          {showNameInput ? (
+            <button
+              // eslint-disable-next-line tailwindcss/classnames-order, prettier/prettier
+              className="btn-outline btn-error btn"
+              onClick={(e) => {
+                setShowNameInput(false);
+                e.preventDefault();
+              }}
+            >
+              <XMarkIcon className="h-4 w-4" />
+            </button>
+          ) : (
+            <button
+              // Delete Loadout
+              // eslint-disable-next-line tailwindcss/classnames-order, prettier/prettier
+              className="btn-outline btn-error btn"
+              onClick={(e) => {
+                dispatch(deleteLoadout({ id: loadout.id }));
+                e.preventDefault();
+              }}
+              disabled={
+                Object.values(allLoadouts).length === 1 || loadout.name === 'default'
+              }
+            >
+              <TrashIcon className="h-4 w-4" />
+            </button>
+          )}
 
-          <button
-            // Delete Loadout
-            // eslint-disable-next-line tailwindcss/classnames-order, prettier/prettier
-            className="btn-outline btn-error btn"
-            onClick={(e) => {
-              dispatch(deleteLoadout({ id: loadout.id }));
-              e.preventDefault();
-            }}
-            disabled={
-              Object.values(allLoadouts).length === 1 || loadout.name === 'default'
-            }
-          >
-            <TrashIcon className="h-4 w-4" />
-          </button>
-          <button
+          {/* <button
             // Create Loadout
             className="btn-success btn-outline btn"
             onClick={(e) => {
@@ -87,7 +143,7 @@ export function CharacterEquipment() {
             }}
           >
             <PlusIcon className="h-4 w-4" />
-          </button>
+          </button> */}
         </div>
         <div className="gap-12 sm:flex">
           <div>
