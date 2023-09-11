@@ -184,34 +184,48 @@ export function SkillTable({
         }
       }),
       columnHelper.accessor((row) => row.dropTable, {
-        header: 'Drops',
+        header: 'Drops/hr',
         id: 'dropTable',
         cell: (info) => {
           const dropTable = info.row.original.dropTable ?? [];
           const rareDropTable = info.row.original.rareDropTable ?? [];
 
+          const efficiency = computeSkillEfficiency({
+            actionTypeHrid,
+            equipmentStats,
+            drinkStats,
+            characterLevels,
+            levelRequirement: info.row.original.levelRequirement.level
+          });
+
+          const secondsPerHour = 3600;
+          const secondsPerAction = computeSkillTime({
+            actionTypeHrid,
+            equipmentStats,
+            baseTime: info.row.original.baseTimeCost
+          });
+          const actionsPerHour = (secondsPerHour / secondsPerAction) * (1 + efficiency);
           const dropTableElem = (
             <div>
               {dropTable?.map((drop) => {
                 const itemName = clientData.itemDetailMap[drop.itemHrid].name;
-                const dropRate = (drop.dropRate * 100).toFixed(2);
-                const teaDropQuantityBonus =
-                  1 + (drinkStats['/buff_types/gathering'] ?? 0);
-                const equipDropQuantitybonus =
-                  1 + (equipmentStats['gatheringQuantity'] ?? 0);
-                const dropQuantitybonus = teaDropQuantityBonus + equipDropQuantitybonus;
-                const minDropQuantity = (drop.minCount * dropQuantitybonus).toFixed(2);
-                const maxDropQuantity = (drop.maxCount * dropQuantitybonus).toFixed(2);
+                const teaDropQuantityBonus = drinkStats['/buff_types/gathering'] ?? 0;
+                const equipDropQuantitybonus = equipmentStats['gatheringQuantity'] ?? 0;
+                const dropQuantitybonus =
+                  1 + (teaDropQuantityBonus + equipDropQuantitybonus);
 
                 const strippedItemHrid = drop.itemHrid.split('/').at(-1);
                 const icon = (
                   <GameIcon svgSetName="items" iconName={strippedItemHrid ?? ''} />
                 );
 
+                const dropsPerAction =
+                  (dropQuantitybonus * (drop.minCount + drop.maxCount)) / 2;
+                const dropsPerHour = dropsPerAction * actionsPerHour;
                 return (
                   <div key={drop.itemHrid}>
                     <span>
-                      {icon} {itemName} ({minDropQuantity}-{maxDropQuantity}) {dropRate}%
+                      {icon} {itemName} {dropsPerHour.toFixed(3)}
                     </span>
                   </div>
                 );
@@ -230,11 +244,13 @@ export function SkillTable({
                 const icon = (
                   <GameIcon svgSetName="items" iconName={strippedItemHrid ?? ''} />
                 );
+                const dropsPerAction = (drop.minCount + drop.maxCount) / 2;
+                const dropsPerHour = dropsPerAction * actionsPerHour * dropRate;
+
                 return (
                   <div key={drop.itemHrid}>
                     <span>
-                      {icon} {itemName} ({drop.minCount}-{drop.maxCount}){' '}
-                      {(dropRate * 100).toFixed(2)}%
+                      {icon} {itemName} {dropsPerHour.toFixed(3)}
                     </span>
                   </div>
                 );

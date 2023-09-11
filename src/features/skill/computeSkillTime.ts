@@ -14,8 +14,8 @@ export function computeSkillTime({
   baseTime
 }: ComputeSkillTimeParams) {
   const speedStatName = actionTypeSpeedStatMapping[actionTypeHrid];
-  const equipBonus = equipmentStats[speedStatName];
-  return equipBonus == null
-    ? baseTimeToSeconds(baseTime)
-    : baseTimeToSeconds(baseTime, equipBonus);
+  const equipBonus = equipmentStats[speedStatName] ?? 0;
+  const baseTimeInSeconds = baseTimeToSeconds(baseTime);
+  const realTime = baseTimeInSeconds / (1 + equipBonus);
+  return Math.max(realTime, 3);
 }
