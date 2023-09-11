@@ -224,7 +224,7 @@ export function SkillTable({
             <div>
               {rareDropTable?.map((drop) => {
                 const itemName = clientData.itemDetailMap[drop.itemHrid].name;
-                const dropRate = (drop.dropRate * 100).toFixed(2);
+                const dropRate = drop.dropRate * (1 + equipmentStats['skillingRareFind']);
 
                 const strippedItemHrid = drop.itemHrid.split('/').at(-1);
                 const icon = (
@@ -233,7 +233,8 @@ export function SkillTable({
                 return (
                   <div key={drop.itemHrid}>
                     <span>
-                      {icon} {itemName} ({drop.minCount}-{drop.maxCount}) {dropRate}%
+                      {icon} {itemName} ({drop.minCount}-{drop.maxCount}){' '}
+                      {(dropRate * 100).toFixed(2)}%
                     </span>
                   </div>
                 );
