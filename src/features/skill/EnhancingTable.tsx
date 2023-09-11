@@ -28,7 +28,11 @@ export function EnhancingTable({
   const [itemOverrides, setItemOverrides] = useState<Partial<Record<ItemHrid, number>>>();
   const [protOverride, setProtOverride] = useState<number>();
 
-  const { data: marketData, error, isLoading } = useGetMedianMarketDataQuery('');
+  const {
+    data: marketData,
+    error,
+    isLoading
+  } = useGetMedianMarketDataQuery('', { pollingInterval: 1000 * 60 * 30 });
   if (error || isLoading || marketData == null) return <div>Error getting market</div>;
 
   const market = new Market(marketData);
