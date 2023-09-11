@@ -1,7 +1,6 @@
 import { createListenerMiddleware, isAnyOf } from '@reduxjs/toolkit';
-import { characterEnhancementSlice } from 'src/features/character/enhancements/characterEnhancementSlice';
-import { characterEquipmentSlice } from 'src/features/character/equipment/characterEquipmentSlice';
 import { characterLevelSlice } from 'src/features/character/levels/characterLevelSlice';
+import { loadoutSlice } from 'src/features/character/loadouts/loadoutSlice';
 import { activeSkillSlice } from 'src/features/navigation/activeSkillSlice';
 import { skillDrinksSlice } from 'src/features/skill/drinks/drinksSlice';
 import { targetLevelSlice } from 'src/features/skill/targets/targetLevelSlice';
@@ -18,42 +17,38 @@ characterLevelListenerMiddleware.startListening({
   }
 });
 
-export const characterEquipmentListenerMiddleware = createListenerMiddleware();
-characterEquipmentListenerMiddleware.startListening({
+export const loadoutListenerMiddleware = createListenerMiddleware();
+loadoutListenerMiddleware.startListening({
   matcher: isAnyOf(
-    characterEquipmentSlice.actions.setEquipment,
-    characterEquipmentSlice.actions.clearEquip,
-    characterEquipmentSlice.actions.resetAllEquipment
+    loadoutSlice.actions.setEquip,
+    loadoutSlice.actions.clearEquip,
+    loadoutSlice.actions.createLoadout,
+    loadoutSlice.actions.setActiveLoadout,
+    loadoutSlice.actions.resetLoadout,
+    loadoutSlice.actions.deleteLoadout,
+    loadoutSlice.actions.renameLoadout,
+    loadoutSlice.actions.resetLoadout,
+    loadoutSlice.actions.setEnhancementLevel
   ),
-  effect: (action) => {
-    if (
-      action.type === 'characterEquipment/setEquipment' ||
-      action.type === 'characterEquipment/clearEquip'
-    ) {
-      localStorage.setItem(
-        'characterEquipment',
-        JSON.stringify(store.getState().characterEquipment)
-      );
-    } else if (action.type === 'characterEquipment/resetEquipment') {
-      localStorage.removeItem('characterEquipment');
-    }
+  effect: () => {
+    localStorage.setItem('loadout', JSON.stringify(store.getState().loadout));
   }
 });
 
-export const characterEnhancementListenerMiddleware = createListenerMiddleware();
-characterEnhancementListenerMiddleware.startListening({
-  actionCreator: characterEnhancementSlice.actions.setEnhancementLevel,
-  effect: (action) => {
-    if (action.type === 'characterEnhancement/setEnhancementLevel') {
-      localStorage.setItem(
-        'characterEnhancement',
-        JSON.stringify(store.getState().characterEnhancement)
-      );
-    } else if (action.type === 'characterEnhancement/resetEnhancementLevels') {
-      localStorage.removeItem('characterEnhancement');
-    }
-  }
-});
+// export const characterEnhancementListenerMiddleware = createListenerMiddleware();
+// characterEnhancementListenerMiddleware.startListening({
+//   actionCreator: characterEnhancementSlice.actions.setEnhancementLevel,
+//   effect: (action) => {
+//     if (action.type === 'characterEnhancement/setEnhancementLevel') {
+//       localStorage.setItem(
+//         'characterEnhancement',
+//         JSON.stringify(store.getState().characterEnhancement)
+//       );
+//     } else if (action.type === 'characterEnhancement/resetEnhancementLevels') {
+//       localStorage.removeItem('characterEnhancement');
+//     }
+//   }
+// });
 
 export const skillDrinksListenerMiddleware = createListenerMiddleware();
 skillDrinksListenerMiddleware.startListening({

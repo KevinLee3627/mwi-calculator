@@ -1,7 +1,7 @@
 import { NonCombatActionTypeHrid } from 'src/core/actions/NonCombatActionTypeHrid';
 import { ActionFunctionHrid } from 'src/core/hrid/ActionFunctionHrid';
 import { NonCombatStats } from 'src/core/items/NonCombatStats';
-import { PossibleCharacterEquipmentLocationHrid } from 'src/features/character/equipment/characterEquipmentSlice';
+import { PossibleCharacterEquipmentLocationHrid } from 'src/features/character/loadouts/loadoutSlice';
 
 const skillingMiscStats: Record<
   Extract<

@@ -1,8 +1,7 @@
 import { NonCombatActionTypeHrid } from 'src/core/actions/NonCombatActionTypeHrid';
 import { NonCombatStats } from 'src/core/items/NonCombatStats';
-import { selectCharacterEnhancement } from 'src/features/character/enhancements/characterEnhancementSlice';
-import { selectCharacterEquipment } from 'src/features/character/equipment/characterEquipmentSlice';
 import { computeEquipmentStats } from 'src/features/character/equipment/computeEquipmentStats';
+import { selectActiveLoadout } from 'src/features/character/loadouts/loadoutSlice';
 import { actionTypeStatMapping } from 'src/features/skill/actionTypeStatMapping';
 import { computeDrinkStats } from 'src/features/skill/drinks/computeDrinkStats';
 import { selectSkillDrinks } from 'src/features/skill/drinks/drinksSlice';
@@ -14,11 +13,13 @@ interface SkillStatsProps {
 
 export function SkillStats({ actionTypeHrid }: SkillStatsProps) {
   // Get relevant stats for a given skill
-  const equipment = useAppSelector(selectCharacterEquipment);
-  const enhancementLevels = useAppSelector(selectCharacterEnhancement);
+  const loadout = useAppSelector(selectActiveLoadout);
   const drinksState = useAppSelector(selectSkillDrinks);
 
-  const equipmentStats = computeEquipmentStats(equipment, enhancementLevels);
+  const equipmentStats = computeEquipmentStats(
+    loadout.equipment,
+    loadout.enhancementLevels
+  );
   const visibleEquipmentStats = Object.entries(equipmentStats)
     .filter(
       ([statName, statValue]) =>

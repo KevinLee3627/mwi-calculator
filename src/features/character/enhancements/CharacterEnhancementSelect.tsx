@@ -1,9 +1,9 @@
 import { Select } from 'src/components/Select';
 import {
-  selectCharacterEnhancement,
+  PossibleCharacterEquipmentLocationHrid,
+  selectActiveLoadout,
   setEnhancementLevel
-} from 'src/features/character/enhancements/characterEnhancementSlice';
-import { PossibleCharacterEquipmentLocationHrid } from 'src/features/character/equipment/characterEquipmentSlice';
+} from 'src/features/character/loadouts/loadoutSlice';
 import { useAppDispatch } from 'src/hooks/useAppDispatch';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 import { range } from 'src/util/range';
@@ -15,7 +15,7 @@ interface CharacterEnhancementSelectProps {
 export function CharacterEnhancementSelect({
   itemLocationHrid
 }: CharacterEnhancementSelectProps) {
-  const enhancement = useAppSelector(selectCharacterEnhancement);
+  const loadout = useAppSelector(selectActiveLoadout);
   const dispatch = useAppDispatch();
   return (
     <Select
@@ -25,15 +25,15 @@ export function CharacterEnhancementSelect({
         value: val
       }))}
       value={{
-        label: `+${enhancement[itemLocationHrid]}`,
-        value: enhancement[itemLocationHrid]
+        label: `+${loadout.enhancementLevels[itemLocationHrid]}`,
+        value: loadout.enhancementLevels[itemLocationHrid]
       }}
       onChange={(selected) => {
         if (selected?.value == null) return;
 
         dispatch(
           setEnhancementLevel({
-            enhancementLevel: selected.value,
+            level: selected.value,
             locationHrid: itemLocationHrid
           })
         );
