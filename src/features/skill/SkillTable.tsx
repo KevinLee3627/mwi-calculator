@@ -18,6 +18,7 @@ import { ActionFunctionHrid } from 'src/core/hrid/ActionFunctionHrid';
 import { ActionHrid } from 'src/core/hrid/ActionHrid';
 import { computeEquipmentStats } from 'src/features/character/equipment/computeEquipmentStats';
 import { CharacterLevelState } from 'src/features/character/levels/characterLevelSlice';
+import { selectCommunityBuffState } from 'src/features/communityBuff/communityBuffSlice';
 import { computeSkillEfficiency } from 'src/features/skill/computeSkillEfficiency';
 import { computeSkillTime } from 'src/features/skill/computeSkillTime';
 import { computeSkillXp } from 'src/features/skill/computeSkillXp';
@@ -55,6 +56,8 @@ export function SkillTable({
   data
 }: SkillTableProps) {
   const dispatch = useAppDispatch();
+  // TODO: Why are we passing the redux store data (characterLevels) in as props?
+  const communityBuffs = useAppSelector(selectCommunityBuffState);
   const targetLevelState = useAppSelector(selectTargetLevel);
   const [currentXp, setCurrentXp] = useState(1);
   const [numActions, setNumActions] = useState(1);
@@ -81,7 +84,8 @@ export function SkillTable({
         equipmentStats,
         drinkStats,
         characterLevels,
-        levelRequirement: action.levelRequirement.level
+        levelRequirement: action.levelRequirement.level,
+        communityBuffs
       });
       const time = computeSkillTime({
         actionTypeHrid,
@@ -101,7 +105,8 @@ export function SkillTable({
     actionTypeHrid,
     characterLevels,
     drinkStats,
-    equipmentStats
+    equipmentStats,
+    communityBuffs
   ]);
 
   const columnHelper = useMemo(() => createColumnHelper<ActionDetail>(), []);

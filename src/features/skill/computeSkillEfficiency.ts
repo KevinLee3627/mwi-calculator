@@ -1,8 +1,13 @@
 import { NonCombatActionTypeHrid } from 'src/core/actions/NonCombatActionTypeHrid';
+import { clientData } from 'src/core/clientData';
 import { BuffTypeHrid } from 'src/core/hrid/BuffTypeHrid';
 import { computeEquipmentStats } from 'src/features/character/equipment/computeEquipmentStats';
 import { CharacterLevelState } from 'src/features/character/levels/characterLevelSlice';
-import { actionTypeEfficiencyStatMapping } from 'src/features/skill/actionTypeStatMapping';
+import { CommunityBuffState } from 'src/features/communityBuff/communityBuffSlice';
+import {
+  actionTypeActionFunctionMapping,
+  actionTypeEfficiencyStatMapping
+} from 'src/features/skill/actionTypeStatMapping';
 import { computeDrinkStats } from 'src/features/skill/drinks/computeDrinkStats';
 import { actionTypeToSkillHrid, actionTypeToSkillName } from 'src/util/hridConverters';
 
@@ -12,13 +17,15 @@ interface ComputeSkillEfficiencyParams {
   drinkStats: ReturnType<typeof computeDrinkStats>;
   characterLevels: CharacterLevelState;
   levelRequirement: number;
+  communityBuffs: CommunityBuffState;
 }
 export function computeSkillEfficiency({
   actionTypeHrid,
   equipmentStats,
   drinkStats,
   characterLevels,
-  levelRequirement
+  levelRequirement,
+  communityBuffs
 }: ComputeSkillEfficiencyParams) {
   const skillEffStatName = actionTypeEfficiencyStatMapping[actionTypeHrid];
   let equipBonus = 0;
@@ -38,5 +45,19 @@ export function computeSkillEfficiency({
   const effectiveLevel = characterLevels[skillHrid] + levelDrinkBonus;
   const levelBonus = Math.max(effectiveLevel - levelRequirement, 0) / 100;
 
-  return equipBonus + effDrinkBonus + levelBonus;
+  let communityBuffBonus = 0;
+
+  const actionFunction = actionTypeActionFunctionMapping[actionTypeHrid];
+  const communityBuffLevel =
+    communityBuffs['/community_buff_types/production_efficiency'];
+  if (actionFunction === '/action_functions/production' && communityBuffLevel > 0) {
+    const communityBuffDetail =
+      clientData.communityBuffTypeDetailMap['/community_buff_types/production_efficiency']
+        .buff;
+    communityBuffBonus =
+      communityBuffDetail.flatBoost +
+      (communityBuffLevel - 1) * communityBuffDetail.flatBoostLevelBonus;
+  }
+
+  return equipBonus + effDrinkBonus + levelBonus + communityBuffBonus;
 }
