@@ -49,6 +49,7 @@ export function SkillTable({
   const dispatch = useAppDispatch();
   const targetLevelState = useAppSelector(selectTargetLevel);
   const [currentXp, setCurrentXp] = useState(1);
+  const [numActions, setNumActions] = useState(1);
   const [actionCategoryHrid, setActionCategoryHrid] = useState<ActionCategoryHrid>();
   const [sorting, setSorting] = useState<SortingState>([
     { id: 'levelRequirement', desc: false }
@@ -264,6 +265,30 @@ export function SkillTable({
           return secondsToTarget;
         }
       }),
+      columnHelper.display({
+        header: `Time to finish ${numActions} actions (s)`,
+        id: 'timeToFinishActions',
+        cell: (info) => {
+          const { levelRequirement, baseTimeCost } = info.row.original;
+
+          const efficiency = computeSkillEfficiency({
+            actionTypeHrid,
+            equipmentStats,
+            drinkStats,
+            characterLevels,
+            levelRequirement: levelRequirement.level
+          });
+          const timePerAction = computeSkillTime({
+            actionTypeHrid,
+            equipmentStats,
+            baseTime: baseTimeCost
+          });
+
+          const effectiveTimePerAction = timePerAction / (1 + efficiency);
+          const totalSeconds = effectiveTimePerAction * numActions;
+          return totalSeconds.toFixed(2);
+        }
+      }),
       columnHelper.accessor((row) => row.inputItems, {
         header: 'Input',
         id: 'inputItems',
@@ -338,7 +363,8 @@ export function SkillTable({
       characterLevels,
       equipmentStats,
       currentXp,
-      targetLevelState
+      targetLevelState,
+      numActions
     ]
   );
 
@@ -466,7 +492,21 @@ export function SkillTable({
               />
             </div>
           </div>
-          <div></div>
+          <div>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text"># Actions</span>
+              </label>
+              <input
+                type="number"
+                className="input-bordered input-primary input"
+                inputMode="numeric"
+                min={1}
+                value={numActions}
+                onChange={(e) => setNumActions(parseInt(e.target.value, 10))}
+              />
+            </div>
+          </div>
           <div className="dropdown">
             <label tabIndex={0} className="btn-primary btn-outline btn mt-2">
               Column Select
