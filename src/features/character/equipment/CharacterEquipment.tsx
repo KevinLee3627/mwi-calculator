@@ -6,7 +6,6 @@ import {
 } from '@heroicons/react/24/solid';
 import { useState } from 'react';
 import { CreatableSelect } from 'src/components/CreatableSelect';
-import { Select } from 'src/components/Select';
 import { ItemDetail } from 'src/core/items/ItemDetail';
 import { CharacterEnhancementSelect } from 'src/features/character/enhancements/CharacterEnhancementSelect';
 import { CharacterEquipmentSelect } from 'src/features/character/equipment/CharacterEquipmentSelect';
