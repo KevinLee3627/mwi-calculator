@@ -1,3 +1,4 @@
+import { GameIcon } from 'src/components/GameIcon';
 import { clientData } from 'src/core/clientData';
 import {
   selectCommunityBuffState,
@@ -13,7 +14,13 @@ export function CommunityBuffs() {
   const buffs = Object.values(clientData.communityBuffTypeDetailMap).map((buffDetail) => (
     <div key={buffDetail.hrid}>
       <label className="label">
-        <span className="label-text">{buffDetail.name} Level</span>
+        <span className="label-text">
+          <GameIcon
+            svgSetName="buffs"
+            iconName={buffDetail.buff.typeHrid.split('/').at(-1) ?? ''}
+          />
+          {buffDetail.name}
+        </span>
       </label>
       <input
         type="number"
