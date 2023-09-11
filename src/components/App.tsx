@@ -3,7 +3,7 @@ import { Sidebar } from 'src/components/Sidebar';
 import { NonCombatSkillHrid } from 'src/core/skills/NonCombatSkillHrid';
 import { CharacterEquipment } from 'src/features/character/equipment/CharacterEquipment';
 import { CharacterLevels } from 'src/features/character/levels/CharacterLevels';
-import { CommunityBuffs } from 'src/features/communityBuffs/CommunityBuffs';
+import { CommunityBuffs } from 'src/features/communityBuff/CommunityBuffs';
 import { selectActiveSkillState } from 'src/features/navigation/activeSkillSlice';
 import { EnhancePage } from 'src/features/skill/EnhancePage';
 import { SkillPage } from 'src/features/skill/SkillPage';
