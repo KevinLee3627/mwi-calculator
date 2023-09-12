@@ -19,6 +19,7 @@ import { ActionHrid } from 'src/core/hrid/ActionHrid';
 import { computeEquipmentStats } from 'src/features/character/equipment/computeEquipmentStats';
 import { CharacterLevelState } from 'src/features/character/levels/characterLevelSlice';
 import { selectCommunityBuffState } from 'src/features/communityBuff/communityBuffSlice';
+import { computeGatheringQuantityBonus } from 'src/features/skill/computeGatheringQuantityBonus';
 import { computeSkillEfficiency } from 'src/features/skill/computeSkillEfficiency';
 import { computeSkillTime } from 'src/features/skill/computeSkillTime';
 import { computeSkillXp } from 'src/features/skill/computeSkillXp';
@@ -163,10 +164,11 @@ export function SkillTable({
             <div>
               {dropTable?.map((drop) => {
                 const itemName = clientData.itemDetailMap[drop.itemHrid].name;
-                const teaDropQuantityBonus = drinkStats['/buff_types/gathering'] ?? 0;
-                const equipDropQuantitybonus = equipmentStats['gatheringQuantity'] ?? 0;
-                const dropQuantitybonus =
-                  1 + (teaDropQuantityBonus + equipDropQuantitybonus);
+                const dropQuantitybonus = computeGatheringQuantityBonus({
+                  drinkStats,
+                  equipmentStats,
+                  communityBuffs
+                });
 
                 const strippedItemHrid = drop.itemHrid.split('/').at(-1);
                 const icon = (
@@ -174,7 +176,7 @@ export function SkillTable({
                 );
 
                 const dropsPerAction =
-                  (dropQuantitybonus * (drop.minCount + drop.maxCount)) / 2;
+                  ((1 + dropQuantitybonus) * (drop.minCount + drop.maxCount)) / 2;
                 const dropsPerHour = dropsPerAction * actionsPerHour;
                 return (
                   <div key={drop.itemHrid}>
@@ -340,7 +342,8 @@ export function SkillTable({
     currentXp,
     targetLevelState,
     numActions,
-    actionStats
+    actionStats,
+    communityBuffs
   ]);
 
   const actionCategoryHrids = useMemo(
