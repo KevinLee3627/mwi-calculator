@@ -180,9 +180,7 @@ export function SkillTable({
                 const dropsPerHour = dropsPerAction * actionsPerHour;
                 return (
                   <div key={drop.itemHrid}>
-                    <span>
-                      {icon} {itemName} ({dropsPerHour.toFixed(3)})
-                    </span>
+                    {icon} {itemName} ({dropsPerHour.toFixed(3)})
                   </div>
                 );
               })}
