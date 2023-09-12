@@ -25,6 +25,9 @@ export function Sidebar() {
             <span onClick={() => openModal('communityBuffsModal')}>Community Buffs</span>
           </li>
           <li>
+            <span onClick={() => openModal('actionQueueModal')}>Queue</span>
+          </li>
+          <li>
             <h2 className="menu-title">Gathering</h2>
             <ul>
               <SidebarSkillTab skillHrid="/skills/milking" />

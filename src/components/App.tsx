@@ -5,6 +5,7 @@ import { CharacterEquipment } from 'src/features/character/equipment/CharacterEq
 import { CharacterLevels } from 'src/features/character/levels/CharacterLevels';
 import { CommunityBuffs } from 'src/features/communityBuff/CommunityBuffs';
 import { selectActiveSkillState } from 'src/features/navigation/activeSkillSlice';
+import { ActionQueue } from 'src/features/queue/ActionQueue';
 import { EnhancePage } from 'src/features/skill/EnhancePage';
 import { SkillPage } from 'src/features/skill/SkillPage';
 import { useAppSelector } from 'src/hooks/useAppSelector';
@@ -48,6 +49,7 @@ const App = () => {
         <CharacterEquipment />
         <CharacterLevels />
         <CommunityBuffs />
+        <ActionQueue />
       </div>
     </>
   );
