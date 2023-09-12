@@ -78,6 +78,7 @@ export function SkillTable({
       const xp = computeSkillXp({
         equipmentStats,
         drinkStats,
+        communityBuffs,
         baseXp: action.experienceGain.value
       });
       const efficiency = computeSkillEfficiency({
