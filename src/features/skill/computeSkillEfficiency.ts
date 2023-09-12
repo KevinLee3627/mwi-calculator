@@ -51,12 +51,10 @@ export function computeSkillEfficiency({
   const communityBuffLevel =
     communityBuffs['/community_buff_types/production_efficiency'];
   if (actionFunction === '/action_functions/production' && communityBuffLevel > 0) {
-    const communityBuffDetail =
+    const { flatBoost, flatBoostLevelBonus } =
       clientData.communityBuffTypeDetailMap['/community_buff_types/production_efficiency']
         .buff;
-    communityBuffBonus =
-      communityBuffDetail.flatBoost +
-      (communityBuffLevel - 1) * communityBuffDetail.flatBoostLevelBonus;
+    communityBuffBonus = flatBoost + (communityBuffLevel - 1) * flatBoostLevelBonus;
   }
 
   return equipBonus + effDrinkBonus + levelBonus + communityBuffBonus;
