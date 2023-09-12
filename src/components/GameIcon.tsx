@@ -7,7 +7,7 @@ interface GameIconProps {
 }
 export function GameIcon({ svgSetName, iconName }: GameIconProps) {
   return (
-    <svg className="mr-1 inline h-4 w-4">
+    <svg className="inline h-4 w-4">
       <use href={`${svgHrefs[svgSetName]}#${iconName}`}></use>
     </svg>
   );

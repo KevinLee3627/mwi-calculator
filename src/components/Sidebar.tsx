@@ -3,11 +3,7 @@ import { clientData } from 'src/core/clientData';
 import { NonCombatSkillHrid } from 'src/core/skills/NonCombatSkillHrid';
 import { setActiveSkill } from 'src/features/navigation/activeSkillSlice';
 import { useAppDispatch } from 'src/hooks/useAppDispatch';
-
-function openModal(modalId: string) {
-  const modal = document.getElementById(modalId) as HTMLDialogElement;
-  modal.showModal();
-}
+import { openModal } from 'src/util/openModal';
 
 export function Sidebar() {
   return (
