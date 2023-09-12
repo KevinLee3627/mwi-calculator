@@ -5,9 +5,12 @@ import { InputItem } from 'src/core/items/InputItem';
 import { ItemDetail } from 'src/core/items/ItemDetail';
 import { computeEquipmentStats } from 'src/features/character/equipment/computeEquipmentStats';
 import { CharacterLevelState } from 'src/features/character/levels/characterLevelSlice';
+import { selectCommunityBuffState } from 'src/features/communityBuff/communityBuffSlice';
 import { Market } from 'src/features/market/Market';
 import { useGetMedianMarketDataQuery } from 'src/features/market/services/market';
+import { computeEnhancingSpeed } from 'src/features/skill/computeEnhancingSpeed';
 import { computeDrinkStats } from 'src/features/skill/drinks/computeDrinkStats';
+import { useAppSelector } from 'src/hooks/useAppSelector';
 import { findLastIndex } from 'src/util/findLastIndex';
 import { range } from 'src/util/range';
 interface EnhancingTableProps {
@@ -25,6 +28,7 @@ export function EnhancingTable({
   itemToEnhance,
   targetLevel
 }: EnhancingTableProps) {
+  const communityBuffs = useAppSelector(selectCommunityBuffState);
   const [itemOverrides, setItemOverrides] = useState<Partial<Record<ItemHrid, number>>>();
   const [protOverride, setProtOverride] = useState<number>();
 
@@ -50,15 +54,12 @@ export function EnhancingTable({
 
   const FAIL_XP = 0.1;
   const TARGET_COL = range(0, 21 - 1);
-  const actionTimer =
-    (clientData.actionDetailMap['/actions/enhancing/enhance'].baseTimeCost / 1000000000) *
-    Math.min(
-      1,
-      1 /
-        (1 +
-          (effectiveEnhancingLevel - itemToEnhance.itemLevel) / 100 +
-          (equipmentStats.enhancingSpeed ?? 0))
-    );
+  const actionTimer = computeEnhancingSpeed({
+    enhancingLevel: effectiveEnhancingLevel,
+    itemLevel: itemToEnhance.itemLevel,
+    equipmentStats,
+    communityBuffs
+  });
 
   function X(N: number) {
     // This is the probability of hitting when your equipment is at level N

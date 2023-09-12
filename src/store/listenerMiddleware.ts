@@ -1,6 +1,7 @@
 import { createListenerMiddleware, isAnyOf } from '@reduxjs/toolkit';
 import { characterLevelSlice } from 'src/features/character/levels/characterLevelSlice';
 import { loadoutSlice } from 'src/features/character/loadouts/loadoutSlice';
+import { communityBuffSlice } from 'src/features/communityBuff/communityBuffSlice';
 import { activeSkillSlice } from 'src/features/navigation/activeSkillSlice';
 import { skillDrinksSlice } from 'src/features/skill/drinks/drinksSlice';
 import { targetLevelSlice } from 'src/features/skill/targets/targetLevelSlice';
@@ -56,5 +57,13 @@ targetLevelListenerMiddleware.startListening({
   actionCreator: targetLevelSlice.actions.setTargetLevel,
   effect: () => {
     localStorage.setItem('targetLevel', JSON.stringify(store.getState().targetLevel));
+  }
+});
+
+export const communityBuffListenerMiddleware = createListenerMiddleware();
+communityBuffListenerMiddleware.startListening({
+  actionCreator: communityBuffSlice.actions.setBuffLevel,
+  effect: () => {
+    localStorage.setItem('communityBuff', JSON.stringify(store.getState().communityBuff));
   }
 });
