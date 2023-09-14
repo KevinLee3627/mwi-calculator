@@ -19,7 +19,9 @@ interface CreateActionQueueEntryPayload {
   numActions: number;
 }
 
-interface DeleteActionQueueEntryPayload {}
+interface DeleteActionQueueEntryPayload {
+  index: number;
+}
 
 interface UpdateActionTypePayload {
   index: number;
@@ -60,6 +62,13 @@ export const actionQueueSlice = createSlice({
     updateNumActions: (state, action: PayloadAction<UpdateNumActionsPayload>) => {
       const { payload } = action;
       state[payload.index].numActions = payload.value;
+    },
+    deleteActionQueueEntry: (
+      state,
+      action: PayloadAction<DeleteActionQueueEntryPayload>
+    ) => {
+      const { payload } = action;
+      state.splice(payload.index, 1);
     }
   }
 });
@@ -68,7 +77,8 @@ export const {
   createActionQueueEntry,
   updateActionType,
   updateActionHrid,
-  updateNumActions
+  updateNumActions,
+  deleteActionQueueEntry
 } = actionQueueSlice.actions;
 
 export const selectActionQueueState = (state: RootState) => state.actionQueue;

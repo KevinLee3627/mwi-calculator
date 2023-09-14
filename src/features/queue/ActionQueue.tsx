@@ -1,10 +1,11 @@
-import { EllipsisVerticalIcon } from '@heroicons/react/24/solid';
+import { EllipsisVerticalIcon, TrashIcon } from '@heroicons/react/24/solid';
 import { useMemo } from 'react';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import { Select } from 'src/components/Select';
 import { clientData } from 'src/core/clientData';
 import {
   createActionQueueEntry,
+  deleteActionQueueEntry,
   selectActionQueueState,
   updateActionHrid,
   updateActionType,
@@ -78,6 +79,17 @@ export function ActionQueue() {
             dispatch(updateNumActions({ index: entryIndex, value }));
           }}
         />
+        <button
+          // Delete Loadout
+          // eslint-disable-next-line tailwindcss/classnames-order, prettier/prettier
+          className="btn-error btn-outline btn"
+          onClick={(e) => {
+            dispatch(deleteActionQueueEntry({ index: entryIndex }));
+            e.preventDefault();
+          }}
+        >
+          <TrashIcon className="h-4 w-4" />
+        </button>
       </div>
     );
   });

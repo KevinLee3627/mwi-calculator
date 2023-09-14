@@ -75,7 +75,8 @@ actionQueueListenerMiddleware.startListening({
     actionQueueSlice.actions.createActionQueueEntry,
     actionQueueSlice.actions.updateActionType,
     actionQueueSlice.actions.updateActionHrid,
-    actionQueueSlice.actions.updateNumActions
+    actionQueueSlice.actions.updateNumActions,
+    actionQueueSlice.actions.deleteActionQueueEntry
   ),
   effect: () => {
     localStorage.setItem('actionQueue', JSON.stringify(store.getState().actionQueue));
