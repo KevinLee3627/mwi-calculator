@@ -18,10 +18,10 @@ module.exports = {
   plugins: [
     'react',
     'react-hooks',
-    'prettier',
     '@typescript-eslint',
     'simple-import-sort',
-    'tailwindcss'
+    'tailwindcss',
+    'prettier'
   ],
   extends: [
     'eslint:recommended',
