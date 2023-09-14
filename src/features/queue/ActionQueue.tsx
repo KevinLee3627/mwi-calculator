@@ -3,33 +3,74 @@ import { useMemo } from 'react';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import { Select } from 'src/components/Select';
 import { clientData } from 'src/core/clientData';
+import {
+  createActionQueueEntry,
+  selectActionQueueState,
+  updateNumActions
+} from 'src/features/queue/actionQueueSlice';
+import { actionTypeToActionMapping } from 'src/features/skill/actionTypeStatMapping';
+import { useAppDispatch } from 'src/hooks/useAppDispatch';
+import { useAppSelector } from 'src/hooks/useAppSelector';
 
 export function ActionQueue() {
+  const dispatch = useAppDispatch();
+  const actionQueue = useAppSelector(selectActionQueueState);
+
   const ResponsiveGridLayout = useMemo(() => WidthProvider(Responsive), []);
-  const skillOptions = useMemo(() => {
-    return Object.values(clientData.skillDetailMap).map((detail) => ({
+  const actionTypeOptions = useMemo(() => {
+    return Object.values(clientData.actionTypeDetailMap).map((detail) => ({
       label: detail.name,
       value: detail
     }));
   }, []);
 
-  const layout = [
-    { i: 'a', x: 0, y: 0, w: 1, h: 1 },
-    { i: 'b', x: 0, y: 1, w: 1, h: 1 },
-    { i: 'c', x: 0, y: 2, w: 1, h: 1 }
-  ];
+  const actionOptions = useMemo(() => {
+    return Object.values(clientData.actionDetailMap).map((detail) => ({
+      label: detail.name,
+      value: detail
+    }));
+  }, []);
 
-  const elems = layout.map((entry) => {
+  const layout = actionQueue.map((entry, idx) => ({
+    i: `${entry.actionTypeHrid}-${entry.actionHrid}-${entry.numActions}`,
+    x: 0,
+    y: idx,
+    w: 1,
+    h: 1
+  }));
+
+  const elems = actionQueue.map((queueEntry, entryIndex) => {
+    const key = entryIndex;
     return (
-      <div key={entry.i} className="flex w-24 items-center gap-2">
+      <div key={key} className="flex w-24 items-center gap-2">
         {/* eslint-disable-next-line tailwindcss/no-custom-classname */}
         <EllipsisVerticalIcon className="queue-drag-handle h-6 w-6" />
-        <Select options={skillOptions} />
-        <Select />
+        <Select
+          options={actionTypeOptions}
+          value={{
+            label: clientData.actionTypeDetailMap[queueEntry.actionTypeHrid].name,
+            value: clientData.actionTypeDetailMap[queueEntry.actionTypeHrid]
+          }}
+        />
+        <Select
+          options={actionTypeToActionMapping[queueEntry.actionTypeHrid].map((action) => ({
+            label: action.name,
+            value: action
+          }))}
+          value={{
+            label: clientData.actionDetailMap[queueEntry.actionHrid].name,
+            value: clientData.actionDetailMap[queueEntry.actionHrid]
+          }}
+        />
         <input
           type="number"
           className="input-bordered input-primary input"
           placeholder="# Of Actions"
+          value={queueEntry.numActions}
+          onChange={(e) => {
+            const value = parseInt(e.target.value, 10);
+            dispatch(updateNumActions({ index: entryIndex, value }));
+          }}
         />
       </div>
     );
@@ -61,6 +102,20 @@ export function ActionQueue() {
         >
           {elems}
         </ResponsiveGridLayout>
+        <button
+          className="btn-primary btn"
+          onClick={() => {
+            dispatch(
+              createActionQueueEntry({
+                actionTypeHrid: '/action_types/milking',
+                actionHrid: '/actions/milking/cow',
+                numActions: 5000
+              })
+            );
+          }}
+        >
+          Add Action
+        </button>
       </div>
       <form method="dialog" className="modal-backdrop">
         <button>close</button>

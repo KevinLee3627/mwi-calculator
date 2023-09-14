@@ -3,6 +3,7 @@ import { characterLevelSlice } from 'src/features/character/levels/characterLeve
 import { loadoutSlice } from 'src/features/character/loadouts/loadoutSlice';
 import { communityBuffSlice } from 'src/features/communityBuff/communityBuffSlice';
 import { activeSkillSlice } from 'src/features/navigation/activeSkillSlice';
+import { actionQueueSlice } from 'src/features/queue/actionQueueSlice';
 import { skillDrinksSlice } from 'src/features/skill/drinks/drinksSlice';
 import { targetLevelSlice } from 'src/features/skill/targets/targetLevelSlice';
 import { store } from 'src/store/store';
@@ -65,5 +66,16 @@ communityBuffListenerMiddleware.startListening({
   actionCreator: communityBuffSlice.actions.setBuffLevel,
   effect: () => {
     localStorage.setItem('communityBuff', JSON.stringify(store.getState().communityBuff));
+  }
+});
+
+export const actionQueueListenerMiddleware = createListenerMiddleware();
+actionQueueListenerMiddleware.startListening({
+  matcher: isAnyOf(
+    actionQueueSlice.actions.createActionQueueEntry,
+    actionQueueSlice.actions.updateNumActions
+  ),
+  effect: () => {
+    localStorage.setItem('actionQueue', JSON.stringify(store.getState().actionQueue));
   }
 });

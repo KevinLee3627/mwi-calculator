@@ -1,5 +1,8 @@
+import { ActionDetail } from 'src/core/actions/ActionDetail';
 import { NonCombatActionTypeHrid } from 'src/core/actions/NonCombatActionTypeHrid';
+import { clientData } from 'src/core/clientData';
 import { ActionFunctionHrid } from 'src/core/hrid/ActionFunctionHrid';
+import { ActionTypeHrid } from 'src/core/hrid/ActionTypeHrid';
 import { NonCombatStats } from 'src/core/items/NonCombatStats';
 import { PossibleCharacterEquipmentLocationHrid } from 'src/features/character/loadouts/loadoutSlice';
 
@@ -125,3 +128,24 @@ export const actionTypeActionFunctionMapping: Record<
   '/action_types/tailoring': '/action_functions/production',
   '/action_types/woodcutting': '/action_functions/gathering'
 };
+
+export const actionTypeToActionMapping = Object.values(clientData.actionDetailMap).reduce<
+  Record<ActionTypeHrid, ActionDetail[]>
+>(
+  (acc, val) => {
+    acc[val.type].push(val);
+    return acc;
+  },
+  {
+    '/action_types/brewing': [],
+    '/action_types/cheesesmithing': [],
+    '/action_types/combat': [],
+    '/action_types/cooking': [],
+    '/action_types/crafting': [],
+    '/action_types/enhancing': [],
+    '/action_types/foraging': [],
+    '/action_types/milking': [],
+    '/action_types/tailoring': [],
+    '/action_types/woodcutting': []
+  }
+);
