@@ -21,7 +21,7 @@ export function ActionQueue() {
 
   const elems = layout.map((entry) => {
     return (
-      <div key={entry.i} className="flex w-24 gap-2">
+      <div key={entry.i} className="flex w-24 items-center gap-2">
         {/* eslint-disable-next-line tailwindcss/no-custom-classname */}
         <EllipsisVerticalIcon className="queue-drag-handle h-6 w-6" />
         <Select options={skillOptions} />
