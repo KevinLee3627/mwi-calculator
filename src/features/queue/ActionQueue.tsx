@@ -6,6 +6,8 @@ import { clientData } from 'src/core/clientData';
 import {
   createActionQueueEntry,
   selectActionQueueState,
+  updateActionHrid,
+  updateActionType,
   updateNumActions
 } from 'src/features/queue/actionQueueSlice';
 import { actionTypeToActionMapping } from 'src/features/skill/actionTypeStatMapping';
@@ -24,15 +26,8 @@ export function ActionQueue() {
     }));
   }, []);
 
-  const actionOptions = useMemo(() => {
-    return Object.values(clientData.actionDetailMap).map((detail) => ({
-      label: detail.name,
-      value: detail
-    }));
-  }, []);
-
   const layout = actionQueue.map((entry, idx) => ({
-    i: `${entry.actionTypeHrid}-${entry.actionHrid}-${entry.numActions}`,
+    i: entry.numActions.toString(),
     x: 0,
     y: idx,
     w: 1,
@@ -40,9 +35,8 @@ export function ActionQueue() {
   }));
 
   const elems = actionQueue.map((queueEntry, entryIndex) => {
-    const key = entryIndex;
     return (
-      <div key={key} className="flex w-24 items-center gap-2">
+      <div key={entryIndex} className="flex w-24 items-center gap-2">
         {/* eslint-disable-next-line tailwindcss/no-custom-classname */}
         <EllipsisVerticalIcon className="queue-drag-handle h-6 w-6" />
         <Select
@@ -50,6 +44,12 @@ export function ActionQueue() {
           value={{
             label: clientData.actionTypeDetailMap[queueEntry.actionTypeHrid].name,
             value: clientData.actionTypeDetailMap[queueEntry.actionTypeHrid]
+          }}
+          onChange={(e) => {
+            const actionTypeHrid = e?.value.hrid;
+            if (!actionTypeHrid) return;
+
+            dispatch(updateActionType({ index: entryIndex, actionTypeHrid }));
           }}
         />
         <Select
@@ -60,6 +60,12 @@ export function ActionQueue() {
           value={{
             label: clientData.actionDetailMap[queueEntry.actionHrid].name,
             value: clientData.actionDetailMap[queueEntry.actionHrid]
+          }}
+          onChange={(e) => {
+            const actionHrid = e?.value.hrid;
+            if (!actionHrid) return;
+
+            dispatch(updateActionHrid({ index: entryIndex, actionHrid }));
           }}
         />
         <input
@@ -109,7 +115,7 @@ export function ActionQueue() {
               createActionQueueEntry({
                 actionTypeHrid: '/action_types/milking',
                 actionHrid: '/actions/milking/cow',
-                numActions: 5000
+                numActions: 0
               })
             );
           }}

@@ -73,6 +73,8 @@ export const actionQueueListenerMiddleware = createListenerMiddleware();
 actionQueueListenerMiddleware.startListening({
   matcher: isAnyOf(
     actionQueueSlice.actions.createActionQueueEntry,
+    actionQueueSlice.actions.updateActionType,
+    actionQueueSlice.actions.updateActionHrid,
     actionQueueSlice.actions.updateNumActions
   ),
   effect: () => {
