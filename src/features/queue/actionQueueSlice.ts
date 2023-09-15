@@ -38,7 +38,9 @@ interface UpdateNumActionsPayload {
   value: number;
 }
 
-interface MoveEntryPayload {}
+interface ReorderActionQueuePayload {
+  newState: ActionQueueState;
+}
 
 export const actionQueueSlice = createSlice({
   name: 'actionQueue',
@@ -69,6 +71,12 @@ export const actionQueueSlice = createSlice({
     ) => {
       const { payload } = action;
       state.splice(payload.index, 1);
+    },
+    reorderActionQueue: (state, action: PayloadAction<ReorderActionQueuePayload>) => {
+      const { payload } = action;
+      console.log('reorder received inredux');
+      console.log(payload.newState);
+      return payload.newState;
     }
   }
 });
@@ -78,7 +86,8 @@ export const {
   updateActionType,
   updateActionHrid,
   updateNumActions,
-  deleteActionQueueEntry
+  deleteActionQueueEntry,
+  reorderActionQueue
 } = actionQueueSlice.actions;
 
 export const selectActionQueueState = (state: RootState) => state.actionQueue;

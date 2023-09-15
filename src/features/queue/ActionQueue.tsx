@@ -6,6 +6,7 @@ import { clientData } from 'src/core/clientData';
 import {
   createActionQueueEntry,
   deleteActionQueueEntry,
+  reorderActionQueue,
   selectActionQueueState,
   updateActionHrid,
   updateActionType,
@@ -26,9 +27,8 @@ export function ActionQueue() {
       value: detail
     }));
   }, []);
-
   const layout = actionQueue.map((entry, idx) => ({
-    i: entry.numActions.toString(),
+    i: idx.toString(),
     x: 0,
     y: idx,
     w: 1,
@@ -37,7 +37,14 @@ export function ActionQueue() {
 
   const elems = actionQueue.map((queueEntry, entryIndex) => {
     return (
-      <div key={entryIndex} className="flex w-24 items-center gap-2">
+      <div
+        key={entryIndex.toString()}
+        // https://github.com/react-grid-layout/react-grid-layout/issues/382
+        // We need to use both data-grid here AND the layout prop in <GridLayout> for
+        // the elements to re-render properly on state(redux) update.
+        // data-grid={{ i: entryIndex.toString(), x: 0, y: entryIndex, w: 1, h: 1 }}
+        className="flex w-24 items-center gap-2"
+      >
         {/* eslint-disable-next-line tailwindcss/no-custom-classname */}
         <EllipsisVerticalIcon className="queue-drag-handle h-6 w-6" />
         <Select
@@ -81,7 +88,6 @@ export function ActionQueue() {
         />
         <button
           // Delete Loadout
-          // eslint-disable-next-line tailwindcss/classnames-order, prettier/prettier
           className="btn-error btn-outline btn"
           onClick={(e) => {
             dispatch(deleteActionQueueEntry({ index: entryIndex }));
@@ -93,6 +99,14 @@ export function ActionQueue() {
       </div>
     );
   });
+
+  console.log('new queue:', actionQueue);
+  console.log('new layout:', layout);
+  console.log(
+    'new elems:',
+    elems.map((elem) => elem.props.children[1].props.value.label)
+  );
+
   return (
     <dialog id="actionQueueModal" className="modal">
       <div className="modal-box !h-4/6 !max-h-full sm:!w-5/12 sm:!max-w-5xl">
@@ -105,14 +119,27 @@ export function ActionQueue() {
             // https://github.com/react-grid-layout/react-grid-layout/issues/171#issuecomment-336719786
             position: 'relative'
           }}
-          layouts={{ default: layout }}
+          layouts={{ lg: layout, sm: layout, xs: layout, xxs: layout }}
           // lg and xxs are required for some reason? Throws an error if not included.
-          cols={{ default: 1, lg: 1, sm: 1, xs: 1, xxs: 1 }}
+          cols={{ lg: 1, sm: 1, xs: 1, xxs: 1 }}
           // TODO: Can we not hardcode this?
           rowHeight={64}
           draggableHandle=".queue-drag-handle"
-          onDragStop={(layout) => {
-            console.log(layout);
+          // onDragStop={(newLayout, oldItem, newItem) => {
+          //   console.log(`oldItem`, oldItem);
+          //   console.log(`newItem`, newItem);
+          //   const newState = newLayout.map((item) => {
+          //     return actionQueue[item.y];
+          //   });
+          //   dispatch(reorderActionQueue({ newState }));
+          // }}
+          onLayoutChange={(newLayout) => {
+            console.log(`onlayoutchange`, newLayout);
+            const newState = newLayout.map((item) => {
+              return actionQueue[item.y];
+            });
+            console.log('onlayoutchange newstate:', newState);
+            dispatch(reorderActionQueue({ newState }));
           }}
           // https://github.com/react-grid-layout/react-grid-layout/issues/858#issuecomment-428539577
           // This makes performance ~6x slower than normal, according to documentation
