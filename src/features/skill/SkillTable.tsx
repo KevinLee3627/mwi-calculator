@@ -258,23 +258,45 @@ export function SkillTable({
       }),
       columnHelper.accessor(
         (row) => {
-          const { outputItems, inputItems } = row;
-          if (outputItems != null && inputItems != null && market != null) {
-            const averageOutputCost = market.getAveragePrice(
-              outputItems.map((item) => item.itemHrid)
-            );
-            const averageInputCost = market.getAveragePrice(
-              inputItems.map((item) => item.itemHrid)
-            );
+          if (actionFunctionHrid === '/action_functions/production') {
+            const { outputItems, inputItems, hrid } = row;
+            if (outputItems != null && inputItems != null && market != null) {
+              const averageOutputCost = market.getAveragePrice(
+                outputItems.map((item) => item.itemHrid)
+              );
+              const averageInputCost = market.getAveragePrice(
+                inputItems.map((item) => item.itemHrid)
+              );
 
-            return averageOutputCost - averageInputCost;
+              const effectiveTimePerAction =
+                actionStats[hrid].time / (1 + actionStats[hrid].efficiency);
+              const actionsPerHour = 3600 / effectiveTimePerAction;
+              const profitPerHour =
+                (averageOutputCost - averageInputCost) * actionsPerHour;
+              return profitPerHour;
+            } else {
+              return 'N/A';
+            }
           } else {
-            return 'N/A';
+            const { dropTable, hrid } = row;
+            if (dropTable != null && market != null) {
+              const averageMarketCost = market.getAveragePrice(
+                dropTable.map((item) => item.itemHrid)
+              );
+
+              const effectiveTimePerAction =
+                actionStats[hrid].time / (1 + actionStats[hrid].efficiency);
+              const actionsPerHour = 3600 / effectiveTimePerAction;
+              const profitPerHour = averageMarketCost * actionsPerHour;
+              return profitPerHour;
+            } else {
+              return 'N/A';
+            }
           }
         },
         {
           id: 'profit',
-          header: 'Profit',
+          header: 'Profit/hr',
           cell: (info) => info.getValue()
         }
       ),
@@ -409,7 +431,8 @@ export function SkillTable({
     numActions,
     actionStats,
     communityBuffs,
-    market
+    market,
+    actionFunctionHrid
   ]);
 
   const actionCategoryHrids = useMemo(
@@ -422,13 +445,17 @@ export function SkillTable({
       setColumnVisibility((columnVisibility) => ({
         ...columnVisibility,
         inputItems: true,
-        outputItems: true
+        outputItems: true,
+        inputCost: true,
+        ouputCost: true
       }));
     else {
       setColumnVisibility((columnVisibility) => ({
         ...columnVisibility,
         inputItems: false,
-        outputItems: false
+        outputItems: false,
+        inputCost: false,
+        outputCost: false
       }));
     }
   }, [actionFunctionHrid]);
