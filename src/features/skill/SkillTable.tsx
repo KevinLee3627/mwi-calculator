@@ -352,7 +352,7 @@ export function SkillTable({
         }
       }),
       columnHelper.display({
-        header: '# Actions to Target Level',
+        header: '# Actions to Target',
         id: 'actionsToTarget',
         cell: (info) => {
           const { hrid } = info.row.original;
@@ -366,7 +366,7 @@ export function SkillTable({
         }
       }),
       columnHelper.display({
-        header: 'Time to Target Level (s)',
+        header: 'Time to Target (s)',
         id: 'timeToTarget',
         cell: (info) => {
           const xpTable = clientData.levelExperienceTable;
