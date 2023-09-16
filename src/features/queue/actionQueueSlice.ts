@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Layout } from 'react-grid-layout';
+import { NonCombatActionTypeHrid } from 'src/core/actions/NonCombatActionTypeHrid';
 import { ActionHrid } from 'src/core/hrid/ActionHrid';
-import { ActionTypeHrid } from 'src/core/hrid/ActionTypeHrid';
 import { RootState } from 'src/store/store';
 
 export interface ActionQueueEntry {
   id: string;
-  actionTypeHrid: ActionTypeHrid;
+  actionTypeHrid: NonCombatActionTypeHrid;
   actionHrid: ActionHrid;
   numActions: number;
 }
@@ -22,7 +22,7 @@ export const actionQueueInitialState: ActionQueueState = {
 };
 
 interface CreateActionQueueEntryPayload {
-  actionTypeHrid: ActionTypeHrid;
+  actionTypeHrid: NonCombatActionTypeHrid;
   actionHrid: ActionHrid;
   numActions: number;
 }
@@ -33,7 +33,7 @@ interface DeleteActionQueueEntryPayload {
 
 interface UpdateActionTypePayload {
   id: string;
-  actionTypeHrid: ActionTypeHrid;
+  actionTypeHrid: NonCombatActionTypeHrid;
 }
 
 interface UpdateActionHridPayload {
