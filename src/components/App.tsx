@@ -13,9 +13,10 @@ import { skillHridToActionType } from 'src/util/hridConverters';
 
 const App = () => {
   const activeSkillState = useAppSelector(selectActiveSkillState);
-  const activeSkill = Object.keys(activeSkillState).find(
+  const activeSkill = (Object.keys(activeSkillState).find(
     (key) => activeSkillState[key as NonCombatSkillHrid]
-  ) as NonCombatSkillHrid;
+  ) ?? '/skills/milking') as NonCombatSkillHrid;
+
   const activePage =
     activeSkill === '/skills/enhancing' ? (
       <EnhancePage />
