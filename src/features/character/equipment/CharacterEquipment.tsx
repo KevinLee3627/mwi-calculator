@@ -113,7 +113,7 @@ export function CharacterEquipment() {
           {showNameInput ? (
             <button
               // eslint-disable-next-line tailwindcss/classnames-order, prettier/prettier
-              className="btn-outline btn-error btn"
+              className="btn-error btn-outline btn"
               onClick={(e) => {
                 setShowNameInput(false);
                 e.preventDefault();
@@ -125,7 +125,7 @@ export function CharacterEquipment() {
             <button
               // Delete Loadout
               // eslint-disable-next-line tailwindcss/classnames-order, prettier/prettier
-              className="btn-outline btn-error btn"
+              className="btn-error btn-outline btn"
               onClick={(e) => {
                 dispatch(deleteLoadout({ id: loadout.id }));
                 e.preventDefault();
@@ -149,7 +149,7 @@ export function CharacterEquipment() {
         <button
           className="btn-error btn mt-4"
           onClick={(e) => {
-            dispatch(resetLoadout({ name: loadout.name }));
+            dispatch(resetLoadout());
             // preventDefault stops button from 'submitting' the form and thus
             // stops the modal from closing.
             e.preventDefault();
