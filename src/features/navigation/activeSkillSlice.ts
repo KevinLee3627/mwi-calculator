@@ -5,7 +5,7 @@ import { RootState } from 'src/store/store';
 export type ActiveSkillState = Record<NonCombatSkillHrid, boolean>;
 
 export const activeSkillInitialState: ActiveSkillState = {
-  '/skills/milking': false,
+  '/skills/milking': true,
   '/skills/foraging': false,
   '/skills/woodcutting': false,
   '/skills/cheesesmithing': false,
