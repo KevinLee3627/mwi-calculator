@@ -19,6 +19,8 @@ import { ActionHrid } from 'src/core/hrid/ActionHrid';
 import { computeEquipmentStats } from 'src/features/character/equipment/computeEquipmentStats';
 import { CharacterLevelState } from 'src/features/character/levels/characterLevelSlice';
 import { selectCommunityBuffState } from 'src/features/communityBuff/communityBuffSlice';
+import { Market } from 'src/features/market/Market';
+import { useGetMarketDataQuery } from 'src/features/market/services/market';
 import { computeGatheringQuantityBonus } from 'src/features/skill/computeGatheringQuantityBonus';
 import { computeSkillEfficiency } from 'src/features/skill/computeSkillEfficiency';
 import { computeSkillTime } from 'src/features/skill/computeSkillTime';
@@ -56,6 +58,15 @@ export function SkillTable({
   characterLevels,
   data
 }: SkillTableProps) {
+  const { data: marketData, error } = useGetMarketDataQuery('', {
+    pollingInterval: 1000 * 60 * 30
+  });
+
+  const market = useMemo(() => {
+    if (marketData == null) return null;
+    else return new Market(marketData);
+  }, [marketData]);
+
   const dispatch = useAppDispatch();
   // TODO: Why are we passing the redux store data (characterLevels) in as props?
   const communityBuffs = useAppSelector(selectCommunityBuffState);
@@ -147,6 +158,126 @@ export function SkillTable({
         id: 'efficiency',
         cell: (info) => actionStats[info.row.original.hrid].efficiency.toFixed(2)
       }),
+      columnHelper.accessor((row) => row.inputItems, {
+        header: 'Input',
+        id: 'inputItems',
+        cell: (info) => {
+          const { inputItems, upgradeItemHrid } = info.row.original;
+          if (inputItems == null) return null;
+
+          const upgradeItemDetail =
+            upgradeItemHrid === '' ? null : clientData.itemDetailMap[upgradeItemHrid];
+          const strippedUpgradeItemHrid = upgradeItemHrid.split('/').at(-1);
+          const icon = (
+            <GameIcon svgSetName="items" iconName={strippedUpgradeItemHrid ?? ''} />
+          );
+          const upgradeItemElem = upgradeItemDetail ? (
+            <div>
+              {icon}
+              {upgradeItemDetail.name} (1)
+            </div>
+          ) : null;
+
+          const itemElems = inputItems.map((item) => {
+            const strippedItemHrid = item.itemHrid.split('/').at(-1);
+            const itemDetail = clientData.itemDetailMap[item.itemHrid];
+
+            const artisanTeaBonus = drinkStats['/buff_types/artisan'] ?? 0;
+            const inputCost = item.count * (1 - artisanTeaBonus);
+            return (
+              <div key={item.itemHrid}>
+                {strippedItemHrid && (
+                  <GameIcon svgSetName="items" iconName={strippedItemHrid} />
+                )}
+                {itemDetail.name} ({inputCost.toFixed(2)})
+              </div>
+            );
+          });
+
+          return (
+            <>
+              {upgradeItemElem} {itemElems}
+            </>
+          );
+        }
+      }),
+      columnHelper.display({
+        id: 'inputCost',
+        header: 'Input Cost',
+        cell: (info) => {
+          const { inputItems } = info.row.original;
+          if (inputItems != null) {
+            const averageCost = market?.getAveragePrice(
+              inputItems.map((item) => item.itemHrid)
+            );
+
+            return <div>{averageCost}</div>;
+          } else {
+            return <div>Error getting market data</div>;
+          }
+        }
+      }),
+      columnHelper.accessor((row) => row.outputItems, {
+        header: 'Output',
+        id: 'outputItems',
+        cell: (info) => {
+          const { outputItems } = info.row.original;
+          if (outputItems == null) return null;
+          const itemElems = outputItems.map((item) => {
+            const strippedItemHrid = item.itemHrid.split('/').at(-1);
+            const itemDetail = clientData.itemDetailMap[item.itemHrid];
+
+            const gourmetTeaBonus = drinkStats['/buff_types/gourmet'] ?? 0;
+            const output = item.count * (1 + gourmetTeaBonus);
+            return (
+              <div key={item.itemHrid}>
+                <GameIcon svgSetName="items" iconName={strippedItemHrid ?? ''} />
+                {itemDetail.name} ({output.toFixed(2)})
+              </div>
+            );
+          });
+
+          return itemElems;
+        }
+      }),
+      columnHelper.display({
+        id: 'outputCost',
+        header: 'Output Cost',
+        cell: (info) => {
+          const { outputItems } = info.row.original;
+          if (outputItems != null) {
+            const averageCost = market?.getAveragePrice(
+              outputItems.map((item) => item.itemHrid)
+            );
+
+            return <div>{averageCost}</div>;
+          } else {
+            return <div>Error getting market data</div>;
+          }
+        }
+      }),
+      columnHelper.accessor(
+        (row) => {
+          const { outputItems, inputItems } = row;
+          if (outputItems != null && inputItems != null && market != null) {
+            const averageOutputCost = market.getAveragePrice(
+              outputItems.map((item) => item.itemHrid)
+            );
+            const averageInputCost = market.getAveragePrice(
+              inputItems.map((item) => item.itemHrid)
+            );
+
+            return averageOutputCost - averageInputCost;
+          } else {
+            return 'N/A';
+          }
+        },
+        {
+          id: 'profit',
+          header: 'Profit',
+          cell: (info) => info.getValue()
+        }
+      ),
       columnHelper.accessor((row) => row.dropTable, {
         header: 'Drops/hr',
         id: 'dropTable',
@@ -266,72 +397,6 @@ export function SkillTable({
           const totalSeconds = effectiveTimePerAction * numActions;
           return totalSeconds.toFixed(2);
         }
-      }),
-      columnHelper.accessor((row) => row.inputItems, {
-        header: 'Input',
-        id: 'inputItems',
-        cell: (info) => {
-          const { inputItems, upgradeItemHrid } = info.row.original;
-          if (inputItems == null) return null;
-
-          const upgradeItemDetail =
-            upgradeItemHrid === '' ? null : clientData.itemDetailMap[upgradeItemHrid];
-          const strippedUpgradeItemHrid = upgradeItemHrid.split('/').at(-1);
-          const icon = (
-            <GameIcon svgSetName="items" iconName={strippedUpgradeItemHrid ?? ''} />
-          );
-          const upgradeItemElem = upgradeItemDetail ? (
-            <div>
-              {icon}
-              {upgradeItemDetail.name} (1)
-            </div>
-          ) : null;
-
-          const itemElems = inputItems.map((item) => {
-            const strippedItemHrid = item.itemHrid.split('/').at(-1);
-            const itemDetail = clientData.itemDetailMap[item.itemHrid];
-
-            const artisanTeaBonus = drinkStats['/buff_types/artisan'] ?? 0;
-            const inputCost = item.count * (1 - artisanTeaBonus);
-            return (
-              <div key={item.itemHrid}>
-                {strippedItemHrid && (
-                  <GameIcon svgSetName="items" iconName={strippedItemHrid} />
-                )}
-                {itemDetail.name} ({inputCost.toFixed(2)})
-              </div>
-            );
-          });
-
-          return (
-            <>
-              {upgradeItemElem} {itemElems}
-            </>
-          );
-        }
-      }),
-      columnHelper.accessor((row) => row.outputItems, {
-        header: 'Output',
-        id: 'outputItems',
-        cell: (info) => {
-          const { outputItems } = info.row.original;
-          if (outputItems == null) return null;
-          const itemElems = outputItems.map((item) => {
-            const strippedItemHrid = item.itemHrid.split('/').at(-1);
-            const itemDetail = clientData.itemDetailMap[item.itemHrid];
-
-            const gourmetTeaBonus = drinkStats['/buff_types/gourmet'] ?? 0;
-            const output = item.count * (1 + gourmetTeaBonus);
-            return (
-              <div key={item.itemHrid}>
-                <GameIcon svgSetName="items" iconName={strippedItemHrid ?? ''} />
-                {itemDetail.name} ({output.toFixed(2)})
-              </div>
-            );
-          });
-
-          return itemElems;
-        }
       })
     ];
   }, [
@@ -343,7 +408,8 @@ export function SkillTable({
     targetLevelState,
     numActions,
     actionStats,
-    communityBuffs
+    communityBuffs,
+    market
   ]);
 
   const actionCategoryHrids = useMemo(
