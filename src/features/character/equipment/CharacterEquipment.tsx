@@ -30,7 +30,7 @@ export function CharacterEquipment() {
 
   const [nameInputValue, setNameInputValue] = useState('');
   const [showNameInput, setShowNameInput] = useState(false);
-  console.log(showNameInput);
+
   function convertEquipToSelect(entry: [string, ItemDetail | null]) {
     const itemLocationHrid = entry[0] as PossibleCharacterEquipmentLocationHrid;
 
