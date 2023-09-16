@@ -5,8 +5,6 @@ import { ItemLocationHrid } from 'src/core/hrid/ItemLocationHrid';
 import { ItemDetail } from 'src/core/items/ItemDetail';
 import { RootState } from 'src/store/store';
 
-const createId = (name: string) => `loadout_${name}`;
-
 export type PossibleCharacterEquipmentLocationHrid = Exclude<
   ItemLocationHrid,
   '/item_locations/two_hand' | '/item_locations/inventory'
@@ -124,10 +122,6 @@ interface SetEnhancementLevelPayload {
   level: number;
 }
 
-interface ResetLoadoutPayload {
-  name: string;
-}
-
 export const loadoutSlice = createSlice({
   name: 'loadout',
   initialState: loadoutInitialState,
@@ -173,12 +167,10 @@ export const loadoutSlice = createSlice({
       const { payload } = action;
       loadouts[activeLoadoutId].enhancementLevels[payload.locationHrid] = payload.level;
     },
-    resetLoadout: (state, action: PayloadAction<ResetLoadoutPayload>) => {
-      const { loadouts } = state;
-      const { payload } = action;
-      loadouts[createId(payload.name)].equipment = characterEquipmentInitialState;
-      loadouts[createId(payload.name)].enhancementLevels =
-        characterEnhancementInitialState;
+    resetLoadout: (state) => {
+      const { loadouts, activeLoadoutId } = state;
+      loadouts[activeLoadoutId].equipment = characterEquipmentInitialState;
+      loadouts[activeLoadoutId].enhancementLevels = characterEnhancementInitialState;
     }
   }
 });
