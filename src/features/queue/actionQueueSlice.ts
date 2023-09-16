@@ -1,17 +1,25 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Layout } from 'react-grid-layout';
 import { ActionHrid } from 'src/core/hrid/ActionHrid';
 import { ActionTypeHrid } from 'src/core/hrid/ActionTypeHrid';
 import { RootState } from 'src/store/store';
 
 export interface ActionQueueEntry {
+  id: string;
   actionTypeHrid: ActionTypeHrid;
   actionHrid: ActionHrid;
   numActions: number;
 }
 
-export type ActionQueueState = ActionQueueEntry[];
+export interface ActionQueueState {
+  actions: Record<string, ActionQueueEntry>;
+  layout: Layout[];
+}
 
-export const actionQueueInitialState: ActionQueueState = [];
+export const actionQueueInitialState: ActionQueueState = {
+  actions: {},
+  layout: []
+};
 
 interface CreateActionQueueEntryPayload {
   actionTypeHrid: ActionTypeHrid;
@@ -20,26 +28,26 @@ interface CreateActionQueueEntryPayload {
 }
 
 interface DeleteActionQueueEntryPayload {
-  index: number;
+  id: string;
 }
 
 interface UpdateActionTypePayload {
-  index: number;
+  id: string;
   actionTypeHrid: ActionTypeHrid;
 }
 
 interface UpdateActionHridPayload {
-  index: number;
+  id: string;
   actionHrid: ActionHrid;
 }
 
 interface UpdateNumActionsPayload {
-  index: number;
+  id: string;
   value: number;
 }
 
 interface ReorderActionQueuePayload {
-  newState: ActionQueueState;
+  newLayout: Layout[];
 }
 
 export const actionQueueSlice = createSlice({
@@ -51,32 +59,36 @@ export const actionQueueSlice = createSlice({
       action: PayloadAction<CreateActionQueueEntryPayload>
     ) => {
       const { payload } = action;
-      state.push(payload);
+      const newId = self.crypto.randomUUID();
+      state.actions[newId] = { ...payload, id: newId };
     },
     updateActionType: (state, action: PayloadAction<UpdateActionTypePayload>) => {
       const { payload } = action;
-      state[payload.index].actionTypeHrid = payload.actionTypeHrid;
+      state.actions[payload.id].actionTypeHrid = payload.actionTypeHrid;
     },
     updateActionHrid: (state, action: PayloadAction<UpdateActionHridPayload>) => {
       const { payload } = action;
-      state[payload.index].actionHrid = payload.actionHrid;
+      state.actions[payload.id].actionHrid = payload.actionHrid;
     },
     updateNumActions: (state, action: PayloadAction<UpdateNumActionsPayload>) => {
       const { payload } = action;
-      state[payload.index].numActions = payload.value;
+      state.actions[payload.id].numActions = payload.value;
     },
     deleteActionQueueEntry: (
       state,
       action: PayloadAction<DeleteActionQueueEntryPayload>
     ) => {
       const { payload } = action;
-      state.splice(payload.index, 1);
+      const idIndex = state.layout.findIndex((entry) => entry.i === payload.id);
+      if (idIndex > 0) {
+        delete state.layout[idIndex];
+      }
+      delete state.actions[payload.id];
     },
     reorderActionQueue: (state, action: PayloadAction<ReorderActionQueuePayload>) => {
       const { payload } = action;
-      console.log('reorder received inredux');
-      console.log(payload.newState);
-      return payload.newState;
+      state.layout = payload.newLayout;
+      return state;
     }
   }
 });

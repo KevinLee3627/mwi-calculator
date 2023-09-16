@@ -79,7 +79,8 @@ actionQueueListenerMiddleware.startListening({
     actionQueueSlice.actions.deleteActionQueueEntry,
     actionQueueSlice.actions.reorderActionQueue
   ),
-  effect: () => {
+  effect: (action) => {
+    console.log('saved', action);
     localStorage.setItem('actionQueue', JSON.stringify(store.getState().actionQueue));
   }
 });

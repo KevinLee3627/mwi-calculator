@@ -18,7 +18,7 @@ import { useAppSelector } from 'src/hooks/useAppSelector';
 
 export function ActionQueue() {
   const dispatch = useAppDispatch();
-  const actionQueue = useAppSelector(selectActionQueueState);
+  const queueState = useAppSelector(selectActionQueueState);
 
   const ResponsiveGridLayout = useMemo(() => WidthProvider(Responsive), []);
   const actionTypeOptions = useMemo(() => {
@@ -27,18 +27,18 @@ export function ActionQueue() {
       value: detail
     }));
   }, []);
-  const layout = actionQueue.map((entry, idx) => ({
-    i: idx.toString(),
+  const layout = queueState.layout.map((entry) => ({
+    i: entry.i,
     x: 0,
-    y: idx,
+    y: entry.y,
     w: 1,
     h: 1
   }));
 
-  const elems = actionQueue.map((queueEntry, entryIndex) => {
+  const elems = Object.values(queueState.actions).map((queueEntry) => {
     return (
       <div
-        key={entryIndex.toString()}
+        key={queueEntry.id}
         // https://github.com/react-grid-layout/react-grid-layout/issues/382
         // We need to use both data-grid here AND the layout prop in <GridLayout> for
         // the elements to re-render properly on state(redux) update.
@@ -57,7 +57,7 @@ export function ActionQueue() {
             const actionTypeHrid = e?.value.hrid;
             if (!actionTypeHrid) return;
 
-            dispatch(updateActionType({ index: entryIndex, actionTypeHrid }));
+            dispatch(updateActionType({ id: queueEntry.id, actionTypeHrid }));
           }}
         />
         <Select
@@ -73,7 +73,7 @@ export function ActionQueue() {
             const actionHrid = e?.value.hrid;
             if (!actionHrid) return;
 
-            dispatch(updateActionHrid({ index: entryIndex, actionHrid }));
+            dispatch(updateActionHrid({ id: queueEntry.id, actionHrid }));
           }}
         />
         <input
@@ -83,14 +83,14 @@ export function ActionQueue() {
           value={queueEntry.numActions}
           onChange={(e) => {
             const value = parseInt(e.target.value, 10);
-            dispatch(updateNumActions({ index: entryIndex, value }));
+            dispatch(updateNumActions({ id: queueEntry.id, value }));
           }}
         />
         <button
           // Delete Loadout
           className="btn-error btn-outline btn"
           onClick={(e) => {
-            dispatch(deleteActionQueueEntry({ index: entryIndex }));
+            dispatch(deleteActionQueueEntry({ id: queueEntry.id }));
             e.preventDefault();
           }}
         >
@@ -99,13 +99,6 @@ export function ActionQueue() {
       </div>
     );
   });
-
-  console.log('new queue:', actionQueue);
-  console.log('new layout:', layout);
-  console.log(
-    'new elems:',
-    elems.map((elem) => elem.props.children[1].props.value.label)
-  );
 
   return (
     <dialog id="actionQueueModal" className="modal">
@@ -125,21 +118,8 @@ export function ActionQueue() {
           // TODO: Can we not hardcode this?
           rowHeight={64}
           draggableHandle=".queue-drag-handle"
-          // onDragStop={(newLayout, oldItem, newItem) => {
-          //   console.log(`oldItem`, oldItem);
-          //   console.log(`newItem`, newItem);
-          //   const newState = newLayout.map((item) => {
-          //     return actionQueue[item.y];
-          //   });
-          //   dispatch(reorderActionQueue({ newState }));
-          // }}
-          onLayoutChange={(newLayout) => {
-            console.log(`onlayoutchange`, newLayout);
-            const newState = newLayout.map((item) => {
-              return actionQueue[item.y];
-            });
-            console.log('onlayoutchange newstate:', newState);
-            dispatch(reorderActionQueue({ newState }));
+          onDragStop={(newLayout) => {
+            dispatch(reorderActionQueue({ newLayout: newLayout }));
           }}
           // https://github.com/react-grid-layout/react-grid-layout/issues/858#issuecomment-428539577
           // This makes performance ~6x slower than normal, according to documentation
