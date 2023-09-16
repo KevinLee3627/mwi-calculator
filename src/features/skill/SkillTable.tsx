@@ -58,7 +58,11 @@ export function SkillTable({
   characterLevels,
   data
 }: SkillTableProps) {
-  const { data: marketData, error } = useGetMarketDataQuery('', {
+  const {
+    data: marketData,
+    error,
+    isLoading
+  } = useGetMarketDataQuery('', {
     pollingInterval: 1000 * 60 * 30
   });
 
@@ -205,6 +209,8 @@ export function SkillTable({
         id: 'inputCost',
         header: 'Input Cost',
         cell: (info) => {
+          if (isLoading) return <div>Loading market data</div>;
+
           const { inputItems } = info.row.original;
           if (inputItems != null) {
             const averageCost = market?.getAveragePrice(
@@ -244,6 +250,8 @@ export function SkillTable({
         id: 'outputCost',
         header: 'Output Cost',
         cell: (info) => {
+          if (isLoading) return <div>Loading market data</div>;
+
           const { outputItems } = info.row.original;
           if (outputItems != null) {
             const averageCost = market?.getAveragePrice(
@@ -258,6 +266,8 @@ export function SkillTable({
       }),
       columnHelper.accessor(
         (row) => {
+          if (isLoading) return <div>Loading market data</div>;
+
           if (actionFunctionHrid === '/action_functions/production') {
             const { outputItems, inputItems, hrid } = row;
             if (outputItems != null && inputItems != null && market != null) {
@@ -273,7 +283,7 @@ export function SkillTable({
               const actionsPerHour = 3600 / effectiveTimePerAction;
               const profitPerHour =
                 (averageOutputCost - averageInputCost) * actionsPerHour;
-              return profitPerHour;
+              return profitPerHour.toFixed(2);
             } else {
               return 'N/A';
             }
@@ -288,7 +298,7 @@ export function SkillTable({
                 actionStats[hrid].time / (1 + actionStats[hrid].efficiency);
               const actionsPerHour = 3600 / effectiveTimePerAction;
               const profitPerHour = averageMarketCost * actionsPerHour;
-              return profitPerHour;
+              return profitPerHour.toFixed(2);
             } else {
               return 'N/A';
             }
@@ -432,7 +442,8 @@ export function SkillTable({
     actionStats,
     communityBuffs,
     market,
-    actionFunctionHrid
+    actionFunctionHrid,
+    isLoading
   ]);
 
   const actionCategoryHrids = useMemo(
