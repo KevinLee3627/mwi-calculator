@@ -31,6 +31,6 @@ export function computeEquipmentStats(
     });
 
     return acc;
-  }, {}) as Record<keyof NonCombatStats, number>;
+  }, {}) as Record<keyof NonCombatStats, number | undefined>;
   return stats;
 }
