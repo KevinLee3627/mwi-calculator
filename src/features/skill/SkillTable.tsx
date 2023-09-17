@@ -273,11 +273,13 @@ export function SkillTable({
           if (actionFunctionHrid === '/action_functions/production') {
             const { outputItems, inputItems, hrid } = row;
             if (outputItems != null && inputItems != null && market != null) {
-              const averageOutputCost = market.getAveragePrice(
-                outputItems.map((item) => item.itemHrid)
+              const averageOutputCost = outputItems.reduce(
+                (acc, item) => acc + market.getApproxValue(item.itemHrid) * item.count,
+                0
               );
-              const averageInputCost = market.getAveragePrice(
-                inputItems.map((item) => item.itemHrid)
+              const averageInputCost = inputItems.reduce(
+                (acc, item) => acc + market.getApproxValue(item.itemHrid) * item.count,
+                0
               );
 
               const effectiveTimePerAction =
