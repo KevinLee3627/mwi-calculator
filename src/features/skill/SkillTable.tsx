@@ -214,13 +214,14 @@ export function SkillTable({
 
           const { inputItems } = info.row.original;
           if (inputItems != null) {
-            const averageCost = market?.getAveragePrice(
-              inputItems.map((item) => item.itemHrid)
+            const averageCost = inputItems.reduce(
+              (acc, item) => acc + market.getApproxValue(item.itemHrid) * item.count,
+              0
             );
 
             return <div>{averageCost}</div>;
           } else {
-            return <div>Error getting market data</div>;
+            return <div>N/A</div>;
           }
         }
       }),
@@ -255,13 +256,13 @@ export function SkillTable({
 
           const { outputItems } = info.row.original;
           if (outputItems != null) {
-            const averageCost = market?.getAveragePrice(
-              outputItems.map((item) => item.itemHrid)
+            const averageCost = outputItems.reduce(
+              (acc, item) => acc + market.getApproxValue(item.itemHrid) * item.count,
+              0
             );
-
             return <div>{averageCost}</div>;
           } else {
-            return <div>Error getting market data</div>;
+            return <div>N/A</div>;
           }
         }
       }),
