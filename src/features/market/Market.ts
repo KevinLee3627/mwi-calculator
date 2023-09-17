@@ -4,15 +4,21 @@ import { MarketData } from 'src/core/market/MarketData';
 import { MedianMarketData } from 'src/core/market/MedianMarketData';
 
 export class Market {
-  marketData: MarketData | MedianMarketData;
+  marketData: MarketData | MedianMarketData | undefined;
 
-  constructor(marketData: MarketData | MedianMarketData) {
+  constructor(marketData: MarketData | MedianMarketData | undefined) {
     this.marketData = marketData;
   }
 
   getEntry(hrid: ItemHrid) {
-    const displayName = clientData.itemDetailMap[hrid].name;
-    return this.marketData.market[displayName];
+    if (this.marketData != null) {
+      const displayName = clientData.itemDetailMap[hrid].name;
+      return this.marketData.market[displayName];
+    } else {
+      // If marketdata is invalid/does not exist, just use the vendor price
+      const item = clientData.itemDetailMap[hrid];
+      return { ask: item.sellPrice, bid: item.sellPrice };
+    }
   }
 
   getApproxValue(hrid: ItemHrid) {

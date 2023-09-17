@@ -37,7 +37,8 @@ export function EnhancingTable({
     error,
     isLoading
   } = useGetMedianMarketDataQuery('', { pollingInterval: 1000 * 60 * 30 });
-  if (error || isLoading || marketData == null) return <div>Error getting market</div>;
+  console.log(marketData);
+  if (isLoading) return <div>Loading...</div>;
 
   const market = new Market(marketData);
 
