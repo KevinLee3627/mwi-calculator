@@ -266,113 +266,121 @@ export function EnhancingTable({
   });
 
   return (
-    <div className="grid auto-rows-min gap-2 sm:grid-cols-2">
-      <div>
-        {/* Results Table */}
-        <div className="card flex-col bg-neutral shadow-xl">
-          <div className="card-body">
-            <h2 className="card-title">Results</h2>
-            <table className="table">
-              <tbody>
-                <tr className="hover">
-                  <th>Time/Action (s)</th>
-                  <td>{actionTimer}</td>
-                </tr>
-                <tr className="hover">
-                  <th>Avg XP/Action</th>
-                  <td>{averageEnhanceXp.toFixed(2)}</td>
-                </tr>
-                <tr className="hover">
-                  <th>XP/hr</th>
-                  <td>{((averageEnhanceXp * 3600) / actionTimer).toFixed(2)}</td>
-                </tr>
-                <tr className="hover">
-                  <th>Protection Level</th>
-                  <td>{protLevel}</td>
-                </tr>
-                <tr className="hover">
-                  <th>Protections Used</th>
-                  <td>{protUsedCol[targetLevel].toFixed(2)}</td>
-                </tr>
-                <tr className="hover">
-                  <th>Average Actions</th>
-                  <td>{Math.ceil(actionsCol[targetLevel])}</td>
-                </tr>
-                <tr className="hover">
-                  <th>Average Time</th>
-                  <td>{(actionsCol[targetLevel] * actionTimer).toFixed(2)}</td>
-                </tr>
-                <tr className="hover">
-                  <th>Average Cost</th>
-                  <td>{cost.toFixed(2)}</td>
-                </tr>
-                <tr className="hover">
-                  <th>Average Total XP</th>
-                  <td>{(actionsCol[targetLevel] * averageEnhanceXp).toFixed(2)}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+    <>
+      {error && (
+        <div className="alert alert-warning mb-4">
+          Market data could not be retrieved - enhancement costs are based on vendor
+          prices (but can be overriden)
         </div>
-      </div>
-      <div>
-        {/* Item Costs Table */}
-        <div className="card mb-2 bg-neutral text-neutral-content">
-          <div className="card-body">
-            <h2 className="card-title text-left">Enhancement Costs</h2>
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>Item</th>
-                  <th>Count</th>
-                  <th>Ask</th>
-                  <th>Bid</th>
-                  <th>Value</th>
-                  <th>Average Used</th>
-                </tr>
-              </thead>
-              <tbody>
-                {marketRows}
-                <tr>
-                  <th colSpan={4}>Total</th>
-                  <td>{costPerEnhance}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-        {/* Protection Costs Table */}
-        <div className="card bg-neutral text-neutral-content">
-          <div className="card-body">
-            <h2 className="card-title text-left">Protection Costs</h2>
-            <div>
-              <label className="label">
-                <span className="label-text">Protection Cost</span>
-              </label>
-              <input
-                className="input-primary input"
-                type="text"
-                value={protectionCost.toString()}
-                onChange={(e) => {
-                  const overrideVal = e.target.value;
-                  setProtOverride(parseInt(overrideVal, 10));
-                }}
-              />
+      )}
+      <div className="grid auto-rows-min gap-2 sm:grid-cols-2">
+        <div>
+          {/* Results Table */}
+          <div className="card flex-col bg-neutral shadow-xl">
+            <div className="card-body">
+              <h2 className="card-title">Results</h2>
+              <table className="table">
+                <tbody>
+                  <tr className="hover">
+                    <th>Time/Action (s)</th>
+                    <td>{actionTimer}</td>
+                  </tr>
+                  <tr className="hover">
+                    <th>Avg XP/Action</th>
+                    <td>{averageEnhanceXp.toFixed(2)}</td>
+                  </tr>
+                  <tr className="hover">
+                    <th>XP/hr</th>
+                    <td>{((averageEnhanceXp * 3600) / actionTimer).toFixed(2)}</td>
+                  </tr>
+                  <tr className="hover">
+                    <th>Protection Level</th>
+                    <td>{protLevel}</td>
+                  </tr>
+                  <tr className="hover">
+                    <th>Protections Used</th>
+                    <td>{protUsedCol[targetLevel].toFixed(2)}</td>
+                  </tr>
+                  <tr className="hover">
+                    <th>Average Actions</th>
+                    <td>{Math.ceil(actionsCol[targetLevel])}</td>
+                  </tr>
+                  <tr className="hover">
+                    <th>Average Time</th>
+                    <td>{(actionsCol[targetLevel] * actionTimer).toFixed(2)}</td>
+                  </tr>
+                  <tr className="hover">
+                    <th>Average Cost</th>
+                    <td>{cost.toFixed(2)}</td>
+                  </tr>
+                  <tr className="hover">
+                    <th>Average Total XP</th>
+                    <td>{(actionsCol[targetLevel] * averageEnhanceXp).toFixed(2)}</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>Item</th>
-                  <th>Ask</th>
-                  <th>Bid</th>
-                  <th>Vendor</th>
-                </tr>
-              </thead>
-              <tbody>{protectionItemRows}</tbody>
-            </table>
+          </div>
+        </div>
+        <div>
+          {/* Item Costs Table */}
+          <div className="card mb-2 bg-neutral text-neutral-content">
+            <div className="card-body">
+              <h2 className="card-title text-left">Enhancement Costs</h2>
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th>Count</th>
+                    <th>Ask</th>
+                    <th>Bid</th>
+                    <th>Value</th>
+                    <th>Average Used</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {marketRows}
+                  <tr>
+                    <th colSpan={4}>Total</th>
+                    <td>{costPerEnhance}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          {/* Protection Costs Table */}
+          <div className="card bg-neutral text-neutral-content">
+            <div className="card-body">
+              <h2 className="card-title text-left">Protection Costs</h2>
+              <div>
+                <label className="label">
+                  <span className="label-text">Protection Cost</span>
+                </label>
+                <input
+                  className="input-primary input"
+                  type="text"
+                  value={protectionCost.toString()}
+                  onChange={(e) => {
+                    const overrideVal = e.target.value;
+                    setProtOverride(parseInt(overrideVal, 10));
+                  }}
+                />
+              </div>
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th>Ask</th>
+                    <th>Bid</th>
+                    <th>Vendor</th>
+                  </tr>
+                </thead>
+                <tbody>{protectionItemRows}</tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
