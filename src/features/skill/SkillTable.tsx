@@ -66,9 +66,10 @@ export function SkillTable({
     pollingInterval: 1000 * 60 * 30
   });
 
+  console.log(marketData, isLoading);
+
   const market = useMemo(() => {
-    if (marketData == null) return null;
-    else return new Market(marketData);
+    return new Market(marketData);
   }, [marketData]);
 
   const dispatch = useAppDispatch();
@@ -266,7 +267,7 @@ export function SkillTable({
       }),
       columnHelper.accessor(
         (row) => {
-          if (isLoading) return <div>Loading market data</div>;
+          if (error) return <div>Error getting market data</div>;
 
           if (actionFunctionHrid === '/action_functions/production') {
             const { outputItems, inputItems, hrid } = row;
@@ -443,7 +444,8 @@ export function SkillTable({
     communityBuffs,
     market,
     actionFunctionHrid,
-    isLoading
+    isLoading,
+    error
   ]);
 
   const actionCategoryHrids = useMemo(
