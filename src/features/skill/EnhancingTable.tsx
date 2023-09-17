@@ -45,7 +45,7 @@ export function EnhancingTable({
   const characterEnhancingLevel = characterLevels['/skills/enhancing'];
   const enhancingTeaLevelBonus = drinkStats['/buff_types/enhancing_level'] ?? 0;
   const effectiveEnhancingLevel = characterEnhancingLevel + enhancingTeaLevelBonus;
-  const toolBonus = equipmentStats.enhancingSuccess;
+  const toolBonus = equipmentStats.enhancingSuccess ?? 0;
 
   // binomial distribution stuff? been too long since I took any stats...
 
@@ -67,7 +67,6 @@ export function EnhancingTable({
     // for example, table[0] = 0.5 = 50%, which is the chance to 'hit'
     // when your item is at +0 !!!
     const baseSuccessRate = clientData.enhancementLevelSuccessRateTable[N];
-
     const rest =
       Math.min((effectiveEnhancingLevel / itemToEnhance.itemLevel + 1) / 2, 1) +
       toolBonus +
@@ -118,6 +117,8 @@ export function EnhancingTable({
 
       return acc + enhancementItemCost * val.count;
     }, 0) ?? 1;
+
+  console.log(`costperenhance: ${costPerEnhance}`);
 
   const extraProtectionItems: InputItem[] =
     itemToEnhance.protectionItemHrids?.map((hrid) => ({
@@ -209,7 +210,7 @@ export function EnhancingTable({
       sample.map((i) => Z(i) * T(i)).reduce((a, b) => a + b)) *
     1.5 *
     (itemToEnhance.itemLevel + 10) *
-    (drinkStats['/buff_types/wisdom'] ?? 1);
+    (1 + (drinkStats['/buff_types/wisdom'] ?? 0));
 
   const protectionItemRows = protectionItems.map((x) => {
     const marketItem = clientData.itemDetailMap[x.itemHrid];
