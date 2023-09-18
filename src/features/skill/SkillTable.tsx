@@ -66,8 +66,6 @@ export function SkillTable({
     pollingInterval: 1000 * 60 * 30
   });
 
-  console.log(marketData, isLoading);
-
   const market = useMemo(() => {
     return new Market(marketData);
   }, [marketData]);
@@ -303,14 +301,25 @@ export function SkillTable({
           } else {
             const { dropTable, hrid } = row;
             if (dropTable != null && market != null) {
-              const averageMarketCost = market.getAveragePrice(
-                dropTable.map((item) => item.itemHrid)
-              );
+              const dropQuantitybonus = computeGatheringQuantityBonus({
+                drinkStats,
+                equipmentStats,
+                communityBuffs
+              });
+
+              const profitPerAction = dropTable.reduce((acc, drop) => {
+                const dropsPerAction =
+                  ((1 + dropQuantitybonus) * (drop.minCount + drop.maxCount)) / 2;
+
+                const moneyPerAction = market.getApproxValue(drop.itemHrid);
+                return acc + moneyPerAction * dropsPerAction;
+              }, 0);
 
               const effectiveTimePerAction =
                 actionStats[hrid].time / (1 + actionStats[hrid].efficiency);
+
               const actionsPerHour = 3600 / effectiveTimePerAction;
-              const profitPerHour = averageMarketCost * actionsPerHour;
+              const profitPerHour = profitPerAction * actionsPerHour;
               return profitPerHour.toFixed(2);
             } else {
               return 'N/A';
