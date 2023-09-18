@@ -214,12 +214,15 @@ export function SkillTable({
 
           const { inputItems } = info.row.original;
           if (inputItems != null) {
+            const artisanTeaBonus = drinkStats['/buff_types/artisan'] ?? 0;
             const averageCost = inputItems.reduce(
-              (acc, item) => acc + market.getApproxValue(item.itemHrid) * item.count,
+              (acc, item) =>
+                acc +
+                market.getApproxValue(item.itemHrid) * item.count * (1 - artisanTeaBonus),
               0
             );
 
-            return <div>{averageCost}</div>;
+            return <div>{averageCost.toFixed(2)}</div>;
           } else {
             return <div>N/A</div>;
           }
@@ -277,8 +280,14 @@ export function SkillTable({
                 (acc, item) => acc + market.getApproxValue(item.itemHrid) * item.count,
                 0
               );
+
+              const artisanTeaBonus = drinkStats['/buff_types/artisan'] ?? 0;
               const averageInputCost = inputItems.reduce(
-                (acc, item) => acc + market.getApproxValue(item.itemHrid) * item.count,
+                (acc, item) =>
+                  acc +
+                  market.getApproxValue(item.itemHrid) *
+                    item.count *
+                    (1 - artisanTeaBonus),
                 0
               );
 
