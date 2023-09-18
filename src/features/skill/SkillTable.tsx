@@ -65,6 +65,7 @@ export function SkillTable({
   } = useGetMarketDataQuery('', {
     pollingInterval: 1000 * 60 * 30
   });
+  console.log(marketData, error, isLoading);
 
   const market = useMemo(() => {
     return new Market(marketData);
@@ -312,6 +313,7 @@ export function SkillTable({
                   ((1 + dropQuantitybonus) * (drop.minCount + drop.maxCount)) / 2;
 
                 const moneyPerAction = market.getApproxValue(drop.itemHrid);
+                console.log(drop.itemHrid, moneyPerAction);
                 return acc + moneyPerAction * dropsPerAction;
               }, 0);
 
@@ -526,9 +528,15 @@ export function SkillTable({
     );
   });
 
-  if (actionTypeHrid !== '/action_types/enhancing') {
+  if (actionTypeHrid !== '/action_types/enhancing' && !isLoading) {
     return (
       <div>
+        {error && (
+          <div className="alert alert-warning mb-4">
+            Market data could not be retrieved - enhancement costs are based on vendor
+            prices (but can be overriden)
+          </div>
+        )}
         <div className="flex items-end gap-2 ">
           {actionFunctionHrid === '/action_functions/production' && (
             <div>
