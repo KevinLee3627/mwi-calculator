@@ -270,7 +270,7 @@ export function SkillTable({
       }),
       columnHelper.accessor(
         (row) => {
-          if (error) return <div>Error getting market data</div>;
+          if (error) return 'Error getting market data';
 
           if (actionFunctionHrid === '/action_functions/production') {
             const { outputItems, inputItems, hrid } = row;
@@ -295,9 +295,7 @@ export function SkillTable({
               const actionsPerHour = 3600 / effectiveTimePerAction;
               const profitPerHour =
                 (averageOutputCost - averageInputCost) * actionsPerHour;
-              return profitPerHour.toFixed(2);
-            } else {
-              return 'N/A';
+              return profitPerHour;
             }
           } else {
             const { dropTable, hrid } = row;
@@ -322,16 +320,18 @@ export function SkillTable({
 
               const actionsPerHour = 3600 / effectiveTimePerAction;
               const profitPerHour = profitPerAction * actionsPerHour;
-              return profitPerHour.toFixed(2);
-            } else {
-              return 'N/A';
+              return profitPerHour;
             }
           }
+          return 'N/A';
         },
         {
           id: 'profit',
           header: 'Profit/hr',
-          cell: (info) => info.getValue()
+          cell: (info) => {
+            const value = info.getValue();
+            return typeof value === 'number' ? value.toFixed(2) : value;
+          }
         }
       ),
       columnHelper.accessor((row) => row.dropTable, {
