@@ -3,7 +3,7 @@ import { ActionDetail } from 'src/old/core/actions/ActionDetail';
 import { ActionTypeDetail } from 'src/old/core/actions/ActionTypeDetail';
 import { BuffTypeDetail } from 'src/old/core/buffs/BuffTypeDetail';
 import { CommunityBuffTypeDetail } from 'src/old/core/buffs/CommunityBuffTypeDetail';
-import clientDataJson from 'src/core/clientData.json';
+import clientDataJson from 'src/old/core/clientData.json';
 import { AbilityHrid } from 'src/old/core/hrid/AbilityHrid';
 import { ActionCategoryHrid } from 'src/old/core/hrid/ActionCategoryHrid';
 import { ActionHrid } from 'src/old/core/hrid/ActionHrid';
