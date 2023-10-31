@@ -1,0 +1,18 @@
+export type SkillHrid =
+  | '/skills/attack'
+  | '/skills/brewing'
+  | '/skills/cheesesmithing'
+  | '/skills/cooking'
+  | '/skills/crafting'
+  | '/skills/defense'
+  | '/skills/enhancing'
+  | '/skills/foraging'
+  | '/skills/intelligence'
+  | '/skills/magic'
+  | '/skills/milking'
+  | '/skills/power'
+  | '/skills/ranged'
+  | '/skills/stamina'
+  | '/skills/tailoring'
+  | '/skills/total_level'
+  | '/skills/woodcutting';
