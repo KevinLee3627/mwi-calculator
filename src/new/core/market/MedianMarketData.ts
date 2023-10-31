@@ -1,4 +1,4 @@
-import { MarketEntry } from 'src/old/core/market/MarketEntry';
+import { MarketEntry } from 'src/new/core/market/MarketEntry';
 
 export interface MedianMarketData {
   time: number; // unix epoch

@@ -1,13 +1,13 @@
-import { MonsterSpawnInfo } from 'src/old/core/combat/MonsterSpawnInfo';
-import { ActionCategoryHrid } from 'src/old/core/hrid/ActionCategoryHrid';
-import { ActionFunctionHrid } from 'src/old/core/hrid/ActionFunctionHrid';
-import { ActionHrid } from 'src/old/core/hrid/ActionHrid';
-import { ActionTypeHrid } from 'src/old/core/hrid/ActionTypeHrid';
-import { ItemHrid } from 'src/old/core/hrid/ItemHrid';
-import { InputItem } from 'src/old/core/items/InputItem';
-import { LevelRequirement } from 'src/old/core/items/LevelRequirement';
-import { DropTableEntry } from 'src/old/core/skills/DropTableEntry';
-import { ExperienceGain } from 'src/old/core/skills/ExperienceGain';
+import { MonsterSpawnInfo } from 'src/new/core/combat/MonsterSpawnInfo';
+import { ActionCategoryHrid } from 'src/new/core/hrid/ActionCategoryHrid';
+import { ActionFunctionHrid } from 'src/new/core/hrid/ActionFunctionHrid';
+import { ActionHrid } from 'src/new/core/hrid/ActionHrid';
+import { ActionTypeHrid } from 'src/new/core/hrid/ActionTypeHrid';
+import { ItemHrid } from 'src/new/core/hrid/ItemHrid';
+import { InputItem } from 'src/new/core/items/InputItem';
+import { LevelRequirement } from 'src/new/core/items/LevelRequirement';
+import { DropTableEntry } from 'src/new/core/skills/DropTableEntry';
+import { ExperienceGain } from 'src/new/core/skills/ExperienceGain';
 
 export interface ActionDetail {
   hrid: ActionHrid;

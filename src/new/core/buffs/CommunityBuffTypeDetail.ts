@@ -1,6 +1,6 @@
-import { BuffDetail } from 'src/old/core/buffs/BuffDetail';
-import { ActionTypeHrid } from 'src/old/core/hrid/ActionTypeHrid';
-import { CommunityBuffTypeHrid } from 'src/old/core/hrid/CommunityBuffTypeHrid';
+import { BuffDetail } from 'src/new/core/buffs/BuffDetail';
+import { ActionTypeHrid } from 'src/new/core/hrid/ActionTypeHrid';
+import { CommunityBuffTypeHrid } from 'src/new/core/hrid/CommunityBuffTypeHrid';
 
 export interface CommunityBuffTypeDetail {
   hrid: CommunityBuffTypeHrid;

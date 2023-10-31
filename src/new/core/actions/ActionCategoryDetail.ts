@@ -1,4 +1,4 @@
-import { ActionCategoryHrid } from 'src/old/core/hrid/ActionCategoryHrid';
+import { ActionCategoryHrid } from 'src/new/core/hrid/ActionCategoryHrid';
 
 export interface ActionCategoryDetail {
   hrid: ActionCategoryHrid;

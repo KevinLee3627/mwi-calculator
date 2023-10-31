@@ -1,5 +1,5 @@
-import { BuffDetail } from 'src/old/core/buffs/BuffDetail';
-import { ActionTypeHrid } from 'src/old/core/hrid/ActionTypeHrid';
+import { BuffDetail } from 'src/new/core/buffs/BuffDetail';
+import { ActionTypeHrid } from 'src/new/core/hrid/ActionTypeHrid';
 
 export interface ConsumableDetail {
   cooldownDuration: number;

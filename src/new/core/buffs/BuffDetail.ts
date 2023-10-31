@@ -1,5 +1,5 @@
-import { BuffTypeHrid } from 'src/old/core/hrid/BuffTypeHrid';
-import { BuffUniquesHrid } from 'src/old/core/hrid/BuffUniquesHrid';
+import { BuffTypeHrid } from 'src/new/core/hrid/BuffTypeHrid';
+import { BuffUniquesHrid } from 'src/new/core/hrid/BuffUniquesHrid';
 
 export interface BuffDetail {
   uniqueHrid: BuffUniquesHrid;

@@ -1,5 +1,5 @@
-import { CombatStyleHrid } from 'src/old/core/hrid/CombatStyleHrid';
-import { DamageTypeHrid } from 'src/old/core/hrid/DamageTypeHrid';
+import { CombatStyleHrid } from 'src/new/core/hrid/CombatStyleHrid';
+import { DamageTypeHrid } from 'src/new/core/hrid/DamageTypeHrid';
 
 export interface CombatStats {
   combatStyleHrids: null | CombatStyleHrid[];

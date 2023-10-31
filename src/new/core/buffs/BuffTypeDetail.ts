@@ -1,4 +1,4 @@
-import { BuffTypeHrid } from 'src/old/core/hrid/BuffTypeHrid';
+import { BuffTypeHrid } from 'src/new/core/hrid/BuffTypeHrid';
 
 export interface BuffTypeDetail {
   hrid: BuffTypeHrid;

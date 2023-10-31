@@ -1,4 +1,4 @@
-import { SkillHrid } from 'src/old/core/hrid/SkillHrid';
+import { SkillHrid } from 'src/new/core/hrid/SkillHrid';
 
 export interface LevelRequirement {
   skillHrid: SkillHrid;

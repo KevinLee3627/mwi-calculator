@@ -1,4 +1,4 @@
-import { ItemCategoryHrid } from 'src/old/core/hrid/ItemCategoryHrid';
+import { ItemCategoryHrid } from 'src/new/core/hrid/ItemCategoryHrid';
 
 export interface ItemCategoryDetail {
   hrid: ItemCategoryHrid;
