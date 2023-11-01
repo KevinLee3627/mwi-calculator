@@ -40,6 +40,7 @@ export type ItemHrid =
   | '/items/azure_spatula'
   | '/items/azure_spear'
   | '/items/azure_sword'
+  | '/items/bag_of_10_cowbells'
   | '/items/bamboo_boots'
   | '/items/bamboo_branch'
   | '/items/bamboo_fabric'
