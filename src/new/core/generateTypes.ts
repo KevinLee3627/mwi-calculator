@@ -1,7 +1,7 @@
 import { readFile, writeFile } from 'fs/promises';
 
 async function main() {
-  const file = await readFile('./src/clientData.json', { encoding: 'utf-8' });
+  const file = await readFile('./src/new/clientData.json', { encoding: 'utf-8' });
   const data = JSON.parse(file);
 
   generateHridType('SkillHrid', Object.keys(data.skillDetailMap));
@@ -52,7 +52,7 @@ async function main() {
 }
 
 async function generateHridType(name: string, values: string[]): Promise<void> {
-  const filePath = `${process.cwd()}/src/core/hrid/${name}.ts`;
+  const filePath = `${process.cwd()}/src/new/core/hrid/${name}.ts`;
 
   const skillHridTypeDef = `export type ${name} = ${values
     .map((val) => `'${val}'`)
