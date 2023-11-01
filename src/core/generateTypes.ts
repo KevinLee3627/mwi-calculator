@@ -52,7 +52,7 @@ async function main() {
 }
 
 async function generateHridType(name: string, values: string[]): Promise<void> {
-  const filePath = `${process.cwd()}/src/new/core/hrid/${name}.ts`;
+  const filePath = `${process.cwd()}/src/core/hrid/${name}.ts`;
 
   const skillHridTypeDef = `export type ${name} = ${values
     .map((val) => `'${val}'`)
