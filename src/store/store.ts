@@ -13,15 +13,15 @@ import {
   communityBuffInitialState,
   communityBuffSlice
 } from 'src/features/communityBuff/communityBuffSlice';
-import { houseInitialState, houseSlice } from 'src/features/house/houseSlice';
 // import {
 //   actionQueueInitialState,
 //   actionQueueSlice
 // } from 'src/old/features/queue/actionQueueSlice';
-// import {
-//   skillDrinksInitialState,
-//   skillDrinksSlice
-// } from 'src/old/features/skill/drinks/drinksSlice';
+import {
+  skillDrinksInitialState,
+  skillDrinksSlice
+} from 'src/features/drinks/drinksSlice';
+import { houseInitialState, houseSlice } from 'src/features/house/houseSlice';
 // import {
 //   targetLevelInitialState,
 //   targetLevelSlice
@@ -32,8 +32,8 @@ import {
   characterLevelsListenerMiddleware,
   communityBuffListenerMiddleware,
   houseListenerMiddleware,
-  loadoutListenerMiddleware
-  // skillDrinksListenerMiddleware,
+  loadoutListenerMiddleware,
+  skillDrinksListenerMiddleware
   // targetLevelListenerMiddleware
 } from 'src/store/listenerMiddleware';
 
@@ -46,7 +46,7 @@ export const store = configureStore({
   reducer: {
     characterLevels: characterLevelsSlice.reducer,
     loadout: loadoutSlice.reducer,
-    // skillDrinks: skillDrinksSlice.reducer,
+    skillDrinks: skillDrinksSlice.reducer,
     activeSkill: activeSkillSlice.reducer,
     // targetLevel: targetLevelSlice.reducer,
     communityBuff: communityBuffSlice.reducer,
@@ -58,7 +58,7 @@ export const store = configureStore({
     ...getDefaultMiddleware(),
     characterLevelsListenerMiddleware.middleware,
     loadoutListenerMiddleware.middleware,
-    // skillDrinksListenerMiddleware.middleware,
+    skillDrinksListenerMiddleware.middleware,
     activeSkillListenerMiddleware.middleware,
     // targetLevelListenerMiddleware.middleware,
     communityBuffListenerMiddleware.middleware,
@@ -69,7 +69,7 @@ export const store = configureStore({
   preloadedState: {
     characterLevels: tryLocalStorage('characterLevels', characterLevelsInitialState),
     loadout: tryLocalStorage('loadout', loadoutInitialState),
-    //   skillDrinks: tryLocalStorage('skillDrinks', skillDrinksInitialState),
+    skillDrinks: tryLocalStorage('skillDrinks', skillDrinksInitialState),
     activeSkill: tryLocalStorage('activeSkill', activeSkillInitialState),
     //   targetLevel: tryLocalStorage('targetLevel', targetLevelInitialState),
     communityBuff: tryLocalStorage('communityBuff', communityBuffInitialState),

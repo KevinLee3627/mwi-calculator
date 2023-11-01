@@ -3,9 +3,9 @@ import { activeSkillSlice } from 'src/features/activeSkillSlice';
 import { characterLevelsSlice } from 'src/features/character/levels/characterLevelsSlice';
 import { loadoutSlice } from 'src/features/character/loadout/loadoutSlice';
 import { communityBuffSlice } from 'src/features/communityBuff/communityBuffSlice';
-import { houseSlice } from 'src/features/house/houseSlice';
 // import { actionQueueSlice } from 'src/old/features/queue/actionQueueSlice';
-// import { skillDrinksSlice } from 'src/old/features/skill/drinks/drinksSlice';
+import { skillDrinksSlice } from 'src/features/drinks/drinksSlice';
+import { houseSlice } from 'src/features/house/houseSlice';
 // import { targetLevelSlice } from 'src/old/features/skill/targets/targetLevelSlice';
 import { store } from 'src/store/store';
 
@@ -38,13 +38,13 @@ loadoutListenerMiddleware.startListening({
   }
 });
 
-// export const skillDrinksListenerMiddleware = createListenerMiddleware();
-// skillDrinksListenerMiddleware.startListening({
-//   actionCreator: skillDrinksSlice.actions.setSkillDrinks,
-//   effect: () => {
-//     localStorage.setItem('skillDrinks', JSON.stringify(store.getState().skillDrinks));
-//   }
-// });
+export const skillDrinksListenerMiddleware = createListenerMiddleware();
+skillDrinksListenerMiddleware.startListening({
+  actionCreator: skillDrinksSlice.actions.setSkillDrinks,
+  effect: () => {
+    localStorage.setItem('skillDrinks', JSON.stringify(store.getState().skillDrinks));
+  }
+});
 
 export const activeSkillListenerMiddleware = createListenerMiddleware();
 activeSkillListenerMiddleware.startListening({
