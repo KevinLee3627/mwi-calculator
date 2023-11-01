@@ -4,4 +4,6 @@ export type SvgSetName =
   | 'items'
   | 'logos'
   | 'skills'
-  | 'upgrades';
+  | 'upgrades'
+  | 'abilities'
+  | 'actions';
