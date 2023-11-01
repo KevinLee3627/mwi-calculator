@@ -11,7 +11,7 @@ export function Sidebar() {
       <aside className=" bg-base-100 ">
         <div className="hidden pl-6 pt-4 font-extrabold lg:block">
           <GameIcon svgSetName="chat_icons" iconName="book" />
-          mwi-calculator
+          cowculator
         </div>
         <ul className="menu sticky text-base-content">
           <li>

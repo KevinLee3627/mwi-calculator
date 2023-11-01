@@ -20,7 +20,7 @@ const App = () => {
                 </label>
               </span>
               <div className="flex place-items-center gap-2">
-                <span className="font-extrabold">mwi-calculator</span>
+                <span className="font-extrabold">cowculator</span>
               </div>
             </div>
           </nav>
