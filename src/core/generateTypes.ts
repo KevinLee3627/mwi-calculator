@@ -1,7 +1,7 @@
 import { readFile, writeFile } from 'fs/promises';
 
 async function main() {
-  const file = await readFile('./src/new/clientData.json', { encoding: 'utf-8' });
+  const file = await readFile('./src/clientData.json', { encoding: 'utf-8' });
   const data = JSON.parse(file);
 
   generateHridType('SkillHrid', Object.keys(data.skillDetailMap));
@@ -44,9 +44,18 @@ async function main() {
   const communityBuffUniquesHrids = Object.values<
     Record<string, Record<string, unknown>>
   >(data.communityBuffTypeDetailMap).map((value) => value.buff.uniqueHrid);
+  const houseBuffUniquesHrids = Object.values<Record<string, unknown>>(
+    data.houseRoomDetailMap
+  ).reduce<string[]>((acc, roomDetail) => {
+    const actionBuffs = roomDetail.actionBuffs as Record<string, unknown>[];
+    const actionBuffHrids = actionBuffs.map((buff) => buff.uniqueHrid as string);
+    const globalBuffs = roomDetail.globalBuffs as Record<string, unknown>[];
+    const globalBuffHrids = globalBuffs.map((buff) => buff.uniqueHrid as string);
+    return [...acc, ...actionBuffHrids, ...globalBuffHrids];
+  }, []);
 
   const uniqueBuffUniquesHrids = Array.from(
-    new Set([...buffUniquesHrids, ...communityBuffUniquesHrids])
+    new Set([...buffUniquesHrids, ...communityBuffUniquesHrids, ...houseBuffUniquesHrids])
   ) as string[];
   generateHridType('BuffUniquesHrid', uniqueBuffUniquesHrids);
 }
