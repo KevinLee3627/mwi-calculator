@@ -4,6 +4,7 @@ import { Sidebar } from 'src/components/Sidebar';
 import { CharacterLevels } from 'src/features/character/levels/CharacterLevels';
 import { CharacterEquipment } from 'src/features/character/loadout/CharacterEquipment';
 import { CommunityBuffs } from 'src/features/communityBuff/CommunityBuffs';
+import { House } from 'src/features/house/House';
 
 const App = () => {
   return (
@@ -34,6 +35,7 @@ const App = () => {
         <CharacterEquipment />
         <CharacterLevels />
         <CommunityBuffs />
+        <House />
       </div>
     </>
   );

@@ -3,6 +3,7 @@ import { activeSkillSlice } from 'src/features/activeSkillSlice';
 import { characterLevelsSlice } from 'src/features/character/levels/characterLevelsSlice';
 import { loadoutSlice } from 'src/features/character/loadout/loadoutSlice';
 import { communityBuffSlice } from 'src/features/communityBuff/communityBuffSlice';
+import { houseSlice } from 'src/features/house/houseSlice';
 // import { actionQueueSlice } from 'src/old/features/queue/actionQueueSlice';
 // import { skillDrinksSlice } from 'src/old/features/skill/drinks/drinksSlice';
 // import { targetLevelSlice } from 'src/old/features/skill/targets/targetLevelSlice';
@@ -66,6 +67,14 @@ communityBuffListenerMiddleware.startListening({
   actionCreator: communityBuffSlice.actions.setBuffLevel,
   effect: () => {
     localStorage.setItem('communityBuff', JSON.stringify(store.getState().communityBuff));
+  }
+});
+
+export const houseListenerMiddleware = createListenerMiddleware();
+houseListenerMiddleware.startListening({
+  actionCreator: houseSlice.actions.setRoomLevel,
+  effect: () => {
+    localStorage.setItem('house', JSON.stringify(store.getState().house));
   }
 });
 

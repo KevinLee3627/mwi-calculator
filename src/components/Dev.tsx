@@ -1,7 +1,8 @@
 import { useStats } from 'src/hooks/useStats';
 
 export function Dev() {
-  const { characterLevels, activeLoadout, communityBuffs, activeSkillState } = useStats();
+  const { characterLevels, activeLoadout, communityBuffs, activeSkillState, house } =
+    useStats();
   const levelsTable = (
     <table className="table">
       <thead>
@@ -69,12 +70,35 @@ export function Dev() {
       </tbody>
     </table>
   );
+
+  const houseTable = (
+    <table className="table">
+      <thead>
+        <tr>
+          <th>room</th>
+          <th>level</th>
+        </tr>
+      </thead>
+      <tbody>
+        {Object.entries(house).map((entry) => {
+          const [key, val] = entry;
+          return (
+            <tr key={key}>
+              <td>{key}</td>
+              <td>{val}</td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  );
   return (
     <div className="flex">
       <div className="flex">
         {levelsTable} {loadoutTable} {communityBuffTable}
       </div>
       <div>active skill: {activeSkillState.activeSkill}</div>
+      <div>{houseTable}</div>
     </div>
   );
 }
