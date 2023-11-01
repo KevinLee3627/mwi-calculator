@@ -1,7 +1,8 @@
-import { clientData } from 'src/new/clientData';
-import { GameIcon } from 'src/old/components/GameIcon';
-import { useAppDispatch } from 'src/old/hooks/useAppDispatch';
-import { openModal } from 'src/old/util/openModal';
+import { GameIcon } from 'src/components/GameIcon';
+import { clientData } from 'src/core/clientData';
+import { NonCombatSkillHrid } from 'src/core/skills/NonCombatSkillHrid';
+// import { useAppDispatch } from 'src/hooks/useAppDispatch';
+import { openModal } from 'src/util/openModal';
 
 export function Sidebar() {
   return (
@@ -56,7 +57,7 @@ export function Sidebar() {
 }
 
 interface SidebarSkillTabProps {
-  // skillHrid: NonCombatSkillHrid;
+  skillHrid: NonCombatSkillHrid;
 }
 function SidebarSkillTab({ skillHrid }: SidebarSkillTabProps) {
   // const dispatch = useAppDispatch();
