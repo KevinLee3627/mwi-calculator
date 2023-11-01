@@ -1,13 +1,14 @@
 import { SkillHrid } from 'src/core/hrid/SkillHrid';
 
-export type NonCombatSkillHrid = Exclude<
+export type NonCombatSkillHrid = Extract<
   SkillHrid,
-  | '/skills/attack'
-  | '/skills/defense'
-  | '/skills/intelligence'
-  | '/skills/magic'
-  | '/skills/power'
-  | '/skills/ranged'
-  | '/skills/stamina'
-  | '/skills/total_level'
+  | '/skills/brewing'
+  | '/skills/cheesesmithing'
+  | '/skills/cooking'
+  | '/skills/crafting'
+  | '/skills/enhancing'
+  | '/skills/foraging'
+  | '/skills/milking'
+  | '/skills/tailoring'
+  | '/skills/woodcutting'
 >;
