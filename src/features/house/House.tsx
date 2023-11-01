@@ -8,33 +8,35 @@ export function House() {
   const dispatch = useAppDispatch();
   const { house } = useStats();
 
-  const rooms = Object.values(clientData.houseRoomDetailMap).map((room) => {
-    return (
-      <div key={room.hrid}>
-        <label className="label">
-          <span className="label-text">
-            <GameIcon
-              svgSetName="skills"
-              iconName={room.skillHrid.split('/').at(-1) ?? ''}
-            />
-            {room.name}
-          </span>
-        </label>
-        <input
-          type="number"
-          className="input-primary input"
-          min={0}
-          max={20}
-          value={house[room.hrid]}
-          onChange={(e) => {
-            const value = parseInt(e.target.value, 10);
+  const rooms = Object.values(clientData.houseRoomDetailMap)
+    .sort((a, b) => a.sortIndex - b.sortIndex)
+    .map((room) => {
+      return (
+        <div key={room.hrid}>
+          <label className="label">
+            <span className="label-text">
+              <GameIcon
+                svgSetName="skills"
+                iconName={room.skillHrid.split('/').at(-1) ?? ''}
+              />
+              {room.name}
+            </span>
+          </label>
+          <input
+            type="number"
+            className="input-primary input"
+            min={0}
+            max={20}
+            value={house[room.hrid]}
+            onChange={(e) => {
+              const value = parseInt(e.target.value, 10);
 
-            dispatch(setRoomLevel({ houseRoomHrid: room.hrid, level: value }));
-          }}
-        />
-      </div>
-    );
-  });
+              dispatch(setRoomLevel({ houseRoomHrid: room.hrid, level: value }));
+            }}
+          />
+        </div>
+      );
+    });
 
   return (
     <dialog id="houseModal" className="modal modal-bottom sm:modal-middle">
