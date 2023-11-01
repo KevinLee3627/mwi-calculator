@@ -1,5 +1,5 @@
-import { EquipmentTypeHrid } from 'src/new/core/hrid/EquipmentTypeHrid';
-import { ItemLocationHrid } from 'src/new/core/hrid/ItemLocationHrid';
+import { EquipmentTypeHrid } from 'src/core/hrid/EquipmentTypeHrid';
+import { ItemLocationHrid } from 'src/core/hrid/ItemLocationHrid';
 
 export interface EquipmentTypeDetail {
   hrid: EquipmentTypeHrid;

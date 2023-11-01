@@ -1,4 +1,4 @@
-import { SkillHrid } from 'src/new/core/hrid/SkillHrid';
+import { SkillHrid } from 'src/core/hrid/SkillHrid';
 
 export interface ExperienceGain {
   skillHrid: SkillHrid;

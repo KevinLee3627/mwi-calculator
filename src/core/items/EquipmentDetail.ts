@@ -1,9 +1,9 @@
-import { EquipmentTypeHrid } from 'src/new/core/hrid/EquipmentTypeHrid';
-import { CombatEnhancementBonuses } from 'src/new/core/items/CombatEnhancementBonuses';
-import { CombatStats } from 'src/new/core/items/CombatStats';
-import { LevelRequirement } from 'src/new/core/items/LevelRequirement';
-import { NonCombatEnhancementBonuses } from 'src/new/core/items/NonCombatEnhancementBonuses';
-import { NonCombatStats } from 'src/new/core/items/NonCombatStats';
+import { EquipmentTypeHrid } from 'src/core/hrid/EquipmentTypeHrid';
+import { CombatEnhancementBonuses } from 'src/core/items/CombatEnhancementBonuses';
+import { CombatStats } from 'src/core/items/CombatStats';
+import { LevelRequirement } from 'src/core/items/LevelRequirement';
+import { NonCombatEnhancementBonuses } from 'src/core/items/NonCombatEnhancementBonuses';
+import { NonCombatStats } from 'src/core/items/NonCombatStats';
 
 export interface EquipmentDetail {
   type: '' | EquipmentTypeHrid;

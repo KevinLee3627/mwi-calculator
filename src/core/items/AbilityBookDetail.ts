@@ -1,5 +1,5 @@
-import { AbilityHrid } from 'src/new/core/hrid/AbilityHrid';
-import { LevelRequirement } from 'src/new/core/items/LevelRequirement';
+import { AbilityHrid } from 'src/core/hrid/AbilityHrid';
+import { LevelRequirement } from 'src/core/items/LevelRequirement';
 
 export interface AbilityBookDetail {
   abilityHrid: AbilityHrid | '';

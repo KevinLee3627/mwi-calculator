@@ -1,5 +1,5 @@
-import { ItemLocationHrid } from 'src/new/core/hrid/ItemLocationHrid';
-import { ItemLocationTypeHrid } from 'src/new/core/hrid/ItemLocationTypeHrid';
+import { ItemLocationHrid } from 'src/core/hrid/ItemLocationHrid';
+import { ItemLocationTypeHrid } from 'src/core/hrid/ItemLocationTypeHrid';
 
 export interface ItemLocationDetail {
   hrid: ItemLocationHrid;

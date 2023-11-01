@@ -1,9 +1,9 @@
-import { ItemCategoryHrid } from 'src/new/core/hrid/ItemCategoryHrid';
-import { ItemHrid } from 'src/new/core/hrid/ItemHrid';
-import { AbilityBookDetail } from 'src/new/core/items/AbilityBookDetail';
-import { ConsumableDetail } from 'src/new/core/items/ConsumableDetail';
-import { EquipmentDetail } from 'src/new/core/items/EquipmentDetail';
-import { InputItem } from 'src/new/core/items/InputItem';
+import { ItemCategoryHrid } from 'src/core/hrid/ItemCategoryHrid';
+import { ItemHrid } from 'src/core/hrid/ItemHrid';
+import { AbilityBookDetail } from 'src/core/items/AbilityBookDetail';
+import { ConsumableDetail } from 'src/core/items/ConsumableDetail';
+import { EquipmentDetail } from 'src/core/items/EquipmentDetail';
+import { InputItem } from 'src/core/items/InputItem';
 
 export interface ItemDetail {
   hrid: ItemHrid;

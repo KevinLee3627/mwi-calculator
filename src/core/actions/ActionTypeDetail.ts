@@ -1,4 +1,4 @@
-import { ActionTypeHrid } from 'src/new/core/hrid/ActionTypeHrid';
+import { ActionTypeHrid } from 'src/core/hrid/ActionTypeHrid';
 
 export interface ActionTypeDetail {
   hrid: ActionTypeHrid;

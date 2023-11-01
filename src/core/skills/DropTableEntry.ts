@@ -1,4 +1,4 @@
-import { ItemHrid } from 'src/new/core/hrid/ItemHrid';
+import { ItemHrid } from 'src/core/hrid/ItemHrid';
 
 export interface DropTableEntry {
   itemHrid: ItemHrid;
