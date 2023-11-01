@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
-// import {
-//   characterLevelInitialState,
-//   characterLevelSlice
-// } from 'src/old/features/character/levels/characterLevelSlice';
+import {
+  characterLevelsInitialState,
+  characterLevelsSlice
+} from 'src/features/character/levels/characterLevelsSlice';
 // import {
 //   loadoutInitialState,
 //   loadoutSlice
@@ -28,15 +28,15 @@ import { configureStore } from '@reduxjs/toolkit';
 //   targetLevelInitialState,
 //   targetLevelSlice
 // } from 'src/old/features/skill/targets/targetLevelSlice';
-// import {
-//   actionQueueListenerMiddleware,
-//   activeSkillListenerMiddleware,
-//   characterLevelListenerMiddleware,
-//   communityBuffListenerMiddleware,
-//   loadoutListenerMiddleware,
-//   skillDrinksListenerMiddleware,
-//   targetLevelListenerMiddleware
-// } from 'src/store/listenerMiddleware';
+import {
+  // actionQueueListenerMiddleware,
+  // activeSkillListenerMiddleware,
+  characterLevelsListenerMiddleware
+  // communityBuffListenerMiddleware,
+  // loadoutListenerMiddleware,
+  // skillDrinksListenerMiddleware,
+  // targetLevelListenerMiddleware
+} from 'src/store/listenerMiddleware';
 
 const tryLocalStorage = (key: string, fallback: object) =>
   localStorage.getItem(key) != null
@@ -45,7 +45,7 @@ const tryLocalStorage = (key: string, fallback: object) =>
 
 export const store = configureStore({
   reducer: {
-    // characterLevel: characterLevelSlice.reducer,
+    characterLevels: characterLevelsSlice.reducer
     // loadout: loadoutSlice.reducer,
     // skillDrinks: skillDrinksSlice.reducer,
     // activeSkill: activeSkillSlice.reducer,
@@ -55,8 +55,8 @@ export const store = configureStore({
     // [marketApi.reducerPath]: marketApi.reducer
   },
   middleware: (getDefaultMiddleware) => [
-    ...getDefaultMiddleware()
-    // characterLevelListenerMiddleware.middleware,
+    ...getDefaultMiddleware(),
+    characterLevelsListenerMiddleware.middleware
     // loadoutListenerMiddleware.middleware,
     // skillDrinksListenerMiddleware.middleware,
     // activeSkillListenerMiddleware.middleware,
@@ -64,16 +64,16 @@ export const store = configureStore({
     // communityBuffListenerMiddleware.middleware,
     // actionQueueListenerMiddleware.middleware,
     // marketApi.middleware
-  ]
-  // preloadedState: {
-  //   characterLevel: tryLocalStorage('characterLevel', characterLevelInitialState),
-  //   loadout: tryLocalStorage('loadout', loadoutInitialState),
-  //   skillDrinks: tryLocalStorage('skillDrinks', skillDrinksInitialState),
-  //   activeSkill: tryLocalStorage('activeSkill', activeSkillInitialState),
-  //   targetLevel: tryLocalStorage('targetLevel', targetLevelInitialState),
-  //   communityBuff: tryLocalStorage('communityBuff', communityBuffInitialState),
-  //   actionQueue: tryLocalStorage('actionQueue', actionQueueInitialState)
-  // }
+  ],
+  preloadedState: {
+    characterLevels: tryLocalStorage('characterLevels', characterLevelsInitialState)
+    //   loadout: tryLocalStorage('loadout', loadoutInitialState),
+    //   skillDrinks: tryLocalStorage('skillDrinks', skillDrinksInitialState),
+    //   activeSkill: tryLocalStorage('activeSkill', activeSkillInitialState),
+    //   targetLevel: tryLocalStorage('targetLevel', targetLevelInitialState),
+    //   communityBuff: tryLocalStorage('communityBuff', communityBuffInitialState),
+    //   actionQueue: tryLocalStorage('actionQueue', actionQueueInitialState)
+  }
 });
 
 export type RootState = ReturnType<typeof store.getState>;
