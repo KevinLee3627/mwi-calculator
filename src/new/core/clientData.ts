@@ -41,6 +41,7 @@ interface ClientData {
   actionCategoryDetailMap: Record<ActionCategoryHrid, ActionCategoryDetail>;
   buffTypeDetailMap: Record<BuffTypeHrid, BuffTypeDetail>;
   communityBuffTypeDetailMap: Record<CommunityBuffTypeHrid, CommunityBuffTypeDetail>;
+  houseRoomDetailMap: Record<
 }
 
 export const clientData: ClientData = clientDataJson as unknown as ClientData;
