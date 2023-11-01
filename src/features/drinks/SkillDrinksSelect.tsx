@@ -1,23 +1,25 @@
 import { useMemo } from 'react';
 import { GameIcon } from 'src/components/GameIcon';
 import { Select } from 'src/components/Select';
-import { NonCombatActionTypeHrid } from 'src/core/actions/NonCombatActionTypeHrid';
 import { clientData } from 'src/core/clientData';
+import { SkillHrid } from 'src/core/hrid/SkillHrid';
 import { selectSkillDrinks, setSkillDrinks } from 'src/features/drinks/drinksSlice';
 import { useAppDispatch } from 'src/hooks/useAppDispatch';
 import { useAppSelector } from 'src/hooks/useAppSelector';
+import { skillHridToActionTypeHrid } from 'src/util/skillHridToActionTypeHridMapping';
 
 interface SkillDrinksSelectProps {
-  actionTypeHrid: NonCombatActionTypeHrid;
+  skillHrid: SkillHrid;
 }
 
-export function SkillDrinksSelect({ actionTypeHrid }: SkillDrinksSelectProps) {
+export function SkillDrinksSelect({ skillHrid }: SkillDrinksSelectProps) {
   // TODO: Consider extracting out logic to separate file, maybe mapping between
   // drinks and which skills can use X drink?
   // Only return usable drinks for the chosen skill
   const skillDrinks = useAppSelector(selectSkillDrinks);
   const dispatch = useAppDispatch();
 
+  const actionTypeHrid = skillHridToActionTypeHrid[skillHrid];
   const drinkChoices = useMemo(() => {
     return Object.values(clientData.itemDetailMap).filter(
       (item) =>

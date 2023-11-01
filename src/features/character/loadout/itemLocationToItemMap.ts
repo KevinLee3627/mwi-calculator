@@ -1,9 +1,10 @@
 import { clientData } from 'src/core/clientData';
+import { ItemLocationHrid } from 'src/core/hrid/ItemLocationHrid';
 import { ItemDetail } from 'src/core/items/ItemDetail';
 import { equipmentTypeHridToItemLocationHrid } from 'src/util/equipmentTypeHridToItemLocationHrid';
 
 export const itemLocationToItemMap = Object.values(clientData.itemDetailMap).reduce<
-  Record<string, ItemDetail[]>
+  Record<ItemLocationHrid, ItemDetail[]>
 >((acc, val) => {
   if (val.equipmentDetail.type === '') return acc;
   const itemLocationHrid = equipmentTypeHridToItemLocationHrid(val.equipmentDetail.type);
@@ -12,4 +13,6 @@ export const itemLocationToItemMap = Object.values(clientData.itemDetailMap).red
   }
   acc[itemLocationHrid].push(val);
   return acc;
-}, {});
+}, {} as Record<ItemLocationHrid, ItemDetail[]>);
+
+console.log(itemLocationToItemMap);

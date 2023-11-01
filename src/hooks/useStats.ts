@@ -5,6 +5,7 @@ import {
   selectAllLoadouts
 } from 'src/features/character/loadout/loadoutSlice';
 import { selectCommunityBuffs } from 'src/features/communityBuff/communityBuffSlice';
+import { selectSkillDrinks } from 'src/features/drinks/drinksSlice';
 import { selectHouse } from 'src/features/house/houseSlice';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 
@@ -15,6 +16,7 @@ export function useStats() {
   const communityBuffs = useAppSelector(selectCommunityBuffs);
   const activeSkillState = useAppSelector(selectActiveSkillState);
   const house = useAppSelector(selectHouse);
+  const drinks = useAppSelector(selectSkillDrinks);
   // const bonuses = {
   //   gatheringQuantity: 0
   // };

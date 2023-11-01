@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { NonCombatActionTypeHrid } from 'src/core/actions/NonCombatActionTypeHrid';
+import { ActionTypeHrid } from 'src/core/hrid/ActionTypeHrid';
 import { ItemDetail } from 'src/core/items/ItemDetail';
 import { RootState } from 'src/store/store';
 
-export type SkillDrinksState = Record<NonCombatActionTypeHrid, ItemDetail[] | null>;
+export type SkillDrinksState = Record<ActionTypeHrid, ItemDetail[] | null>;
 
 export const skillDrinksInitialState: SkillDrinksState = {
   '/action_types/milking': null,
@@ -14,11 +14,12 @@ export const skillDrinksInitialState: SkillDrinksState = {
   '/action_types/tailoring': null,
   '/action_types/cooking': null,
   '/action_types/brewing': null,
-  '/action_types/enhancing': null
+  '/action_types/enhancing': null,
+  '/action_types/combat': null
 };
 
 export interface SetDrinksPayload {
-  actionTypeHrid: NonCombatActionTypeHrid;
+  actionTypeHrid: ActionTypeHrid;
   drinks: ItemDetail[];
 }
 

@@ -2,6 +2,7 @@ import { GameIcon } from 'src/components/GameIcon';
 import { Select } from 'src/components/Select';
 import { clientData } from 'src/core/clientData';
 import { ItemDetail } from 'src/core/items/ItemDetail';
+import { itemLocationToItemMap } from 'src/features/character/loadout/itemLocationToItemMap';
 import {
   clearEquip,
   PossibleCharacterEquipmentLocationHrid,
@@ -12,15 +13,14 @@ import { useStats } from 'src/hooks/useStats';
 
 interface CharacterEquipmentSelectProps {
   itemLocationHrid: PossibleCharacterEquipmentLocationHrid;
-  possibleItems: ItemDetail[];
 }
 
 export function CharacterEquipmentSelect({
-  itemLocationHrid,
-  possibleItems
+  itemLocationHrid
 }: CharacterEquipmentSelectProps) {
   const { activeLoadout } = useStats();
   const dispatch = useAppDispatch();
+  const possibleItems = itemLocationToItemMap[itemLocationHrid];
   const itemLocationName = clientData.itemLocationDetailMap[itemLocationHrid].name;
   const location = itemLocationHrid.split('/').at(-1);
   const itemHridStripped = activeLoadout.equipment[itemLocationHrid]?.hrid.replace(

@@ -5,6 +5,7 @@ import { CharacterLevels } from 'src/features/character/levels/CharacterLevels';
 import { CharacterEquipment } from 'src/features/character/loadout/CharacterEquipment';
 import { CommunityBuffs } from 'src/features/communityBuff/CommunityBuffs';
 import { House } from 'src/features/house/House';
+import { SkillPage } from 'src/features/SkillPage';
 
 const App = () => {
   return (
@@ -28,7 +29,8 @@ const App = () => {
             </div>
           </nav>
           <div className="flex-1">
-            <Dev />
+            {/* <Dev /> */}
+            <SkillPage />
           </div>
         </div>
         <Sidebar />
