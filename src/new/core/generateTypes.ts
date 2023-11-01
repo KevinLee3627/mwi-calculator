@@ -1,7 +1,7 @@
 import { readFile, writeFile } from 'fs/promises';
 
 async function main() {
-  const file = await readFile('./src/core/clientData.json', { encoding: 'utf-8' });
+  const file = await readFile('./src/clientData.json', { encoding: 'utf-8' });
   const data = JSON.parse(file);
 
   generateHridType('SkillHrid', Object.keys(data.skillDetailMap));
@@ -17,6 +17,7 @@ async function main() {
   generateHridType('CommunityBuffTypeHrid', Object.keys(data.communityBuffTypeDetailMap));
   generateHridType('DamageTypeHrid', Object.keys(data.damageTypeDetailMap));
   generateHridType('CombatStyleHrid', Object.keys(data.combatStyleDetailMap));
+  generateHridType('HouseRoomHrid', Object.keys(data.houseRoomDetailMap));
 
   const actionFunctionHrids = Object.values<Record<string, unknown>>(
     data.actionDetailMap
