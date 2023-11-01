@@ -3,6 +3,7 @@ import { clientData } from 'src/core/clientData';
 import { NonCombatSkillHrid } from 'src/core/skills/NonCombatSkillHrid';
 import { setActiveSkill } from 'src/features/activeSkillSlice';
 import { useAppDispatch } from 'src/hooks/useAppDispatch';
+import { useStats } from 'src/hooks/useStats';
 import { openModal } from 'src/util/openModal';
 
 export function Sidebar() {
@@ -61,6 +62,9 @@ interface SidebarSkillTabProps {
   skillHrid: NonCombatSkillHrid;
 }
 function SidebarSkillTab({ skillHrid }: SidebarSkillTabProps) {
+  const {
+    activeSkillState: { activeSkill }
+  } = useStats();
   const dispatch = useAppDispatch();
 
   const skillHridStripped = skillHrid.split('/').at(-1);
@@ -70,7 +74,7 @@ function SidebarSkillTab({ skillHrid }: SidebarSkillTabProps) {
         dispatch(setActiveSkill({ skillHrid }));
       }}
     >
-      <span>
+      <span className={skillHrid === activeSkill ? 'active' : ''}>
         <GameIcon svgSetName="skills" iconName={skillHridStripped ?? ''} />
         {clientData.skillDetailMap[skillHrid].name}
       </span>
