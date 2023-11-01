@@ -1,6 +1,6 @@
 import { createListenerMiddleware, isAnyOf } from '@reduxjs/toolkit';
 import { characterLevelsSlice } from 'src/features/character/levels/characterLevelsSlice';
-// import { loadoutSlice } from 'src/old/features/character/loadouts/loadoutSlice';
+import { loadoutSlice } from 'src/features/character/loadout/loadoutSlice';
 // import { communityBuffSlice } from 'src/old/features/communityBuff/communityBuffSlice';
 // import { activeSkillSlice } from 'src/old/features/navigation/activeSkillSlice';
 // import { actionQueueSlice } from 'src/old/features/queue/actionQueueSlice';
@@ -19,23 +19,23 @@ characterLevelsListenerMiddleware.startListening({
   }
 });
 
-// export const loadoutListenerMiddleware = createListenerMiddleware();
-// loadoutListenerMiddleware.startListening({
-//   matcher: isAnyOf(
-//     loadoutSlice.actions.setEquip,
-//     loadoutSlice.actions.clearEquip,
-//     loadoutSlice.actions.createLoadout,
-//     loadoutSlice.actions.setActiveLoadout,
-//     loadoutSlice.actions.resetLoadout,
-//     loadoutSlice.actions.deleteLoadout,
-//     loadoutSlice.actions.renameLoadout,
-//     loadoutSlice.actions.resetLoadout,
-//     loadoutSlice.actions.setEnhancementLevel
-//   ),
-//   effect: () => {
-//     localStorage.setItem('loadout', JSON.stringify(store.getState().loadout));
-//   }
-// });
+export const loadoutListenerMiddleware = createListenerMiddleware();
+loadoutListenerMiddleware.startListening({
+  matcher: isAnyOf(
+    loadoutSlice.actions.setEquip,
+    loadoutSlice.actions.clearEquip,
+    loadoutSlice.actions.createLoadout,
+    loadoutSlice.actions.setActiveLoadout,
+    loadoutSlice.actions.resetLoadout,
+    loadoutSlice.actions.deleteLoadout,
+    loadoutSlice.actions.renameLoadout,
+    loadoutSlice.actions.resetLoadout,
+    loadoutSlice.actions.setEnhancementLevel
+  ),
+  effect: () => {
+    localStorage.setItem('loadout', JSON.stringify(store.getState().loadout));
+  }
+});
 
 // export const skillDrinksListenerMiddleware = createListenerMiddleware();
 // skillDrinksListenerMiddleware.startListening({

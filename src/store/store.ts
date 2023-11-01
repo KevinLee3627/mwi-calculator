@@ -3,10 +3,10 @@ import {
   characterLevelsInitialState,
   characterLevelsSlice
 } from 'src/features/character/levels/characterLevelsSlice';
-// import {
-//   loadoutInitialState,
-//   loadoutSlice
-// } from 'src/old/features/character/loadouts/loadoutSlice';
+import {
+  loadoutInitialState,
+  loadoutSlice
+} from 'src/features/character/loadout/loadoutSlice';
 // import {
 //   communityBuffInitialState,
 //   communityBuffSlice
@@ -31,9 +31,9 @@ import {
 import {
   // actionQueueListenerMiddleware,
   // activeSkillListenerMiddleware,
-  characterLevelsListenerMiddleware
+  characterLevelsListenerMiddleware,
   // communityBuffListenerMiddleware,
-  // loadoutListenerMiddleware,
+  loadoutListenerMiddleware
   // skillDrinksListenerMiddleware,
   // targetLevelListenerMiddleware
 } from 'src/store/listenerMiddleware';
@@ -45,8 +45,8 @@ const tryLocalStorage = (key: string, fallback: object) =>
 
 export const store = configureStore({
   reducer: {
-    characterLevels: characterLevelsSlice.reducer
-    // loadout: loadoutSlice.reducer,
+    characterLevels: characterLevelsSlice.reducer,
+    loadout: loadoutSlice.reducer
     // skillDrinks: skillDrinksSlice.reducer,
     // activeSkill: activeSkillSlice.reducer,
     // targetLevel: targetLevelSlice.reducer,
@@ -56,8 +56,8 @@ export const store = configureStore({
   },
   middleware: (getDefaultMiddleware) => [
     ...getDefaultMiddleware(),
-    characterLevelsListenerMiddleware.middleware
-    // loadoutListenerMiddleware.middleware,
+    characterLevelsListenerMiddleware.middleware,
+    loadoutListenerMiddleware.middleware
     // skillDrinksListenerMiddleware.middleware,
     // activeSkillListenerMiddleware.middleware,
     // targetLevelListenerMiddleware.middleware,
@@ -66,8 +66,8 @@ export const store = configureStore({
     // marketApi.middleware
   ],
   preloadedState: {
-    characterLevels: tryLocalStorage('characterLevels', characterLevelsInitialState)
-    //   loadout: tryLocalStorage('loadout', loadoutInitialState),
+    characterLevels: tryLocalStorage('characterLevels', characterLevelsInitialState),
+    loadout: tryLocalStorage('loadout', loadoutInitialState)
     //   skillDrinks: tryLocalStorage('skillDrinks', skillDrinksInitialState),
     //   activeSkill: tryLocalStorage('activeSkill', activeSkillInitialState),
     //   targetLevel: tryLocalStorage('targetLevel', targetLevelInitialState),

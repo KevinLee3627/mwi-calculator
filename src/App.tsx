@@ -2,6 +2,7 @@ import { Bars3Icon } from '@heroicons/react/24/solid';
 import { Dev } from 'src/components/Dev';
 import { Sidebar } from 'src/components/Sidebar';
 import { CharacterLevels } from 'src/features/character/levels/CharacterLevels';
+import { CharacterEquipment } from 'src/features/character/loadout/CharacterEquipment';
 
 const App = () => {
   return (
@@ -29,7 +30,7 @@ const App = () => {
           </div>
         </div>
         <Sidebar />
-
+        <CharacterEquipment />
         <CharacterLevels />
       </div>
     </>
