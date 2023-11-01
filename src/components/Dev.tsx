@@ -1,5 +1,6 @@
 import { selectCharacterLevels } from 'src/features/character/levels/characterLevelsSlice';
 import { selectActiveLoadout } from 'src/features/character/loadout/loadoutSlice';
+import { selectCommunityBuffs } from 'src/features/communityBuff/communityBuffSlice';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 
 export function Dev() {
@@ -27,7 +28,6 @@ export function Dev() {
   );
 
   const activeLoadout = useAppSelector(selectActiveLoadout);
-  console.log(activeLoadout);
   const loadoutTable = (
     <table className="table">
       <thead>
@@ -51,9 +51,32 @@ export function Dev() {
       </tbody>
     </table>
   );
+
+  const communityBuffs = useAppSelector(selectCommunityBuffs);
+  const communityBuffTable = (
+    <table className="table">
+      <thead>
+        <tr>
+          <th>location</th>
+          <th>level</th>
+        </tr>
+      </thead>
+      <tbody>
+        {Object.entries(communityBuffs).map((entry) => {
+          const [key, val] = entry;
+          return (
+            <tr key={key}>
+              <td>{key}</td>
+              <td>{val}</td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  );
   return (
     <div className="flex">
-      {levelsTable} {loadoutTable}
+      {levelsTable} {loadoutTable} {communityBuffTable}
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { Dev } from 'src/components/Dev';
 import { Sidebar } from 'src/components/Sidebar';
 import { CharacterLevels } from 'src/features/character/levels/CharacterLevels';
 import { CharacterEquipment } from 'src/features/character/loadout/CharacterEquipment';
+import { CommunityBuffs } from 'src/features/communityBuff/CommunityBuffs';
 
 const App = () => {
   return (
@@ -32,6 +33,7 @@ const App = () => {
         <Sidebar />
         <CharacterEquipment />
         <CharacterLevels />
+        <CommunityBuffs />
       </div>
     </>
   );

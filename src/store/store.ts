@@ -7,10 +7,10 @@ import {
   loadoutInitialState,
   loadoutSlice
 } from 'src/features/character/loadout/loadoutSlice';
-// import {
-//   communityBuffInitialState,
-//   communityBuffSlice
-// } from 'src/old/features/communityBuff/communityBuffSlice';
+import {
+  communityBuffInitialState,
+  communityBuffSlice
+} from 'src/features/communityBuff/communityBuffSlice';
 // import { marketApi } from 'src/old/features/market/services/market';
 // import {
 //   activeSkillInitialState,
@@ -32,7 +32,7 @@ import {
   // actionQueueListenerMiddleware,
   // activeSkillListenerMiddleware,
   characterLevelsListenerMiddleware,
-  // communityBuffListenerMiddleware,
+  communityBuffListenerMiddleware,
   loadoutListenerMiddleware
   // skillDrinksListenerMiddleware,
   // targetLevelListenerMiddleware
@@ -46,32 +46,32 @@ const tryLocalStorage = (key: string, fallback: object) =>
 export const store = configureStore({
   reducer: {
     characterLevels: characterLevelsSlice.reducer,
-    loadout: loadoutSlice.reducer
+    loadout: loadoutSlice.reducer,
     // skillDrinks: skillDrinksSlice.reducer,
     // activeSkill: activeSkillSlice.reducer,
     // targetLevel: targetLevelSlice.reducer,
-    // communityBuff: communityBuffSlice.reducer,
+    communityBuff: communityBuffSlice.reducer
     // actionQueue: actionQueueSlice.reducer,
     // [marketApi.reducerPath]: marketApi.reducer
   },
   middleware: (getDefaultMiddleware) => [
     ...getDefaultMiddleware(),
     characterLevelsListenerMiddleware.middleware,
-    loadoutListenerMiddleware.middleware
+    loadoutListenerMiddleware.middleware,
     // skillDrinksListenerMiddleware.middleware,
     // activeSkillListenerMiddleware.middleware,
     // targetLevelListenerMiddleware.middleware,
-    // communityBuffListenerMiddleware.middleware,
+    communityBuffListenerMiddleware.middleware
     // actionQueueListenerMiddleware.middleware,
     // marketApi.middleware
   ],
   preloadedState: {
     characterLevels: tryLocalStorage('characterLevels', characterLevelsInitialState),
-    loadout: tryLocalStorage('loadout', loadoutInitialState)
+    loadout: tryLocalStorage('loadout', loadoutInitialState),
     //   skillDrinks: tryLocalStorage('skillDrinks', skillDrinksInitialState),
     //   activeSkill: tryLocalStorage('activeSkill', activeSkillInitialState),
     //   targetLevel: tryLocalStorage('targetLevel', targetLevelInitialState),
-    //   communityBuff: tryLocalStorage('communityBuff', communityBuffInitialState),
+    communityBuff: tryLocalStorage('communityBuff', communityBuffInitialState)
     //   actionQueue: tryLocalStorage('actionQueue', actionQueueInitialState)
   }
 });
