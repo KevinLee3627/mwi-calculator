@@ -26,10 +26,10 @@ export function Sidebar() {
             <span onClick={() => openModal('communityBuffsModal')}>Community Buffs</span>
           </li>
           <li>
-            <span onClick={() => openModal('actionQueueModal')}>Queue</span>
+            <span onClick={() => openModal('houseModal')}>House</span>
           </li>
           <li>
-            <span onClick={() => openModal('houseModal')}>House</span>
+            <span onClick={() => openModal('actionQueueModal')}>Queue</span>
           </li>
           <li>
             <h2 className="menu-title">Gathering</h2>
