@@ -1,3 +1,4 @@
+import { selectActiveSkillState } from 'src/features/activeSkillSlice';
 import { selectCharacterLevels } from 'src/features/character/levels/characterLevelsSlice';
 import {
   selectActiveLoadout,
@@ -11,6 +12,31 @@ export function useStats() {
   const activeLoadout = useAppSelector(selectActiveLoadout);
   const allLoadouts = useAppSelector(selectAllLoadouts);
   const communityBuffs = useAppSelector(selectCommunityBuffs);
+  const activeSkillState = useAppSelector(selectActiveSkillState);
+  // const bonuses = {
+  //   gatheringQuantity: 0
+  // };
 
-  return { characterLevels, activeLoadout, allLoadouts, communityBuffs };
+  return {
+    characterLevels,
+    activeLoadout,
+    allLoadouts,
+    communityBuffs,
+    activeSkillState
+  };
 }
+
+// function computeGatheringQuantityBonus() {
+// const teaDropQuantityBonus = drinkStats['/buff_types/gathering'] ?? 0;
+// const equipDropQuantitybonus = equipmentStats['gatheringQuantity'] ?? 0;
+// const communityBuffLevel = communityBuffs['/community_buff_types/gathering_quantity'];
+// let communityBuffBonus = 0;
+// if (communityBuffLevel > 0) {
+//   const { flatBoost, flatBoostLevelBonus } =
+//     clientData.communityBuffTypeDetailMap['/community_buff_types/gathering_quantity']
+//       .buff;
+//   communityBuffBonus = flatBoost + (communityBuffLevel - 1) * flatBoostLevelBonus;
+// }
+// const bonus = teaDropQuantityBonus + equipDropQuantitybonus + communityBuffBonus;
+// return bonus;
+// }

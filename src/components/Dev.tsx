@@ -1,7 +1,7 @@
 import { useStats } from 'src/hooks/useStats';
 
 export function Dev() {
-  const { characterLevels, activeLoadout, communityBuffs } = useStats();
+  const { characterLevels, activeLoadout, communityBuffs, activeSkillState } = useStats();
   const levelsTable = (
     <table className="table">
       <thead>
@@ -71,7 +71,10 @@ export function Dev() {
   );
   return (
     <div className="flex">
-      {levelsTable} {loadoutTable} {communityBuffTable}
+      <div className="flex">
+        {levelsTable} {loadoutTable} {communityBuffTable}
+      </div>
+      <div>active skill: {activeSkillState.activeSkill}</div>
     </div>
   );
 }

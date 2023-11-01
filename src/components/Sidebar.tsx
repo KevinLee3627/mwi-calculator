@@ -1,7 +1,8 @@
 import { GameIcon } from 'src/components/GameIcon';
 import { clientData } from 'src/core/clientData';
 import { NonCombatSkillHrid } from 'src/core/skills/NonCombatSkillHrid';
-// import { useAppDispatch } from 'src/hooks/useAppDispatch';
+import { setActiveSkill } from 'src/features/activeSkillSlice';
+import { useAppDispatch } from 'src/hooks/useAppDispatch';
 import { openModal } from 'src/util/openModal';
 
 export function Sidebar() {
@@ -60,13 +61,13 @@ interface SidebarSkillTabProps {
   skillHrid: NonCombatSkillHrid;
 }
 function SidebarSkillTab({ skillHrid }: SidebarSkillTabProps) {
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
 
   const skillHridStripped = skillHrid.split('/').at(-1);
   return (
     <li
       onClick={() => {
-        // dispatch(setActiveSkill({ skillHrid }));
+        dispatch(setActiveSkill({ skillHrid }));
       }}
     >
       <span>

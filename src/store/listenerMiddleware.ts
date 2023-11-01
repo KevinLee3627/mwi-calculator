@@ -1,8 +1,8 @@
 import { createListenerMiddleware, isAnyOf } from '@reduxjs/toolkit';
+import { activeSkillSlice } from 'src/features/activeSkillSlice';
 import { characterLevelsSlice } from 'src/features/character/levels/characterLevelsSlice';
 import { loadoutSlice } from 'src/features/character/loadout/loadoutSlice';
 import { communityBuffSlice } from 'src/features/communityBuff/communityBuffSlice';
-// import { activeSkillSlice } from 'src/old/features/navigation/activeSkillSlice';
 // import { actionQueueSlice } from 'src/old/features/queue/actionQueueSlice';
 // import { skillDrinksSlice } from 'src/old/features/skill/drinks/drinksSlice';
 // import { targetLevelSlice } from 'src/old/features/skill/targets/targetLevelSlice';
@@ -45,13 +45,13 @@ loadoutListenerMiddleware.startListening({
 //   }
 // });
 
-// export const activeSkillListenerMiddleware = createListenerMiddleware();
-// activeSkillListenerMiddleware.startListening({
-//   actionCreator: activeSkillSlice.actions.setActiveSkill,
-//   effect: () => {
-//     localStorage.setItem('activeSkill', JSON.stringify(store.getState().activeSkill));
-//   }
-// });
+export const activeSkillListenerMiddleware = createListenerMiddleware();
+activeSkillListenerMiddleware.startListening({
+  actionCreator: activeSkillSlice.actions.setActiveSkill,
+  effect: () => {
+    localStorage.setItem('activeSkill', JSON.stringify(store.getState().activeSkill));
+  }
+});
 
 // export const targetLevelListenerMiddleware = createListenerMiddleware();
 // targetLevelListenerMiddleware.startListening({
