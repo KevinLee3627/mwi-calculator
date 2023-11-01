@@ -4,6 +4,7 @@ import { ActionDetail } from 'src/core/actions/ActionDetail';
 import { ActionTypeDetail } from 'src/core/actions/ActionTypeDetail';
 import { BuffTypeDetail } from 'src/core/buffs/BuffTypeDetail';
 import { CommunityBuffTypeDetail } from 'src/core/buffs/CommunityBuffTypeDetail';
+import { HouseRoomDetail } from 'src/core/house/HouseRoomDetail';
 import { AbilityHrid } from 'src/core/hrid/AbilityHrid';
 import { ActionCategoryHrid } from 'src/core/hrid/ActionCategoryHrid';
 import { ActionHrid } from 'src/core/hrid/ActionHrid';
@@ -11,6 +12,7 @@ import { ActionTypeHrid } from 'src/core/hrid/ActionTypeHrid';
 import { BuffTypeHrid } from 'src/core/hrid/BuffTypeHrid';
 import { CommunityBuffTypeHrid } from 'src/core/hrid/CommunityBuffTypeHrid';
 import { EquipmentTypeHrid } from 'src/core/hrid/EquipmentTypeHrid';
+import { HouseRoomHrid } from 'src/core/hrid/HouseRoomHrid';
 import { ItemCategoryHrid } from 'src/core/hrid/ItemCategoryHrid';
 import { ItemHrid } from 'src/core/hrid/ItemHrid';
 import { ItemLocationHrid } from 'src/core/hrid/ItemLocationHrid';
@@ -41,7 +43,7 @@ interface ClientData {
   actionCategoryDetailMap: Record<ActionCategoryHrid, ActionCategoryDetail>;
   buffTypeDetailMap: Record<BuffTypeHrid, BuffTypeDetail>;
   communityBuffTypeDetailMap: Record<CommunityBuffTypeHrid, CommunityBuffTypeDetail>;
-  houseRoomDetailMap: Record<
+  houseRoomDetailMap: Record<HouseRoomHrid, HouseRoomDetail>;
 }
 
 export const clientData: ClientData = clientDataJson as unknown as ClientData;
