@@ -16,17 +16,14 @@ import {
   PossibleCharacterEquipmentLocationHrid,
   renameLoadout,
   resetLoadout,
-  selectActiveLoadout,
-  selectAllLoadouts,
   setActiveLoadout
 } from 'src/features/character/loadout/loadoutSlice';
 import { useAppDispatch } from 'src/hooks/useAppDispatch';
-import { useAppSelector } from 'src/hooks/useAppSelector';
+import { useStats } from 'src/hooks/useStats';
 
 export function CharacterEquipment() {
   const dispatch = useAppDispatch();
-  const loadout = useAppSelector(selectActiveLoadout);
-  const allLoadouts = useAppSelector(selectAllLoadouts);
+  const { activeLoadout, allLoadouts } = useStats();
 
   const [nameInputValue, setNameInputValue] = useState('');
   const [showNameInput, setShowNameInput] = useState(false);
@@ -47,11 +44,11 @@ export function CharacterEquipment() {
     );
   }
 
-  const equipmentInputs = Object.entries(loadout.equipment)
+  const equipmentInputs = Object.entries(activeLoadout.equipment)
     .filter((entry) => !entry[0].includes('tool'))
     .map((entry) => convertEquipToSelect(entry));
 
-  const toolInputs = Object.entries(loadout.equipment)
+  const toolInputs = Object.entries(activeLoadout.equipment)
     .filter((entry) => entry[0].includes('tool'))
     .map((entry) => convertEquipToSelect(entry));
   return (
@@ -66,7 +63,7 @@ export function CharacterEquipment() {
             <input
               type="text"
               className="input-primary input flex-1"
-              placeholder={loadout.name}
+              placeholder={activeLoadout.name}
               value={nameInputValue}
               onChange={(e) => setNameInputValue(e.target.value)}
             />
@@ -77,7 +74,7 @@ export function CharacterEquipment() {
                 value: loadout,
                 label: loadout.name
               }))}
-              value={{ value: loadout, label: loadout.name }}
+              value={{ value: activeLoadout, label: activeLoadout.name }}
               onChange={(newValue) => {
                 dispatch(setActiveLoadout({ id: newValue?.value.id ?? 0 }));
               }}
@@ -90,7 +87,9 @@ export function CharacterEquipment() {
             <button
               className="btn-success btn-outline btn"
               onClick={(e) => {
-                dispatch(renameLoadout({ id: loadout.id, newName: nameInputValue }));
+                dispatch(
+                  renameLoadout({ id: activeLoadout.id, newName: nameInputValue })
+                );
                 setNameInputValue('');
                 setShowNameInput(false);
                 e.preventDefault();
@@ -102,7 +101,7 @@ export function CharacterEquipment() {
             <button
               className="btn-primary btn-outline btn"
               onClick={(e) => {
-                setNameInputValue(loadout.name);
+                setNameInputValue(activeLoadout.name);
                 setShowNameInput(true);
                 e.preventDefault();
               }}
@@ -127,10 +126,10 @@ export function CharacterEquipment() {
               // eslint-disable-next-line tailwindcss/classnames-order, prettier/prettier
               className="btn-outline btn-error btn"
               onClick={(e) => {
-                dispatch(deleteLoadout({ id: loadout.id }));
+                dispatch(deleteLoadout({ id: activeLoadout.id }));
                 e.preventDefault();
               }}
-              disabled={Object.values(allLoadouts).length === 1 || loadout.id === 0}
+              disabled={Object.values(allLoadouts).length === 1 || activeLoadout.id === 0}
             >
               <TrashIcon className="h-4 w-4" />
             </button>

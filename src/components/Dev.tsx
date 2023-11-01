@@ -1,10 +1,7 @@
-import { selectCharacterLevels } from 'src/features/character/levels/characterLevelsSlice';
-import { selectActiveLoadout } from 'src/features/character/loadout/loadoutSlice';
-import { selectCommunityBuffs } from 'src/features/communityBuff/communityBuffSlice';
-import { useAppSelector } from 'src/hooks/useAppSelector';
+import { useStats } from 'src/hooks/useStats';
 
 export function Dev() {
-  const characterLevels = useAppSelector(selectCharacterLevels);
+  const { characterLevels, activeLoadout, communityBuffs } = useStats();
   const levelsTable = (
     <table className="table">
       <thead>
@@ -27,7 +24,6 @@ export function Dev() {
     </table>
   );
 
-  const activeLoadout = useAppSelector(selectActiveLoadout);
   const loadoutTable = (
     <table className="table">
       <thead>
@@ -52,7 +48,6 @@ export function Dev() {
     </table>
   );
 
-  const communityBuffs = useAppSelector(selectCommunityBuffs);
   const communityBuffTable = (
     <table className="table">
       <thead>

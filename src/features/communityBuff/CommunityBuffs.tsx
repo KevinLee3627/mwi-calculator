@@ -1,15 +1,12 @@
 import { GameIcon } from 'src/components/GameIcon';
 import { clientData } from 'src/core/clientData';
-import {
-  selectCommunityBuffs,
-  setBuffLevel
-} from 'src/features/communityBuff/communityBuffSlice';
+import { setBuffLevel } from 'src/features/communityBuff/communityBuffSlice';
 import { useAppDispatch } from 'src/hooks/useAppDispatch';
-import { useAppSelector } from 'src/hooks/useAppSelector';
+import { useStats } from 'src/hooks/useStats';
 
 export function CommunityBuffs() {
   const dispatch = useAppDispatch();
-  const communityBuffs = useAppSelector(selectCommunityBuffs);
+  const { communityBuffs } = useStats();
 
   const buffs = Object.values(clientData.communityBuffTypeDetailMap).map((buffDetail) => (
     <div key={buffDetail.hrid}>

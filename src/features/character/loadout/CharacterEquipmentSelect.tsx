@@ -5,11 +5,10 @@ import { ItemDetail } from 'src/core/items/ItemDetail';
 import {
   clearEquip,
   PossibleCharacterEquipmentLocationHrid,
-  selectActiveLoadout,
   setEquip
 } from 'src/features/character/loadout/loadoutSlice';
 import { useAppDispatch } from 'src/hooks/useAppDispatch';
-import { useAppSelector } from 'src/hooks/useAppSelector';
+import { useStats } from 'src/hooks/useStats';
 
 interface CharacterEquipmentSelectProps {
   itemLocationHrid: PossibleCharacterEquipmentLocationHrid;
@@ -20,11 +19,11 @@ export function CharacterEquipmentSelect({
   itemLocationHrid,
   possibleItems
 }: CharacterEquipmentSelectProps) {
-  const loadout = useAppSelector(selectActiveLoadout);
+  const { activeLoadout } = useStats();
   const dispatch = useAppDispatch();
   const itemLocationName = clientData.itemLocationDetailMap[itemLocationHrid].name;
   const location = itemLocationHrid.split('/').at(-1);
-  const itemHridStripped = loadout.equipment[itemLocationHrid]?.hrid.replace(
+  const itemHridStripped = activeLoadout.equipment[itemLocationHrid]?.hrid.replace(
     '/items/',
     ''
   );
@@ -44,8 +43,8 @@ export function CharacterEquipmentSelect({
         name={`${itemLocationHrid}_select`}
         options={possibleItems.map((item) => ({ label: item.name, value: item }))}
         value={{
-          label: loadout.equipment[itemLocationHrid]?.name,
-          value: loadout.equipment[itemLocationHrid]
+          label: activeLoadout.equipment[itemLocationHrid]?.name,
+          value: activeLoadout.equipment[itemLocationHrid]
         }}
         placeholder="test"
         onChange={(selected) => {

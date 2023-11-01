@@ -1,12 +1,9 @@
 import { GameIcon } from 'src/components/GameIcon';
 import { clientData } from 'src/core/clientData';
 import { NonCombatSkillHrid } from 'src/core/skills/NonCombatSkillHrid';
-import {
-  selectCharacterLevels,
-  setLevel
-} from 'src/features/character/levels/characterLevelsSlice';
+import { setLevel } from 'src/features/character/levels/characterLevelsSlice';
 import { useAppDispatch } from 'src/hooks/useAppDispatch';
-import { useAppSelector } from 'src/hooks/useAppSelector';
+import { useStats } from 'src/hooks/useStats';
 
 interface CharacterLevelInputProps {
   skillHrid: NonCombatSkillHrid;
@@ -14,7 +11,7 @@ interface CharacterLevelInputProps {
 
 export function CharacterLevelInput({ skillHrid }: CharacterLevelInputProps) {
   const skillName = clientData.skillDetailMap[skillHrid].name;
-  const levels = useAppSelector(selectCharacterLevels);
+  const { characterLevels } = useStats();
   const dispatch = useAppDispatch();
 
   const skillHridStripped = skillHrid.replace('/skills/', '');
@@ -35,7 +32,7 @@ export function CharacterLevelInput({ skillHrid }: CharacterLevelInputProps) {
         id={`${skillHrid}_level_input`}
         name={`${skillHrid}_level_input`}
         className="input-primary input"
-        value={levels[skillHrid]}
+        value={characterLevels[skillHrid]}
         onChange={(e) => {
           const value = parseInt(e.target.value, 10);
           dispatch(setLevel({ skillHrid, value }));
