@@ -1,4 +1,5 @@
 import { Bars3Icon } from '@heroicons/react/24/solid';
+import { Sidebar } from 'src/components/Sidebar';
 
 const App = () => {
   return (
@@ -21,8 +22,9 @@ const App = () => {
               </div>
             </div>
           </nav>
-          <div className="flex-1"></div>
+          <div className="flex-1">test</div>
         </div>
+        <Sidebar />
       </div>
     </>
   );
