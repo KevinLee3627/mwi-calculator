@@ -1,7 +1,6 @@
 import { GameIcon } from 'src/components/GameIcon';
 import { Select } from 'src/components/Select';
 import { clientData } from 'src/core/clientData';
-import { ItemDetail } from 'src/core/items/ItemDetail';
 import { itemLocationToItemMap } from 'src/features/character/loadout/itemLocationToItemMap';
 import {
   clearEquip,

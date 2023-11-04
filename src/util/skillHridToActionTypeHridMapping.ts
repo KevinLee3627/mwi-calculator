@@ -18,5 +18,5 @@ export const skillHridToActionTypeHrid: Record<SkillHrid, ActionTypeHrid> = {
   '/skills/stamina': '/action_types/combat',
   '/skills/tailoring': '/action_types/tailoring',
   '/skills/total_level': '/action_types/combat',
-  '/skills/woodcutting': '/action_types/combat'
+  '/skills/woodcutting': '/action_types/woodcutting'
 };
