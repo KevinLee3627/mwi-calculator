@@ -12,8 +12,14 @@ import { openModal } from 'src/util/openModal';
 import { skillHridToActionTypeHrid } from 'src/util/skillHridToActionTypeHridMapping';
 
 export function SkillPage() {
-  const { activeLoadout, characterLevels, communityBuffs, house, activeSkillState } =
-    useStats();
+  const {
+    activeLoadout,
+    characterLevels,
+    communityBuffs,
+    house,
+    activeSkillState,
+    drinks
+  } = useStats();
 
   const actionTypeHrid = skillHridToActionTypeHrid[activeSkillState.activeSkill];
   if (actionTypeHrid === '/action_types/combat') return <div>Nope...</div>;
