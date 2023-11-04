@@ -14,11 +14,6 @@ import { skillHridToActionTypeHrid } from 'src/util/skillHridToActionTypeHridMap
 export function SkillPage() {
   const { activeLoadout, characterLevels, communityBuffs, house, activeSkillState } =
     useStats();
-  // const equipmentStats = computeEquipmentStats(
-  //   loadout.equipment,
-  //   loadout.enhancementLevels
-  // ) as Record<keyof NonCombatStats, number>;
-  // const drinkStats = computeDrinkStats(drinks, actionTypeHrid);
 
   const actionTypeHrid = skillHridToActionTypeHrid[activeSkillState.activeSkill];
   if (actionTypeHrid === '/action_types/combat') return <div>Nope...</div>;
@@ -102,6 +97,7 @@ export function SkillPage() {
           </div>
         </div>
       </div>
+      <div></div>
       {/* <SkillTable
         actionTypeHrid={actionTypeHrid}
         actionFunctionHrid={actionFunctionHrid}

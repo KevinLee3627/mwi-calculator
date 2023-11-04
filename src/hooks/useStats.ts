@@ -17,9 +17,6 @@ export function useStats() {
   const activeSkillState = useAppSelector(selectActiveSkillState);
   const house = useAppSelector(selectHouse);
   const drinks = useAppSelector(selectSkillDrinks);
-  // const bonuses = {
-  //   gatheringQuantity: 0
-  // };
 
   return {
     characterLevels,
@@ -27,7 +24,8 @@ export function useStats() {
     allLoadouts,
     communityBuffs,
     activeSkillState,
-    house
+    house,
+    drinks
   };
 }
 
