@@ -14,5 +14,3 @@ export const itemLocationToItemMap = Object.values(clientData.itemDetailMap).red
   acc[itemLocationHrid].push(val);
   return acc;
 }, {} as Record<ItemLocationHrid, ItemDetail[]>);
-
-console.log(itemLocationToItemMap);

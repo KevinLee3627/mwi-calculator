@@ -1,7 +1,5 @@
-import { createColumnHelper } from '@tanstack/react-table';
 import { useMemo } from 'react';
 import { GameIcon } from 'src/components/GameIcon';
-import { ActionDetail } from 'src/core/actions/ActionDetail';
 import { clientData } from 'src/core/clientData';
 import { CommunityBuffTypeHrid } from 'src/core/hrid/CommunityBuffTypeHrid';
 import { HouseRoomHrid } from 'src/core/hrid/HouseRoomHrid';
@@ -103,7 +101,7 @@ export function SkillPage() {
         </div>
       </div>
       <div>
-        <SkillTable data={tableData} />
+        <SkillTable data={tableData} actionTypeHrid={actionTypeHrid} />
       </div>
       {/* <SkillTable
         actionTypeHrid={actionTypeHrid}

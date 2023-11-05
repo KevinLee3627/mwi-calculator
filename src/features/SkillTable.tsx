@@ -9,12 +9,23 @@ import {
 } from '@tanstack/react-table';
 import { useState } from 'react';
 import { ActionDetail } from 'src/core/actions/ActionDetail';
+import { NonCombatActionTypeHrid } from 'src/core/actions/NonCombatActionTypeHrid';
+import { computeActionXp } from 'src/features/calculations/computeActionXp';
+import { computeDrinkStats } from 'src/features/calculations/computeDrinkStats';
+import { computeEquipmentStats } from 'src/features/calculations/computeEquipmentStats';
+import { useStats } from 'src/hooks/useStats';
+import { formatNumber } from 'src/util/formatNumber';
 
 interface SkillTableProps {
   data: ActionDetail[];
+  actionTypeHrid: NonCombatActionTypeHrid;
 }
 
-export function SkillTable({ data }: SkillTableProps) {
+export function SkillTable({ data, actionTypeHrid }: SkillTableProps) {
+  const { activeLoadout, drinks, communityBuffs, house } = useStats();
+  const equipmentStats = computeEquipmentStats(activeLoadout);
+  const drinkStats = computeDrinkStats(drinks, actionTypeHrid);
+
   const [sorting, setSorting] = useState<SortingState>([
     { id: 'levelRequirement', desc: false }
   ]);
@@ -26,13 +37,27 @@ export function SkillTable({ data }: SkillTableProps) {
       header: 'Level Req.',
       cell: (info) => {
         const baseLevelReq = info.row.original.levelRequirement.level;
-        // const artisanTeaPenalty = drinkStats['/buff_types/artisan'] ? 5 : 0;
-        // return baseLevelReq + artisanTeaPenalty;
-        return baseLevelReq;
+        const drinkStats = computeDrinkStats(drinks, actionTypeHrid);
+        const artisanTeaPenalty = drinkStats['/buff_types/artisan'] ? 5 : 0;
+        return baseLevelReq + artisanTeaPenalty;
       }
     }),
     columnHelper.accessor((row) => row.name, { id: 'name', header: 'Name' }),
-    columnHelper.accessor((row) => row.experienceGain.value, { id: 'xp', header: 'XP' })
+    columnHelper.accessor((row) => row.experienceGain.value, {
+      id: 'xp',
+      header: 'XP',
+      cell: (info) => {
+        const { experienceGain } = info.row.original;
+        const xp = computeActionXp({
+          equipmentStats,
+          drinkStats,
+          communityBuffs,
+          houseStats: house,
+          baseXp: experienceGain.value
+        });
+        return formatNumber(xp);
+      }
+    })
   ];
 
   const table = useReactTable({
