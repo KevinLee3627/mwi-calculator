@@ -1,4 +1,7 @@
+import { createColumnHelper } from '@tanstack/react-table';
+import { useMemo } from 'react';
 import { GameIcon } from 'src/components/GameIcon';
+import { ActionDetail } from 'src/core/actions/ActionDetail';
 import { clientData } from 'src/core/clientData';
 import { CommunityBuffTypeHrid } from 'src/core/hrid/CommunityBuffTypeHrid';
 import { HouseRoomHrid } from 'src/core/hrid/HouseRoomHrid';
@@ -6,32 +9,28 @@ import { CharacterLevelInput } from 'src/features/character/levels/CharacterLeve
 import { CharacterEnhancementSelect } from 'src/features/character/loadout/CharacterEnhancementSelect';
 import { CharacterEquipmentSelect } from 'src/features/character/loadout/CharacterEquipmentSelect';
 import { SkillDrinksSelect } from 'src/features/drinks/SkillDrinksSelect';
+import { SkillTable } from 'src/features/SkillTable';
 import { useStats } from 'src/hooks/useStats';
 import { actionTypeToolLocationMapping } from 'src/util/actionTypeToolLocationMapping';
 import { openModal } from 'src/util/openModal';
 import { skillHridToActionTypeHrid } from 'src/util/skillHridToActionTypeHridMapping';
 
 export function SkillPage() {
-  const {
-    activeLoadout,
-    characterLevels,
-    communityBuffs,
-    house,
-    activeSkillState,
-    drinks
-  } = useStats();
+  const { communityBuffs, house, activeSkillState } = useStats();
 
   const actionTypeHrid = skillHridToActionTypeHrid[activeSkillState.activeSkill];
+
+  const tableData = useMemo(
+    () =>
+      Object.values(clientData.actionDetailMap).filter(
+        (value) => value.type === actionTypeHrid
+      ),
+    [actionTypeHrid]
+  );
+
   if (actionTypeHrid === '/action_types/combat') return <div>Nope...</div>;
   // const actionFunctionHrid = actionTypeActionFunctionMapping[actionTypeHrid];
 
-  // const tableData = useMemo(
-  //   () =>
-  //     Object.values(clientData.actionDetailMap).filter(
-  //       (value) => value.type === actionTypeHrid
-  //     ),
-  //   [actionTypeHrid]
-  // );
   return (
     <div>
       <div className="flex max-w-fit flex-col items-start sm:max-w-full sm:flex-row sm:items-end">
@@ -103,7 +102,9 @@ export function SkillPage() {
           </div>
         </div>
       </div>
-      <div></div>
+      <div>
+        <SkillTable data={tableData} />
+      </div>
       {/* <SkillTable
         actionTypeHrid={actionTypeHrid}
         actionFunctionHrid={actionFunctionHrid}
