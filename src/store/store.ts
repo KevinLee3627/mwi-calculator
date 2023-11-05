@@ -22,10 +22,10 @@ import {
   skillDrinksSlice
 } from 'src/features/drinks/drinksSlice';
 import { houseInitialState, houseSlice } from 'src/features/house/houseSlice';
-// import {
-//   targetLevelInitialState,
-//   targetLevelSlice
-// } from 'src/old/features/skill/targets/targetLevelSlice';
+import {
+  targetLevelsInitialState,
+  targetLevelsSlice
+} from 'src/features/targetLevelSlice';
 import {
   // actionQueueListenerMiddleware,
   activeSkillListenerMiddleware,
@@ -33,8 +33,8 @@ import {
   communityBuffListenerMiddleware,
   houseListenerMiddleware,
   loadoutListenerMiddleware,
-  skillDrinksListenerMiddleware
-  // targetLevelListenerMiddleware
+  skillDrinksListenerMiddleware,
+  targetLevelsListenerMiddleware
 } from 'src/store/listenerMiddleware';
 
 const tryLocalStorage = (key: string, fallback: object) =>
@@ -48,7 +48,7 @@ export const store = configureStore({
     loadout: loadoutSlice.reducer,
     skillDrinks: skillDrinksSlice.reducer,
     activeSkill: activeSkillSlice.reducer,
-    // targetLevel: targetLevelSlice.reducer,
+    targetLevels: targetLevelsSlice.reducer,
     communityBuff: communityBuffSlice.reducer,
     house: houseSlice.reducer
     // actionQueue: actionQueueSlice.reducer,
@@ -60,7 +60,7 @@ export const store = configureStore({
     loadoutListenerMiddleware.middleware,
     skillDrinksListenerMiddleware.middleware,
     activeSkillListenerMiddleware.middleware,
-    // targetLevelListenerMiddleware.middleware,
+    targetLevelsListenerMiddleware.middleware,
     communityBuffListenerMiddleware.middleware,
     houseListenerMiddleware.middleware
     // actionQueueListenerMiddleware.middleware,
@@ -71,7 +71,7 @@ export const store = configureStore({
     loadout: tryLocalStorage('loadout', loadoutInitialState),
     skillDrinks: tryLocalStorage('skillDrinks', skillDrinksInitialState),
     activeSkill: tryLocalStorage('activeSkill', activeSkillInitialState),
-    //   targetLevel: tryLocalStorage('targetLevel', targetLevelInitialState),
+    targetLevels: tryLocalStorage('targetLevels', targetLevelsInitialState),
     communityBuff: tryLocalStorage('communityBuff', communityBuffInitialState),
     house: tryLocalStorage('house', houseInitialState)
     //   actionQueue: tryLocalStorage('actionQueue', actionQueueInitialState)

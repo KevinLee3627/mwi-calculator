@@ -7,6 +7,7 @@ import {
 import { selectCommunityBuffs } from 'src/features/communityBuff/communityBuffSlice';
 import { selectSkillDrinks } from 'src/features/drinks/drinksSlice';
 import { selectHouse } from 'src/features/house/houseSlice';
+import { selectTargetLevels } from 'src/features/targetLevelSlice';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 
 export function useStats() {
@@ -17,6 +18,7 @@ export function useStats() {
   const activeSkillState = useAppSelector(selectActiveSkillState);
   const house = useAppSelector(selectHouse);
   const drinks = useAppSelector(selectSkillDrinks);
+  const targetLevels = useAppSelector(selectTargetLevels);
 
   return {
     characterLevels,
@@ -25,7 +27,8 @@ export function useStats() {
     communityBuffs,
     activeSkillState,
     house,
-    drinks
+    drinks,
+    targetLevels
   };
 }
 

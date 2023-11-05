@@ -6,7 +6,7 @@ import { communityBuffSlice } from 'src/features/communityBuff/communityBuffSlic
 // import { actionQueueSlice } from 'src/old/features/queue/actionQueueSlice';
 import { skillDrinksSlice } from 'src/features/drinks/drinksSlice';
 import { houseSlice } from 'src/features/house/houseSlice';
-// import { targetLevelSlice } from 'src/old/features/skill/targets/targetLevelSlice';
+import { targetLevelsSlice } from 'src/features/targetLevelSlice';
 import { store } from 'src/store/store';
 
 export const characterLevelsListenerMiddleware = createListenerMiddleware();
@@ -54,13 +54,13 @@ activeSkillListenerMiddleware.startListening({
   }
 });
 
-// export const targetLevelListenerMiddleware = createListenerMiddleware();
-// targetLevelListenerMiddleware.startListening({
-//   actionCreator: targetLevelSlice.actions.setTargetLevel,
-//   effect: () => {
-//     localStorage.setItem('targetLevel', JSON.stringify(store.getState().targetLevel));
-//   }
-// });
+export const targetLevelsListenerMiddleware = createListenerMiddleware();
+targetLevelsListenerMiddleware.startListening({
+  actionCreator: targetLevelsSlice.actions.setTargetLevel,
+  effect: () => {
+    localStorage.setItem('targetLevel', JSON.stringify(store.getState().targetLevels));
+  }
+});
 
 export const communityBuffListenerMiddleware = createListenerMiddleware();
 communityBuffListenerMiddleware.startListening({

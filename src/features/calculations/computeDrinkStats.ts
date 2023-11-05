@@ -1,12 +1,9 @@
 import { BuffTypeHrid } from 'src/core/hrid/BuffTypeHrid';
-import { NonCombatSkillHrid } from 'src/core/skills/NonCombatSkillHrid';
+import { SkillHrid } from 'src/core/hrid/SkillHrid';
 import { SkillDrinksState } from 'src/features/drinks/drinksSlice';
 import { skillHridToActionTypeHrid } from 'src/util/skillHridToActionTypeHridMapping';
 
-export function computeDrinkStats(
-  drinksState: SkillDrinksState,
-  skillHrid: NonCombatSkillHrid
-) {
+export function computeDrinkStats(drinksState: SkillDrinksState, skillHrid: SkillHrid) {
   const actionTypeHrid = skillHridToActionTypeHrid[skillHrid];
   // organize buffs given and their values
   const drinks = drinksState[actionTypeHrid];

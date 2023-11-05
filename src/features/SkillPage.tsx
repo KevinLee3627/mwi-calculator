@@ -101,7 +101,7 @@ export function SkillPage() {
         </div>
       </div>
       <div>
-        <SkillTable data={tableData} actionTypeHrid={actionTypeHrid} />
+        <SkillTable data={tableData} skillHrid={activeSkillState.activeSkill} />
       </div>
       {/* <SkillTable
         actionTypeHrid={actionTypeHrid}

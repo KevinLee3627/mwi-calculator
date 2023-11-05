@@ -10,22 +10,27 @@ import {
 } from '@tanstack/react-table';
 import { useState } from 'react';
 import { ActionDetail } from 'src/core/actions/ActionDetail';
-import { NonCombatActionTypeHrid } from 'src/core/actions/NonCombatActionTypeHrid';
+import { NonCombatSkillHrid } from 'src/core/skills/NonCombatSkillHrid';
 import { computeActionXp } from 'src/features/calculations/computeActionXp';
 import { computeDrinkStats } from 'src/features/calculations/computeDrinkStats';
 import { computeEquipmentStats } from 'src/features/calculations/computeEquipmentStats';
+import { setTargetLevel } from 'src/features/targetLevelSlice';
+import { useAppDispatch } from 'src/hooks/useAppDispatch';
 import { useStats } from 'src/hooks/useStats';
 import { formatNumber } from 'src/util/formatNumber';
 
 interface SkillTableProps {
   data: ActionDetail[];
-  actionTypeHrid: NonCombatActionTypeHrid;
+  skillHrid: NonCombatSkillHrid;
 }
 
-export function SkillTable({ data, actionTypeHrid }: SkillTableProps) {
-  const { activeLoadout, drinks, communityBuffs, house } = useStats();
+export function SkillTable({ data, skillHrid }: SkillTableProps) {
+  const dispatch = useAppDispatch();
+
+  const { activeLoadout, drinks, communityBuffs, house, targetLevels } = useStats();
+
   const equipmentStats = computeEquipmentStats(activeLoadout);
-  const drinkStats = computeDrinkStats(drinks, actionTypeHrid);
+  const drinkStats = computeDrinkStats(drinks, skillHrid);
 
   const [sorting, setSorting] = useState<SortingState>([
     { id: 'levelRequirement', desc: false }
@@ -39,7 +44,7 @@ export function SkillTable({ data, actionTypeHrid }: SkillTableProps) {
       header: 'Level Req.',
       cell: (info) => {
         const baseLevelReq = info.row.original.levelRequirement.level;
-        const drinkStats = computeDrinkStats(drinks, actionTypeHrid);
+        const drinkStats = computeDrinkStats(drinks, skillHrid);
         const artisanTeaPenalty = drinkStats['/buff_types/artisan'] ? 5 : 0;
         return baseLevelReq + artisanTeaPenalty;
       }
@@ -74,7 +79,27 @@ export function SkillTable({ data, actionTypeHrid }: SkillTableProps) {
 
   return (
     <div>
-      <ColumnVisibilityDropdown table={table} />
+      <div className="flex items-end gap-4">
+        <div className="form-control" key={`${skillHrid}_key`}>
+          <label className="label">
+            <span className="label-text">Level</span>
+          </label>
+          <input
+            type="number"
+            min={0}
+            max={200}
+            id={`${skillHrid}_level_input`}
+            name={`${skillHrid}_level_input`}
+            className="input-primary input"
+            value={targetLevels[skillHrid]}
+            onChange={(e) => {
+              const value = parseInt(e.target.value, 10);
+              dispatch(setTargetLevel({ skillHrid, level: value }));
+            }}
+          />
+        </div>
+        <ColumnVisibilityDropdown table={table} />
+      </div>
       <table className="table-zebra table">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
