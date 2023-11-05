@@ -1,11 +1,13 @@
-import { NonCombatActionTypeHrid } from 'src/core/actions/NonCombatActionTypeHrid';
 import { BuffTypeHrid } from 'src/core/hrid/BuffTypeHrid';
+import { NonCombatSkillHrid } from 'src/core/skills/NonCombatSkillHrid';
 import { SkillDrinksState } from 'src/features/drinks/drinksSlice';
+import { skillHridToActionTypeHrid } from 'src/util/skillHridToActionTypeHridMapping';
 
 export function computeDrinkStats(
   drinksState: SkillDrinksState,
-  actionTypeHrid: NonCombatActionTypeHrid
+  skillHrid: NonCombatSkillHrid
 ) {
+  const actionTypeHrid = skillHridToActionTypeHrid[skillHrid];
   // organize buffs given and their values
   const drinks = drinksState[actionTypeHrid];
   // TODO: How to handle error?
