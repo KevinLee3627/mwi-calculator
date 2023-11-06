@@ -1,5 +1,4 @@
 import { configureStore } from '@reduxjs/toolkit';
-// import { marketApi } from 'src/old/features/market/services/market';
 import { activeSkillInitialState, activeSkillSlice } from 'src/features/activeSkillSlice';
 import {
   characterLevelsInitialState,
@@ -23,6 +22,7 @@ import {
   skillDrinksSlice
 } from 'src/features/drinks/drinksSlice';
 import { houseInitialState, houseSlice } from 'src/features/house/houseSlice';
+import { marketApi } from 'src/features/market/marketApi';
 import {
   targetLevelsInitialState,
   targetLevelsSlice
@@ -53,9 +53,9 @@ export const store = configureStore({
     targetLevels: targetLevelsSlice.reducer,
     communityBuff: communityBuffSlice.reducer,
     house: houseSlice.reducer,
-    currentXp: currentXpSlice.reducer
+    currentXp: currentXpSlice.reducer,
     // actionQueue: actionQueueSlice.reducer,
-    // [marketApi.reducerPath]: marketApi.reducer
+    [marketApi.reducerPath]: marketApi.reducer
   },
   middleware: (getDefaultMiddleware) => [
     ...getDefaultMiddleware(),
@@ -66,9 +66,9 @@ export const store = configureStore({
     targetLevelsListenerMiddleware.middleware,
     communityBuffListenerMiddleware.middleware,
     houseListenerMiddleware.middleware,
-    currentXpListenerMiddleware.middleware
+    currentXpListenerMiddleware.middleware,
     // actionQueueListenerMiddleware.middleware,
-    // marketApi.middleware
+    marketApi.middleware
   ],
   preloadedState: {
     characterLevels: tryLocalStorage('characterLevels', characterLevelsInitialState),

@@ -19,6 +19,8 @@ import { computeCommunityBuffStats } from 'src/features/calculations/computeComm
 import { computeDrinkStats } from 'src/features/calculations/computeDrinkStats';
 import { computeEquipmentStats } from 'src/features/calculations/computeEquipmentStats';
 import { setSkillXp } from 'src/features/currentXpSlice';
+import { Market } from 'src/features/market/Market';
+import { useGetMarketDataQuery } from 'src/features/market/marketApi';
 import { setTargetLevel } from 'src/features/targetLevelSlice';
 import { useAppDispatch } from 'src/hooks/useAppDispatch';
 import { useStats } from 'src/hooks/useStats';
@@ -44,6 +46,16 @@ export function SkillTable({ data, skillHrid }: SkillTableProps) {
     { id: 'levelRequirement', desc: false }
   ]);
   const [columnVisibility, setColumnVisibility] = useState({});
+
+  const {
+    data: marketData,
+    error,
+    isLoading
+  } = useGetMarketDataQuery('', {
+    pollingInterval: 1000 * 60
+  });
+
+  const market = useMemo(() => new Market(marketData?.market), [marketData]);
 
   const {
     activeLoadout,
@@ -135,7 +147,19 @@ export function SkillTable({ data, skillHrid }: SkillTableProps) {
       columnHelper.accessor((row) => actionStats[row.hrid].efficiency, {
         id: 'efficiency',
         header: 'Efficiency',
-        cell: (info) => `${formatNumber(info.getValue() * 100)}%`
+        cell: (info) =>
+          `${formatNumber(actionStats[info.row.original.hrid].efficiency * 100)}%`
+      }),
+      columnHelper.display({
+        id: 'price',
+        header: 'Price',
+        cell: (info) => {
+          const { dropTable } = info.row.original;
+          if (dropTable == null) return 'N/A';
+          const dropHrid = dropTable[0].itemHrid;
+          const price = market.getItemPrice(dropHrid);
+          return <input className="input-primary input input-sm" defaultValue={price} />;
+        }
       }),
       columnHelper.display({
         id: 'actionsToTarget',
@@ -145,7 +169,7 @@ export function SkillTable({ data, skillHrid }: SkillTableProps) {
         }
       })
     ];
-  }, [columnHelper, actionStats, drinkStats]);
+  }, [columnHelper, actionStats, drinkStats, market]);
 
   const table = useReactTable({
     data,
