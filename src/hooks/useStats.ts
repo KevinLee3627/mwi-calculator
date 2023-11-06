@@ -5,6 +5,7 @@ import {
   selectAllLoadouts
 } from 'src/features/character/loadout/loadoutSlice';
 import { selectCommunityBuffs } from 'src/features/communityBuff/communityBuffSlice';
+import { selectCurrentXp } from 'src/features/currentXpSlice';
 import { selectSkillDrinks } from 'src/features/drinks/drinksSlice';
 import { selectHouse } from 'src/features/house/houseSlice';
 import { selectTargetLevels } from 'src/features/targetLevelSlice';
@@ -19,6 +20,7 @@ export function useStats() {
   const house = useAppSelector(selectHouse);
   const drinks = useAppSelector(selectSkillDrinks);
   const targetLevels = useAppSelector(selectTargetLevels);
+  const currentXp = useAppSelector(selectCurrentXp);
 
   return {
     characterLevels,
@@ -28,7 +30,8 @@ export function useStats() {
     activeSkillState,
     house,
     drinks,
-    targetLevels
+    targetLevels,
+    currentXp
   };
 }
 

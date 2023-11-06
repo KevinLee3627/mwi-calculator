@@ -3,6 +3,7 @@ import { activeSkillSlice } from 'src/features/activeSkillSlice';
 import { characterLevelsSlice } from 'src/features/character/levels/characterLevelsSlice';
 import { loadoutSlice } from 'src/features/character/loadout/loadoutSlice';
 import { communityBuffSlice } from 'src/features/communityBuff/communityBuffSlice';
+import { currentXpSlice } from 'src/features/currentXpSlice';
 // import { actionQueueSlice } from 'src/old/features/queue/actionQueueSlice';
 import { skillDrinksSlice } from 'src/features/drinks/drinksSlice';
 import { houseSlice } from 'src/features/house/houseSlice';
@@ -75,6 +76,14 @@ houseListenerMiddleware.startListening({
   actionCreator: houseSlice.actions.setRoomLevel,
   effect: () => {
     localStorage.setItem('house', JSON.stringify(store.getState().house));
+  }
+});
+
+export const currentXpListenerMiddleware = createListenerMiddleware();
+currentXpListenerMiddleware.startListening({
+  actionCreator: currentXpSlice.actions.setSkillXp,
+  effect: () => {
+    localStorage.setItem('currentXp', JSON.stringify(store.getState().currentXp));
   }
 });
 

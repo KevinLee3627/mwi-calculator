@@ -14,6 +14,7 @@ import { NonCombatSkillHrid } from 'src/core/skills/NonCombatSkillHrid';
 import { computeActionXp } from 'src/features/calculations/computeActionXp';
 import { computeDrinkStats } from 'src/features/calculations/computeDrinkStats';
 import { computeEquipmentStats } from 'src/features/calculations/computeEquipmentStats';
+import { setSkillXp } from 'src/features/currentXpSlice';
 import { setTargetLevel } from 'src/features/targetLevelSlice';
 import { useAppDispatch } from 'src/hooks/useAppDispatch';
 import { useStats } from 'src/hooks/useStats';
@@ -27,7 +28,8 @@ interface SkillTableProps {
 export function SkillTable({ data, skillHrid }: SkillTableProps) {
   const dispatch = useAppDispatch();
 
-  const { activeLoadout, drinks, communityBuffs, house, targetLevels } = useStats();
+  const { activeLoadout, drinks, communityBuffs, house, targetLevels, currentXp } =
+    useStats();
 
   const equipmentStats = computeEquipmentStats(activeLoadout);
   const drinkStats = computeDrinkStats(drinks, skillHrid);
@@ -80,16 +82,29 @@ export function SkillTable({ data, skillHrid }: SkillTableProps) {
   return (
     <div>
       <div className="flex items-end gap-4">
-        <div className="form-control" key={`${skillHrid}_key`}>
+        <div className="form-control">
           <label className="label">
-            <span className="label-text">Level</span>
+            <span className="label-text">Current XP</span>
+          </label>
+          <input
+            type="number"
+            min={0}
+            className="input-primary input"
+            value={currentXp[skillHrid]}
+            onChange={(e) => {
+              const value = parseInt(e.target.value, 10);
+              dispatch(setSkillXp({ skillHrid, xp: value }));
+            }}
+          />
+        </div>
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text">Target Level</span>
           </label>
           <input
             type="number"
             min={0}
             max={200}
-            id={`${skillHrid}_level_input`}
-            name={`${skillHrid}_level_input`}
             className="input-primary input"
             value={targetLevels[skillHrid]}
             onChange={(e) => {

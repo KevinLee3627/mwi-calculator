@@ -13,6 +13,7 @@ import {
   communityBuffInitialState,
   communityBuffSlice
 } from 'src/features/communityBuff/communityBuffSlice';
+import { currentXpInitialState, currentXpSlice } from 'src/features/currentXpSlice';
 // import {
 //   actionQueueInitialState,
 //   actionQueueSlice
@@ -31,6 +32,7 @@ import {
   activeSkillListenerMiddleware,
   characterLevelsListenerMiddleware,
   communityBuffListenerMiddleware,
+  currentXpListenerMiddleware,
   houseListenerMiddleware,
   loadoutListenerMiddleware,
   skillDrinksListenerMiddleware,
@@ -50,7 +52,8 @@ export const store = configureStore({
     activeSkill: activeSkillSlice.reducer,
     targetLevels: targetLevelsSlice.reducer,
     communityBuff: communityBuffSlice.reducer,
-    house: houseSlice.reducer
+    house: houseSlice.reducer,
+    currentXp: currentXpSlice.reducer
     // actionQueue: actionQueueSlice.reducer,
     // [marketApi.reducerPath]: marketApi.reducer
   },
@@ -62,7 +65,8 @@ export const store = configureStore({
     activeSkillListenerMiddleware.middleware,
     targetLevelsListenerMiddleware.middleware,
     communityBuffListenerMiddleware.middleware,
-    houseListenerMiddleware.middleware
+    houseListenerMiddleware.middleware,
+    currentXpListenerMiddleware.middleware
     // actionQueueListenerMiddleware.middleware,
     // marketApi.middleware
   ],
@@ -73,7 +77,8 @@ export const store = configureStore({
     activeSkill: tryLocalStorage('activeSkill', activeSkillInitialState),
     targetLevels: tryLocalStorage('targetLevels', targetLevelsInitialState),
     communityBuff: tryLocalStorage('communityBuff', communityBuffInitialState),
-    house: tryLocalStorage('house', houseInitialState)
+    house: tryLocalStorage('house', houseInitialState),
+    currentXp: tryLocalStorage('currentXp', currentXpInitialState)
     //   actionQueue: tryLocalStorage('actionQueue', actionQueueInitialState)
   }
 });
