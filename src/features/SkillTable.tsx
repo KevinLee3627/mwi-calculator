@@ -11,6 +11,7 @@ import {
 import { useState } from 'react';
 import { ActionDetail } from 'src/core/actions/ActionDetail';
 import { NonCombatSkillHrid } from 'src/core/skills/NonCombatSkillHrid';
+import { computeActionTime } from 'src/features/calculations/computeActionTime';
 import { computeActionXp } from 'src/features/calculations/computeActionXp';
 import { computeDrinkStats } from 'src/features/calculations/computeDrinkStats';
 import { computeEquipmentStats } from 'src/features/calculations/computeEquipmentStats';
@@ -19,6 +20,7 @@ import { setTargetLevel } from 'src/features/targetLevelSlice';
 import { useAppDispatch } from 'src/hooks/useAppDispatch';
 import { useStats } from 'src/hooks/useStats';
 import { formatNumber } from 'src/util/formatNumber';
+import { skillHridToSpeedBonus } from 'src/util/skillHridToSpeedBonusMapping';
 
 interface SkillTableProps {
   data: ActionDetail[];
@@ -65,6 +67,23 @@ export function SkillTable({ data, skillHrid }: SkillTableProps) {
           baseXp: experienceGain.value
         });
         return formatNumber(xp);
+      }
+    }),
+    columnHelper.accessor((row) => row.baseTimeCost, {
+      id: 'time',
+      header: 'Time (s)',
+      cell: (info) => {
+        const { baseTimeCost } = info.row.original;
+        const toolBonus = equipmentStats[skillHridToSpeedBonus[skillHrid]] ?? 0;
+        const time = computeActionTime({ baseTimeCost, toolBonus });
+        return formatNumber(time);
+      }
+    }),
+    columnHelper.display({
+      id: 'actionsToTarget',
+      header: '# Actions to Target',
+      cell: (info) => {
+        return info.row.original.baseTimeCost;
       }
     })
   ];
