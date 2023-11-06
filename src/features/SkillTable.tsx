@@ -11,8 +11,10 @@ import {
 import { useState } from 'react';
 import { ActionDetail } from 'src/core/actions/ActionDetail';
 import { NonCombatSkillHrid } from 'src/core/skills/NonCombatSkillHrid';
+import { computeActionEfficiency } from 'src/features/calculations/computeActionEfficiency';
 import { computeActionTime } from 'src/features/calculations/computeActionTime';
 import { computeActionXp } from 'src/features/calculations/computeActionXp';
+import { computeCommunityBuffStats } from 'src/features/calculations/computeCommunityBuffStats';
 import { computeDrinkStats } from 'src/features/calculations/computeDrinkStats';
 import { computeEquipmentStats } from 'src/features/calculations/computeEquipmentStats';
 import { setSkillXp } from 'src/features/currentXpSlice';
@@ -30,11 +32,19 @@ interface SkillTableProps {
 export function SkillTable({ data, skillHrid }: SkillTableProps) {
   const dispatch = useAppDispatch();
 
-  const { activeLoadout, drinks, communityBuffs, house, targetLevels, currentXp } =
-    useStats();
+  const {
+    activeLoadout,
+    drinks,
+    communityBuffs,
+    house,
+    targetLevels,
+    currentXp,
+    characterLevels
+  } = useStats();
 
   const equipmentStats = computeEquipmentStats(activeLoadout);
   const drinkStats = computeDrinkStats(drinks, skillHrid);
+  const communityBuffStats = computeCommunityBuffStats(communityBuffs);
 
   const [sorting, setSorting] = useState<SortingState>([
     { id: 'levelRequirement', desc: false }
@@ -62,7 +72,7 @@ export function SkillTable({ data, skillHrid }: SkillTableProps) {
         const xp = computeActionXp({
           equipmentStats,
           drinkStats,
-          communityBuffs,
+          communityBuffStats,
           houseStats: house,
           baseXp: experienceGain.value
         });
@@ -79,6 +89,23 @@ export function SkillTable({ data, skillHrid }: SkillTableProps) {
         return formatNumber(time);
       }
     }),
+    columnHelper.accessor(
+      (row) =>
+        computeActionEfficiency({
+          actionLevel: row.levelRequirement.level,
+          characterLevel: characterLevels[skillHrid],
+          equipmentStats,
+          drinkStats,
+          house,
+          communityBuffStats,
+          skillHrid
+        }),
+      {
+        id: 'efficiency',
+        header: 'Efficiency',
+        cell: (info) => `${formatNumber(info.getValue() * 100)}%`
+      }
+    ),
     columnHelper.display({
       id: 'actionsToTarget',
       header: '# Actions to Target',
