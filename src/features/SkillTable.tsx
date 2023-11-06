@@ -58,7 +58,6 @@ export function SkillTable({ data, skillHrid }: SkillTableProps) {
       header: 'Level Req.',
       cell: (info) => {
         const baseLevelReq = info.row.original.levelRequirement.level;
-        const drinkStats = computeDrinkStats(drinks, skillHrid);
         const artisanTeaPenalty = drinkStats['/buff_types/artisan'] ? 5 : 0;
         return baseLevelReq + artisanTeaPenalty;
       }
