@@ -26,9 +26,8 @@ export function computeActionEfficiency({
   house,
   skillHrid
 }: ComputeActionEfficiencyParams) {
-  const skillTeaBonus = drinkStats[skillHridToTeaBuffHrid[skillHrid]];
+  const skillTeaBonus = drinkStats[skillHridToTeaBuffHrid[skillHrid]] ?? 0;
   const levelBonus = Math.max(0, characterLevel + skillTeaBonus - actionLevel) / 100;
-
   const effTeaBonus = drinkStats['/buff_types/efficiency'] ?? 0;
   const necklaceBonus = equipmentStats['skillingEfficiency'] ?? 0;
 
