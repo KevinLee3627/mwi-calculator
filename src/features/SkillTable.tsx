@@ -8,8 +8,9 @@ import {
   Table,
   useReactTable
 } from '@tanstack/react-table';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ActionDetail } from 'src/core/actions/ActionDetail';
+import { ActionHrid } from 'src/core/hrid/ActionHrid';
 import { NonCombatSkillHrid } from 'src/core/skills/NonCombatSkillHrid';
 import { computeActionEfficiency } from 'src/features/calculations/computeActionEfficiency';
 import { computeActionTime } from 'src/features/calculations/computeActionTime';
@@ -29,8 +30,19 @@ interface SkillTableProps {
   skillHrid: NonCombatSkillHrid;
 }
 
+interface ActionStat {
+  xp: number;
+  efficiency: number;
+  time: number;
+  actionHrid: ActionHrid;
+}
+
 export function SkillTable({ data, skillHrid }: SkillTableProps) {
   const dispatch = useAppDispatch();
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: 'levelRequirement', desc: false }
+  ]);
+  const [columnVisibility, setColumnVisibility] = useState({});
 
   const {
     activeLoadout,
@@ -46,10 +58,45 @@ export function SkillTable({ data, skillHrid }: SkillTableProps) {
   const drinkStats = computeDrinkStats(drinks, skillHrid);
   const communityBuffStats = computeCommunityBuffStats(communityBuffs);
 
-  const [sorting, setSorting] = useState<SortingState>([
-    { id: 'levelRequirement', desc: false }
+  const actionStats = useMemo(() => {
+    return data.reduce<Record<ActionHrid, ActionStat>>((acc, action) => {
+      const xp = computeActionXp({
+        equipmentStats,
+        drinkStats,
+        communityBuffStats,
+        houseStats: house,
+        baseXp: action.experienceGain.value
+      });
+
+      const efficiency = computeActionEfficiency({
+        actionLevel: action.levelRequirement.level,
+        characterLevel: characterLevels[skillHrid],
+        equipmentStats,
+        drinkStats,
+        house,
+        communityBuffStats,
+        skillHrid
+      });
+
+      const toolBonus = equipmentStats[skillHridToSpeedBonus[skillHrid]] ?? 0;
+      const time = computeActionTime({ baseTimeCost: action.baseTimeCost, toolBonus });
+      acc[action.hrid] = {
+        actionHrid: action.hrid,
+        xp,
+        efficiency,
+        time
+      };
+      return acc;
+    }, {} as Record<ActionHrid, ActionStat>);
+  }, [
+    characterLevels,
+    drinkStats,
+    equipmentStats,
+    communityBuffStats,
+    house,
+    skillHrid,
+    data
   ]);
-  const [columnVisibility, setColumnVisibility] = useState({});
 
   const columnHelper = createColumnHelper<ActionDetail>();
   const columns = [
@@ -63,48 +110,21 @@ export function SkillTable({ data, skillHrid }: SkillTableProps) {
       }
     }),
     columnHelper.accessor((row) => row.name, { id: 'name', header: 'Name' }),
-    columnHelper.accessor((row) => row.experienceGain.value, {
+    columnHelper.accessor((row) => actionStats[row.hrid].xp, {
       id: 'xp',
       header: 'XP',
-      cell: (info) => {
-        const { experienceGain } = info.row.original;
-        const xp = computeActionXp({
-          equipmentStats,
-          drinkStats,
-          communityBuffStats,
-          houseStats: house,
-          baseXp: experienceGain.value
-        });
-        return formatNumber(xp);
-      }
+      cell: (info) => formatNumber(info.getValue())
     }),
-    columnHelper.accessor((row) => row.baseTimeCost, {
+    columnHelper.accessor((row) => actionStats[row.hrid].time, {
       id: 'time',
       header: 'Time (s)',
-      cell: (info) => {
-        const { baseTimeCost } = info.row.original;
-        const toolBonus = equipmentStats[skillHridToSpeedBonus[skillHrid]] ?? 0;
-        const time = computeActionTime({ baseTimeCost, toolBonus });
-        return formatNumber(time);
-      }
+      cell: (info) => formatNumber(info.getValue())
     }),
-    columnHelper.accessor(
-      (row) =>
-        computeActionEfficiency({
-          actionLevel: row.levelRequirement.level,
-          characterLevel: characterLevels[skillHrid],
-          equipmentStats,
-          drinkStats,
-          house,
-          communityBuffStats,
-          skillHrid
-        }),
-      {
-        id: 'efficiency',
-        header: 'Efficiency',
-        cell: (info) => `${formatNumber(info.getValue() * 100)}%`
-      }
-    ),
+    columnHelper.accessor((row) => actionStats[row.hrid].efficiency, {
+      id: 'efficiency',
+      header: 'Efficiency',
+      cell: (info) => `${formatNumber(info.getValue() * 100)}%`
+    }),
     columnHelper.display({
       id: 'actionsToTarget',
       header: '# Actions to Target',
