@@ -35,6 +35,7 @@ interface ActionStat {
   efficiency: number;
   time: number;
   actionHrid: ActionHrid;
+  xpPerHour: number;
 }
 
 export function SkillTable({ data, skillHrid }: SkillTableProps) {
@@ -80,12 +81,17 @@ export function SkillTable({ data, skillHrid }: SkillTableProps) {
 
       const toolBonus = equipmentStats[skillHridToSpeedBonus[skillHrid]] ?? 0;
       const time = computeActionTime({ baseTimeCost: action.baseTimeCost, toolBonus });
+
+      const xpPerSecond = xp / (time / (1 + efficiency));
+      const xpPerHour = xpPerSecond * 3600;
       acc[action.hrid] = {
         actionHrid: action.hrid,
         xp,
         efficiency,
-        time
+        time,
+        xpPerHour
       };
+
       return acc;
     }, {} as Record<ActionHrid, ActionStat>);
   }, [
@@ -99,40 +105,47 @@ export function SkillTable({ data, skillHrid }: SkillTableProps) {
   ]);
 
   const columnHelper = createColumnHelper<ActionDetail>();
-  const columns = [
-    columnHelper.accessor((row) => row.levelRequirement.level, {
-      id: 'levelRequirement',
-      header: 'Level Req.',
-      cell: (info) => {
-        const baseLevelReq = info.row.original.levelRequirement.level;
-        const artisanTeaPenalty = drinkStats['/buff_types/artisan'] ? 5 : 0;
-        return baseLevelReq + artisanTeaPenalty;
-      }
-    }),
-    columnHelper.accessor((row) => row.name, { id: 'name', header: 'Name' }),
-    columnHelper.accessor((row) => actionStats[row.hrid].xp, {
-      id: 'xp',
-      header: 'XP',
-      cell: (info) => formatNumber(info.getValue())
-    }),
-    columnHelper.accessor((row) => actionStats[row.hrid].time, {
-      id: 'time',
-      header: 'Time (s)',
-      cell: (info) => formatNumber(info.getValue())
-    }),
-    columnHelper.accessor((row) => actionStats[row.hrid].efficiency, {
-      id: 'efficiency',
-      header: 'Efficiency',
-      cell: (info) => `${formatNumber(info.getValue() * 100)}%`
-    }),
-    columnHelper.display({
-      id: 'actionsToTarget',
-      header: '# Actions to Target',
-      cell: (info) => {
-        return info.row.original.baseTimeCost;
-      }
-    })
-  ];
+  const columns = useMemo(() => {
+    return [
+      columnHelper.accessor((row) => row.levelRequirement.level, {
+        id: 'levelRequirement',
+        header: 'Level Req.',
+        cell: ({ row }) => {
+          const baseLevelReq = row.original.levelRequirement.level;
+          const artisanTeaPenalty = drinkStats['/buff_types/artisan'] ? 5 : 0;
+          return baseLevelReq + artisanTeaPenalty;
+        }
+      }),
+      columnHelper.accessor((row) => row.name, { id: 'name', header: 'Name' }),
+      columnHelper.accessor((row) => actionStats[row.hrid].xp, {
+        id: 'xp',
+        header: 'XP',
+        cell: ({ row }) => formatNumber(actionStats[row.original.hrid].xp)
+      }),
+      columnHelper.accessor((row) => row.baseTimeCost, {
+        id: 'time',
+        header: 'Time (s)',
+        cell: ({ row }) => formatNumber(actionStats[row.original.hrid].time)
+      }),
+      columnHelper.accessor((row) => actionStats[row.hrid].xpPerHour, {
+        id: 'xpPerHour',
+        header: 'XP/Hr',
+        cell: ({ row }) => formatNumber(actionStats[row.original.hrid].xpPerHour)
+      }),
+      columnHelper.accessor((row) => actionStats[row.hrid].efficiency, {
+        id: 'efficiency',
+        header: 'Efficiency',
+        cell: (info) => `${formatNumber(info.getValue() * 100)}%`
+      }),
+      columnHelper.display({
+        id: 'actionsToTarget',
+        header: '# Actions to Target',
+        cell: (info) => {
+          return info.row.original.baseTimeCost;
+        }
+      })
+    ];
+  }, [columnHelper, actionStats, drinkStats]);
 
   const table = useReactTable({
     data,

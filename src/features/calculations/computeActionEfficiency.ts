@@ -42,14 +42,6 @@ export function computeActionEfficiency({
   const roomHrid = skillHridToRoomHrid[skillHrid];
   const houseBonus = house[roomHrid] * 0.015;
 
-  console.log(
-    levelBonus,
-    effTeaBonus,
-    necklaceBonus,
-    gearBonus,
-    communityBuffBonus,
-    houseBonus
-  );
   return (
     levelBonus + effTeaBonus + necklaceBonus + gearBonus + communityBuffBonus + houseBonus
   );
