@@ -7,11 +7,13 @@ import {
   Table,
   useReactTable
 } from '@tanstack/react-table';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ActionDetail } from 'src/core/actions/ActionDetail';
 import { NonCombatSkillHrid } from 'src/core/skills/NonCombatSkillHrid';
 import { useGatheringColumns } from 'src/features/columns';
 import { setSkillXp } from 'src/features/currentXpSlice';
+import { Market } from 'src/features/market/Market';
+import { useGetMarketDataQuery } from 'src/features/market/marketApi';
 import { setTargetLevel } from 'src/features/targetLevelSlice';
 import { useAppDispatch } from 'src/hooks/useAppDispatch';
 import { useStats } from 'src/hooks/useStats';
@@ -28,9 +30,22 @@ export function SkillTable({ data, skillHrid }: SkillTableProps) {
   ]);
   const [columnVisibility, setColumnVisibility] = useState({});
 
+  const {
+    data: marketData,
+    error,
+    isLoading
+  } = useGetMarketDataQuery('', {
+    pollingInterval: 1000 * 60 * 30
+  });
+
+  const market = useMemo(() => {
+    if (isLoading || error || marketData == null) return null;
+    else return new Market(marketData.market);
+  }, [marketData, isLoading, error]);
+
   const { targetLevels, currentXp } = useStats();
 
-  const columns = useGatheringColumns({ skillHrid, data });
+  const columns = useGatheringColumns({ skillHrid, data, market });
 
   const table = useReactTable({
     data,

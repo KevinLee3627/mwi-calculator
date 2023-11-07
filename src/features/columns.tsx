@@ -13,7 +13,6 @@ import { computeCommunityBuffStats } from 'src/features/calculations/computeComm
 import { computeDrinkStats } from 'src/features/calculations/computeDrinkStats';
 import { computeEquipmentStats } from 'src/features/calculations/computeEquipmentStats';
 import { Market } from 'src/features/market/Market';
-import { useGetMarketDataQuery } from 'src/features/market/marketApi';
 import { useStats } from 'src/hooks/useStats';
 import { formatNumber } from 'src/util/formatNumber';
 import { skillHridToSpeedBonus } from 'src/util/skillHridToSpeedBonusMapping';
@@ -21,6 +20,7 @@ import { skillHridToSpeedBonus } from 'src/util/skillHridToSpeedBonusMapping';
 interface UseGatheringColumnsParams {
   data: ActionDetail[];
   skillHrid: NonCombatSkillHrid;
+  market: Market | null;
 }
 
 interface ActionStat {
@@ -31,19 +31,14 @@ interface ActionStat {
   xpPerHour: number;
   actionsPerHour: number;
   dropsPerAction: { itemHrid: ItemHrid; amt: number }[];
+  profitPerAction: number;
 }
 
-export function useGatheringColumns({ skillHrid, data }: UseGatheringColumnsParams) {
-  const {
-    data: marketData,
-    error,
-    isLoading
-  } = useGetMarketDataQuery('', {
-    pollingInterval: 1000 * 60
-  });
-
-  const market = useMemo(() => new Market(marketData?.market), [marketData]);
-
+export function useGatheringColumns({
+  skillHrid,
+  data,
+  market
+}: UseGatheringColumnsParams) {
   const { activeLoadout, drinks, communityBuffs, house, characterLevels } = useStats();
 
   const { equipmentStats, drinkStats, communityBuffStats } = useMemo(() => {
@@ -100,6 +95,12 @@ export function useGatheringColumns({ skillHrid, data }: UseGatheringColumnsPara
         return { itemHrid: drop.itemHrid, amt: avgPerAction };
       });
 
+      const profitPerAction = dropsPerAction.reduce((acc, val) => {
+        if (market == null)
+          return acc + val.amt * clientData.itemDetailMap[val.itemHrid].sellPrice;
+        else return acc + val.amt * market?.getItemPrice(val.itemHrid);
+      }, 0);
+
       acc[action.hrid] = {
         actionHrid: action.hrid,
         xp,
@@ -107,7 +108,8 @@ export function useGatheringColumns({ skillHrid, data }: UseGatheringColumnsPara
         time,
         xpPerHour,
         actionsPerHour,
-        dropsPerAction
+        dropsPerAction,
+        profitPerAction
       };
 
       return acc;
@@ -119,7 +121,8 @@ export function useGatheringColumns({ skillHrid, data }: UseGatheringColumnsPara
     communityBuffStats,
     house,
     skillHrid,
-    data
+    data,
+    market
   ]);
 
   const columnHelper = createColumnHelper<ActionDetail>();
@@ -157,17 +160,6 @@ export function useGatheringColumns({ skillHrid, data }: UseGatheringColumnsPara
           `${formatNumber(actionStats[info.row.original.hrid].efficiency * 100)}%`
       }),
       columnHelper.display({
-        id: 'price',
-        header: 'Price',
-        cell: (info) => {
-          const { dropTable } = info.row.original;
-          if (dropTable == null) return 'N/A';
-          const dropHrid = dropTable[0].itemHrid;
-          const price = market.getItemPrice(dropHrid);
-          return <input className="input-primary input input-sm" defaultValue={price} />;
-        }
-      }),
-      columnHelper.display({
         id: 'dropsPerHour',
         header: 'Drops/hr',
         cell: (info) => {
@@ -179,18 +171,35 @@ export function useGatheringColumns({ skillHrid, data }: UseGatheringColumnsPara
                 const itemName = clientData.itemDetailMap[drop.itemHrid].name;
                 const dropsPerHour = drop.amt * actionStats[actionHrid].actionsPerHour;
                 const strippedItemHrid = drop.itemHrid.split('/').at(-1);
-                const icon = (
-                  <GameIcon svgSetName="items" iconName={strippedItemHrid ?? ''} />
-                );
                 return (
                   <div key={drop.itemHrid} className="flex">
-                    {icon}
+                    <GameIcon svgSetName="items" iconName={strippedItemHrid ?? ''} />
                     {itemName} ({formatNumber(dropsPerHour)})
                   </div>
                 );
               })}
             </div>
           );
+        }
+      }),
+      columnHelper.display({
+        id: 'price',
+        header: 'Price',
+        cell: (info) => {
+          const { dropTable } = info.row.original;
+          console.log(market);
+          if (dropTable == null || market == null) return 'N/A';
+          const dropHrid = dropTable[0].itemHrid;
+          const price = market.getItemPrice(dropHrid);
+          return <input className="input-primary input input-sm" defaultValue={price} />;
+        }
+      }),
+      columnHelper.accessor((row) => actionStats[row.hrid].profitPerAction, {
+        id: 'profitPerHour',
+        header: 'Profit/hr',
+        cell: (info) => {
+          const { profitPerAction, actionsPerHour } = actionStats[info.row.original.hrid];
+          return formatNumber(profitPerAction * actionsPerHour);
         }
       }),
       columnHelper.display({
