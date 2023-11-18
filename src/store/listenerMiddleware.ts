@@ -59,7 +59,7 @@ export const targetLevelsListenerMiddleware = createListenerMiddleware();
 targetLevelsListenerMiddleware.startListening({
   actionCreator: targetLevelsSlice.actions.setTargetLevel,
   effect: () => {
-    localStorage.setItem('targetLevel', JSON.stringify(store.getState().targetLevels));
+    localStorage.setItem('targetLevels', JSON.stringify(store.getState().targetLevels));
   }
 });
 
