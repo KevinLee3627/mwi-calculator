@@ -24,7 +24,7 @@ export function CommunityBuffs() {
         className="input-primary input"
         min={0}
         max={20}
-        value={communityBuffs[buffDetail.hrid]}
+        value={communityBuffs[buffDetail.hrid] ?? 0}
         onChange={(e) => {
           const value = parseInt(e.target.value, 10);
 

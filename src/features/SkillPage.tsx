@@ -66,7 +66,7 @@ export function SkillPage() {
                     svgSetName="buffs"
                     iconName={buffDetail.buff.typeHrid.split('/').at(-1) ?? ''}
                   />
-                  <p>{buffLevel}</p>
+                  <p>{buffLevel ?? 0}</p>
                 </div>
               );
             })}
