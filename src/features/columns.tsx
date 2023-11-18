@@ -1,5 +1,7 @@
 import { createColumnHelper } from '@tanstack/react-table';
-import { useMemo } from 'react';
+import { useRef } from 'react';
+import { FocusEventHandler } from 'react';
+import { useMemo, useState } from 'react';
 import { GameIcon } from 'src/components/GameIcon';
 import { ActionDetail } from 'src/core/actions/ActionDetail';
 import { clientData } from 'src/core/clientData';
@@ -49,6 +51,13 @@ export function useGatheringColumns({
     return { equipmentStats, drinkStats, communityBuffStats };
   }, [activeLoadout, drinks, skillHrid, communityBuffs]);
 
+  const [priceOverrides, setPriceOverrides] = useState<
+    Partial<Record<ActionHrid, number>>
+  >({});
+
+  // https://stackoverflow.com/a/67029060/6506007
+  const keyToFocus = useRef<string>('');
+
   const actionStats = useMemo(() => {
     return data.reduce<Record<ActionHrid, ActionStat>>((acc, action) => {
       const xp = computeActionXp({
@@ -95,10 +104,13 @@ export function useGatheringColumns({
         return { itemHrid: drop.itemHrid, amt: avgPerAction };
       });
 
+      // TODO: How do we use the price overrides?
       const profitPerAction = dropsPerAction.reduce((acc, val) => {
+        const override = priceOverrides[action.hrid];
+        if (override != null) return acc + val.amt * override;
         if (market == null)
           return acc + val.amt * clientData.itemDetailMap[val.itemHrid].sellPrice;
-        else return acc + val.amt * market?.getItemPrice(val.itemHrid);
+        else return acc + val.amt * market.getItemPrice(val.itemHrid);
       }, 0);
 
       acc[action.hrid] = {
@@ -122,7 +134,8 @@ export function useGatheringColumns({
     house,
     skillHrid,
     data,
-    market
+    market,
+    priceOverrides
   ]);
 
   const columnHelper = createColumnHelper<ActionDetail>();
@@ -186,12 +199,36 @@ export function useGatheringColumns({
         id: 'price',
         header: 'Price',
         cell: (info) => {
-          const { dropTable } = info.row.original;
-          console.log(market);
+          const { dropTable, hrid } = info.row.original;
           if (dropTable == null || market == null) return 'N/A';
           const dropHrid = dropTable[0].itemHrid;
           const price = market.getItemPrice(dropHrid);
-          return <input className="input-primary input input-sm" defaultValue={price} />;
+
+          // const onBlur: FocusEventHandler<HTMLInputElement> = (e) => {
+          //   console.log(e);
+          //   setPriceOverrides((state) => {
+          //     return { ...state, [hrid]: e.target.value };
+          //   });
+          // };
+
+          const key = `${hrid}-override`;
+
+          return (
+            <input
+              key={key}
+              className="input-primary input input-sm"
+              defaultValue={price}
+              value={priceOverrides[hrid]}
+              onChange={(e) => {
+                keyToFocus.current = key;
+                setPriceOverrides((state) => {
+                  return { ...state, [hrid]: e.target.value };
+                });
+              }}
+              // onBlur={onBlur}
+              autoFocus={key === keyToFocus.current}
+            />
+          );
         }
       }),
       columnHelper.accessor((row) => actionStats[row.hrid].profitPerAction, {
@@ -210,7 +247,7 @@ export function useGatheringColumns({
         }
       })
     ];
-  }, [columnHelper, actionStats, drinkStats, market]);
+  }, [columnHelper, actionStats, drinkStats, market, priceOverrides]);
 
   return columns;
 }
