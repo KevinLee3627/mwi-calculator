@@ -1,7 +1,6 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import { useRef } from 'react';
 import { useMemo, useState } from 'react';
-import { Row } from 'react-data-grid';
 import { GameIcon } from 'src/components/GameIcon';
 import { ActionDetail } from 'src/core/actions/ActionDetail';
 import { clientData } from 'src/core/clientData';
@@ -31,6 +30,7 @@ interface ActionStat {
   time: number;
   actionHrid: ActionHrid;
   xpPerHour: number;
+  actionsPerSecond: number;
   actionsPerHour: number;
   dropsPerAction: { itemHrid: ItemHrid; amt: number }[];
   profitPerAction: number;
@@ -127,6 +127,7 @@ export function useGatheringColumns({
         efficiency,
         time,
         xpPerHour,
+        actionsPerSecond,
         actionsPerHour,
         dropsPerAction,
         profitPerAction
@@ -212,13 +213,6 @@ export function useGatheringColumns({
           const dropHrid = dropTable[0].itemHrid;
           const price = market.getItemPrice(dropHrid);
 
-          // const onBlur: FocusEventHandler<HTMLInputElement> = (e) => {
-          //   console.log(e);
-          //   setPriceOverrides((state) => {
-          //     return { ...state, [hrid]: e.target.value };
-          //   });
-          // };
-
           const key = `${hrid}-override`;
 
           return (
@@ -233,7 +227,6 @@ export function useGatheringColumns({
                   return { ...state, [hrid]: e.target.value };
                 });
               }}
-              // onBlur={onBlur}
               autoFocus={key === keyToFocus.current}
             />
           );
@@ -256,6 +249,18 @@ export function useGatheringColumns({
           const currentSkillXp = currentXp[skillHrid];
           const actionsToTarget = (targetXp - currentSkillXp) / actionStats[hrid].xp;
           return formatNumber(actionsToTarget);
+        }
+      }),
+      columnHelper.accessor((row) => actionStats[row.hrid].xp, {
+        id: 'timeToTarget',
+        header: 'Time to Target',
+        cell: (info) => {
+          const { hrid } = info.row.original;
+          const targetXp = clientData.levelExperienceTable[targetLevels[skillHrid]];
+          const currentSkillXp = currentXp[skillHrid];
+          const actionsToTarget = (targetXp - currentSkillXp) / actionStats[hrid].xp;
+          const timeToTarget = actionsToTarget / actionStats[hrid].actionsPerSecond;
+          return formatNumber(timeToTarget);
         }
       })
     ];
