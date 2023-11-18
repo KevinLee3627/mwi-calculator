@@ -1,7 +1,7 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import { useRef } from 'react';
-import { FocusEventHandler } from 'react';
 import { useMemo, useState } from 'react';
+import { Row } from 'react-data-grid';
 import { GameIcon } from 'src/components/GameIcon';
 import { ActionDetail } from 'src/core/actions/ActionDetail';
 import { clientData } from 'src/core/clientData';
@@ -41,7 +41,15 @@ export function useGatheringColumns({
   data,
   market
 }: UseGatheringColumnsParams) {
-  const { activeLoadout, drinks, communityBuffs, house, characterLevels } = useStats();
+  const {
+    activeLoadout,
+    drinks,
+    communityBuffs,
+    house,
+    characterLevels,
+    targetLevels,
+    currentXp
+  } = useStats();
 
   const { equipmentStats, drinkStats, communityBuffStats } = useMemo(() => {
     const equipmentStats = computeEquipmentStats(activeLoadout);
@@ -239,15 +247,28 @@ export function useGatheringColumns({
           return formatNumber(profitPerAction * actionsPerHour);
         }
       }),
-      columnHelper.display({
+      columnHelper.accessor((row) => actionStats[row.hrid].xp, {
         id: 'actionsToTarget',
         header: '# Actions to Target',
         cell: (info) => {
-          return info.row.original.baseTimeCost;
+          const { hrid } = info.row.original;
+          const targetXp = clientData.levelExperienceTable[targetLevels[skillHrid]];
+          const currentSkillXp = currentXp[skillHrid];
+          const actionsToTarget = (targetXp - currentSkillXp) / actionStats[hrid].xp;
+          return formatNumber(actionsToTarget);
         }
       })
     ];
-  }, [columnHelper, actionStats, drinkStats, market, priceOverrides]);
+  }, [
+    columnHelper,
+    actionStats,
+    drinkStats,
+    market,
+    priceOverrides,
+    currentXp,
+    targetLevels,
+    skillHrid
+  ]);
 
   return columns;
 }
