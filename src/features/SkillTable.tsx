@@ -10,14 +10,15 @@ import {
 import { useMemo, useState } from 'react';
 import { ActionDetail } from 'src/core/actions/ActionDetail';
 import { NonCombatSkillHrid } from 'src/core/skills/NonCombatSkillHrid';
-import { useGatheringColumns } from 'src/features/columns';
 import { setSkillXp } from 'src/features/currentXpSlice';
+import { useGatheringColumns } from 'src/features/gatheringColumns';
 import { Market } from 'src/features/market/Market';
 import { useGetMarketDataQuery } from 'src/features/market/marketApi';
 import { setTargetAction } from 'src/features/targetActionsSlice';
 import { setTargetLevel } from 'src/features/targetLevelSlice';
 import { useAppDispatch } from 'src/hooks/useAppDispatch';
 import { useStats } from 'src/hooks/useStats';
+import { skillHridToActionFunctionHrid } from 'src/util/skillHridToActionFunctionHridMapping';
 
 interface SkillTableProps {
   data: ActionDetail[];
@@ -57,6 +58,8 @@ export function SkillTable({ data, skillHrid }: SkillTableProps) {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel()
   });
+
+  const actionFunctionHrid = skillHridToActionFunctionHrid[skillHrid];
 
   return (
     <div>
