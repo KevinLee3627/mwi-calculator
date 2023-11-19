@@ -48,6 +48,7 @@ export function useGatheringColumns({
     house,
     characterLevels,
     targetLevels,
+    targetActions,
     currentXp
   } = useStats();
 
@@ -262,6 +263,17 @@ export function useGatheringColumns({
           const timeToTarget = actionsToTarget / actionStats[hrid].actionsPerSecond;
           return formatNumber(timeToTarget);
         }
+      }),
+      columnHelper.accessor((row) => actionStats[row.hrid].actionsPerSecond, {
+        id: 'timeToFinishActions',
+        header: 'Time to finish # actions',
+        cell: (info) => {
+          const { hrid } = info.row.original;
+          const currentTargetActions = targetActions[skillHrid];
+          if (isNaN(currentTargetActions)) return 'N/A';
+          const timeToFinish = currentTargetActions / actionStats[hrid].actionsPerSecond;
+          return formatNumber(timeToFinish);
+        }
       })
     ];
   }, [
@@ -272,6 +284,7 @@ export function useGatheringColumns({
     priceOverrides,
     currentXp,
     targetLevels,
+    targetActions,
     skillHrid
   ]);
 

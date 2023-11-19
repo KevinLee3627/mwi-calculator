@@ -14,6 +14,7 @@ import { useGatheringColumns } from 'src/features/columns';
 import { setSkillXp } from 'src/features/currentXpSlice';
 import { Market } from 'src/features/market/Market';
 import { useGetMarketDataQuery } from 'src/features/market/marketApi';
+import { setTargetAction } from 'src/features/targetActionsSlice';
 import { setTargetLevel } from 'src/features/targetLevelSlice';
 import { useAppDispatch } from 'src/hooks/useAppDispatch';
 import { useStats } from 'src/hooks/useStats';
@@ -43,7 +44,7 @@ export function SkillTable({ data, skillHrid }: SkillTableProps) {
     else return new Market(marketData.market);
   }, [marketData, isLoading, error]);
 
-  const { targetLevels, currentXp } = useStats();
+  const { targetLevels, targetActions, currentXp } = useStats();
 
   const columns = useGatheringColumns({ skillHrid, data, market });
 
@@ -88,6 +89,22 @@ export function SkillTable({ data, skillHrid }: SkillTableProps) {
             onChange={(e) => {
               const value = parseInt(e.target.value, 10);
               dispatch(setTargetLevel({ skillHrid, level: value }));
+            }}
+          />
+        </div>
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text"># of Actions</span>
+          </label>
+          <input
+            type="number"
+            min={0}
+            max={200}
+            className="input-primary input"
+            value={targetActions[skillHrid]}
+            onChange={(e) => {
+              const value = parseInt(e.target.value, 10);
+              dispatch(setTargetAction({ skillHrid, num: value }));
             }}
           />
         </div>

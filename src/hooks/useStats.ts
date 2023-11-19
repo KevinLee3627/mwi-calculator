@@ -8,6 +8,7 @@ import { selectCommunityBuffs } from 'src/features/communityBuff/communityBuffSl
 import { selectCurrentXp } from 'src/features/currentXpSlice';
 import { selectSkillDrinks } from 'src/features/drinks/drinksSlice';
 import { selectHouse } from 'src/features/house/houseSlice';
+import { selectTargetActions } from 'src/features/targetActionsSlice';
 import { selectTargetLevels } from 'src/features/targetLevelSlice';
 import { useAppSelector } from 'src/hooks/useAppSelector';
 
@@ -20,6 +21,7 @@ export function useStats() {
   const house = useAppSelector(selectHouse);
   const drinks = useAppSelector(selectSkillDrinks);
   const targetLevels = useAppSelector(selectTargetLevels);
+  const targetActions = useAppSelector(selectTargetActions);
   const currentXp = useAppSelector(selectCurrentXp);
 
   return {
@@ -31,6 +33,7 @@ export function useStats() {
     house,
     drinks,
     targetLevels,
+    targetActions,
     currentXp
   };
 }

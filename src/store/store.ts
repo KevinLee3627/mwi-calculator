@@ -24,6 +24,10 @@ import {
 import { houseInitialState, houseSlice } from 'src/features/house/houseSlice';
 import { marketApi } from 'src/features/market/marketApi';
 import {
+  targetActionsInitialState,
+  targetActionsSlice
+} from 'src/features/targetActionsSlice';
+import {
   targetLevelsInitialState,
   targetLevelsSlice
 } from 'src/features/targetLevelSlice';
@@ -36,6 +40,7 @@ import {
   houseListenerMiddleware,
   loadoutListenerMiddleware,
   skillDrinksListenerMiddleware,
+  targetActionsListenerMiddleware,
   targetLevelsListenerMiddleware
 } from 'src/store/listenerMiddleware';
 
@@ -51,6 +56,7 @@ export const store = configureStore({
     skillDrinks: skillDrinksSlice.reducer,
     activeSkill: activeSkillSlice.reducer,
     targetLevels: targetLevelsSlice.reducer,
+    targetActions: targetActionsSlice.reducer,
     communityBuff: communityBuffSlice.reducer,
     house: houseSlice.reducer,
     currentXp: currentXpSlice.reducer,
@@ -64,6 +70,7 @@ export const store = configureStore({
     skillDrinksListenerMiddleware.middleware,
     activeSkillListenerMiddleware.middleware,
     targetLevelsListenerMiddleware.middleware,
+    targetActionsListenerMiddleware.middleware,
     communityBuffListenerMiddleware.middleware,
     houseListenerMiddleware.middleware,
     currentXpListenerMiddleware.middleware,
@@ -76,6 +83,7 @@ export const store = configureStore({
     skillDrinks: tryLocalStorage('skillDrinks', skillDrinksInitialState),
     activeSkill: tryLocalStorage('activeSkill', activeSkillInitialState),
     targetLevels: tryLocalStorage('targetLevels', targetLevelsInitialState),
+    targetActions: tryLocalStorage('targetActions', targetActionsInitialState),
     communityBuff: tryLocalStorage('communityBuff', communityBuffInitialState),
     house: tryLocalStorage('house', houseInitialState),
     currentXp: tryLocalStorage('currentXp', currentXpInitialState)

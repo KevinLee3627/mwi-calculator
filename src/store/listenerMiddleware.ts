@@ -7,6 +7,7 @@ import { currentXpSlice } from 'src/features/currentXpSlice';
 // import { actionQueueSlice } from 'src/old/features/queue/actionQueueSlice';
 import { skillDrinksSlice } from 'src/features/drinks/drinksSlice';
 import { houseSlice } from 'src/features/house/houseSlice';
+import { targetActionsSlice } from 'src/features/targetActionsSlice';
 import { targetLevelsSlice } from 'src/features/targetLevelSlice';
 import { store } from 'src/store/store';
 
@@ -60,6 +61,14 @@ targetLevelsListenerMiddleware.startListening({
   actionCreator: targetLevelsSlice.actions.setTargetLevel,
   effect: () => {
     localStorage.setItem('targetLevels', JSON.stringify(store.getState().targetLevels));
+  }
+});
+
+export const targetActionsListenerMiddleware = createListenerMiddleware();
+targetActionsListenerMiddleware.startListening({
+  actionCreator: targetActionsSlice.actions.setTargetAction,
+  effect: () => {
+    localStorage.setItem('targetActions', JSON.stringify(store.getState().targetActions));
   }
 });
 
