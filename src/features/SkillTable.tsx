@@ -8,7 +8,10 @@ import {
   useReactTable
 } from '@tanstack/react-table';
 import { useMemo, useState } from 'react';
+import { Select } from 'src/components/Select';
 import { ActionDetail } from 'src/core/actions/ActionDetail';
+import { clientData } from 'src/core/clientData';
+import { ActionCategoryHrid } from 'src/core/hrid/ActionCategoryHrid';
 import { NonCombatSkillHrid } from 'src/core/skills/NonCombatSkillHrid';
 import { setSkillXp } from 'src/features/currentXpSlice';
 import { useGatheringColumns } from 'src/features/gatheringColumns';
@@ -18,6 +21,7 @@ import { setTargetAction } from 'src/features/targetActionsSlice';
 import { setTargetLevel } from 'src/features/targetLevelSlice';
 import { useAppDispatch } from 'src/hooks/useAppDispatch';
 import { useStats } from 'src/hooks/useStats';
+import { skillHridToActionCategoryHrids } from 'src/util/skillHridToActionCategoryHrids';
 import { skillHridToActionFunctionHrid } from 'src/util/skillHridToActionFunctionHridMapping';
 
 interface SkillTableProps {
@@ -27,11 +31,9 @@ interface SkillTableProps {
 
 export function SkillTable({ data, skillHrid }: SkillTableProps) {
   const dispatch = useAppDispatch();
-  const [sorting, setSorting] = useState<SortingState>([
-    { id: 'levelRequirement', desc: false }
-  ]);
-  const [columnVisibility, setColumnVisibility] = useState({});
+  const [category, setCategory] = useState<ActionCategoryHrid | null>(null);
 
+  // Market stuff
   const {
     data: marketData,
     error,
@@ -47,10 +49,20 @@ export function SkillTable({ data, skillHrid }: SkillTableProps) {
 
   const { targetLevels, targetActions, currentXp } = useStats();
 
-  const columns = useGatheringColumns({ skillHrid, data, market });
+  // Table stuff
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: 'levelRequirement', desc: false }
+  ]);
+  const [columnVisibility, setColumnVisibility] = useState({});
+
+  const tableData = useMemo(() => {
+    return category ? data.filter((action) => action.category === category) : data;
+  }, [data, category]);
+
+  const columns = useGatheringColumns({ skillHrid, data: tableData, market });
 
   const table = useReactTable({
-    data,
+    data: tableData,
     columns,
     state: { sorting, columnVisibility },
     onSortingChange: setSorting,
@@ -60,10 +72,33 @@ export function SkillTable({ data, skillHrid }: SkillTableProps) {
   });
 
   const actionFunctionHrid = skillHridToActionFunctionHrid[skillHrid];
-
+  const categories = skillHridToActionCategoryHrids[skillHrid];
   return (
     <div>
       <div className="flex items-end gap-4">
+        {actionFunctionHrid === '/action_functions/production' && (
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">Category</span>
+            </label>
+            <Select
+              options={categories.map((hrid) => ({
+                label: clientData.actionCategoryDetailMap[hrid].name,
+                value: hrid
+              }))}
+              value={{
+                label: category ? clientData.actionCategoryDetailMap[category].name : '',
+                value: category
+              }}
+              placeholder="test"
+              onChange={(selected) => {
+                if (selected == null || selected.value == null) setCategory(null);
+                else setCategory(selected.value as ActionCategoryHrid);
+              }}
+              isClearable
+            />
+          </div>
+        )}
         <div className="form-control">
           <label className="label">
             <span className="label-text">Current XP</span>
