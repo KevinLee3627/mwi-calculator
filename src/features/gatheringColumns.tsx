@@ -2,6 +2,7 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { useRef } from 'react';
 import { useMemo, useState } from 'react';
 import { GameIcon } from 'src/components/GameIcon';
+import { ItemIcon } from 'src/components/ItemIcon';
 import { ActionDetail } from 'src/core/actions/ActionDetail';
 import { clientData } from 'src/core/clientData';
 import { ActionHrid } from 'src/core/hrid/ActionHrid';
@@ -248,6 +249,35 @@ export function useGatheringColumns({
       })
     ];
 
+    const productionColumns = [
+      columnHelper.display({
+        id: 'inputItems',
+        header: 'Inputs',
+        cell: ({ row }) => {
+          let { inputItems } = row.original;
+          const { upgradeItemHrid, hrid } = row.original;
+
+          if (inputItems == null) return <div>N/A</div>;
+
+          if (upgradeItemHrid !== '') {
+            inputItems = [...inputItems, { itemHrid: upgradeItemHrid, count: 1 }];
+          }
+
+          return inputItems.map((item) => {
+            const itemName = clientData.itemDetailMap[item.itemHrid].name;
+            return (
+              <div key={`${hrid}-${item.itemHrid}`} className="flex">
+                <div className="mr-1">
+                  <ItemIcon itemHrid={item.itemHrid} />
+                </div>
+                {itemName} ({item.count})
+              </div>
+            );
+          });
+        }
+      })
+    ];
+
     const targetColumns = [
       columnHelper.accessor((row) => actionStats[row.hrid].xp, {
         id: 'actionsToTarget',
@@ -286,7 +316,9 @@ export function useGatheringColumns({
     ];
     if (actionFunctionHrid === '/action_functions/gathering')
       return [...baseColumns, ...gatheringColumns, ...targetColumns];
-    return [...baseColumns, ...targetColumns];
+    else if (actionFunctionHrid === '/action_functions/production')
+      return [...baseColumns, ...productionColumns, ...targetColumns];
+    else return [...baseColumns, ...targetColumns];
   }, [
     columnHelper,
     actionStats,
