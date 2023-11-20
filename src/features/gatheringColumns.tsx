@@ -198,10 +198,9 @@ export function useGatheringColumns({
               {actionStats[actionHrid].dropsPerAction.map((drop) => {
                 const itemName = clientData.itemDetailMap[drop.itemHrid].name;
                 const dropsPerHour = drop.amt * actionStats[actionHrid].actionsPerHour;
-                const strippedItemHrid = drop.itemHrid.split('/').at(-1);
                 return (
                   <div key={drop.itemHrid} className="flex">
-                    <GameIcon svgSetName="items" iconName={strippedItemHrid ?? ''} />
+                    <ItemIcon itemHrid={drop.itemHrid} />
                     {itemName} ({formatNumber(dropsPerHour)})
                   </div>
                 );
