@@ -7,7 +7,7 @@ import {
   Table,
   useReactTable
 } from '@tanstack/react-table';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Select } from 'src/components/Select';
 import { ActionDetail } from 'src/core/actions/ActionDetail';
 import { clientData } from 'src/core/clientData';
@@ -30,9 +30,13 @@ interface SkillTableProps {
 }
 
 export function SkillTable({ data, skillHrid }: SkillTableProps) {
+  console.log('rerender');
   const dispatch = useAppDispatch();
   const [category, setCategory] = useState<ActionCategoryHrid | null>(null);
 
+  useEffect(() => {
+    setCategory(null);
+  }, [skillHrid]);
   // Market stuff
   const {
     data: marketData,
