@@ -16,6 +16,7 @@ import { computeEquipmentStats } from 'src/features/calculations/computeEquipmen
 import { Market } from 'src/features/market/Market';
 import { useStats } from 'src/hooks/useStats';
 import { formatNumber } from 'src/util/formatNumber';
+import { skillHridToActionFunctionHrid } from 'src/util/skillHridToActionFunctionHridMapping';
 import { skillHridToSpeedBonus } from 'src/util/skillHridToSpeedBonusMapping';
 
 interface UseGatheringColumnsParams {
@@ -33,7 +34,7 @@ interface ActionStat {
   actionsPerSecond: number;
   actionsPerHour: number;
   dropsPerAction: { itemHrid: ItemHrid; amt: number }[];
-  profitPerAction: number;
+  dropsProfitPerAction: number;
 }
 
 export function useGatheringColumns({
@@ -41,6 +42,8 @@ export function useGatheringColumns({
   data,
   market
 }: UseGatheringColumnsParams) {
+  const actionFunctionHrid = skillHridToActionFunctionHrid[skillHrid];
+
   const {
     activeLoadout,
     drinks,
@@ -63,7 +66,6 @@ export function useGatheringColumns({
   const [priceOverrides, setPriceOverrides] = useState<
     Partial<Record<ActionHrid, number>>
   >({});
-
   // https://stackoverflow.com/a/67029060/6506007
   const keyToFocus = useRef<string>('');
 
@@ -114,7 +116,7 @@ export function useGatheringColumns({
       });
 
       // TODO: How do we use the price overrides?
-      const profitPerAction = dropsPerAction.reduce((acc, val) => {
+      const dropsProfitPerAction = dropsPerAction.reduce((acc, val) => {
         const override = priceOverrides[action.hrid];
         if (override != null) return acc + val.amt * override;
         if (market == null)
@@ -131,7 +133,7 @@ export function useGatheringColumns({
         actionsPerSecond,
         actionsPerHour,
         dropsPerAction,
-        profitPerAction
+        dropsProfitPerAction
       };
 
       return acc;
@@ -150,7 +152,7 @@ export function useGatheringColumns({
 
   const columnHelper = createColumnHelper<ActionDetail>();
   const columns = useMemo(() => {
-    return [
+    const baseColumns = [
       columnHelper.accessor((row) => row.levelRequirement.level, {
         id: 'levelRequirement',
         header: 'Level Req.',
@@ -181,7 +183,9 @@ export function useGatheringColumns({
         header: 'Efficiency',
         cell: (info) =>
           `${formatNumber(actionStats[info.row.original.hrid].efficiency * 100)}%`
-      }),
+      })
+    ];
+    const gatheringColumns = [
       columnHelper.display({
         id: 'dropsPerHour',
         header: 'Drops/hr',
@@ -233,14 +237,18 @@ export function useGatheringColumns({
           );
         }
       }),
-      columnHelper.accessor((row) => actionStats[row.hrid].profitPerAction, {
-        id: 'profitPerHour',
+      columnHelper.accessor((row) => actionStats[row.hrid].dropsProfitPerAction, {
+        id: 'dropsProfitPerHour',
         header: 'Profit/hr',
         cell: (info) => {
-          const { profitPerAction, actionsPerHour } = actionStats[info.row.original.hrid];
-          return formatNumber(profitPerAction * actionsPerHour);
+          const { dropsProfitPerAction, actionsPerHour } =
+            actionStats[info.row.original.hrid];
+          return formatNumber(dropsProfitPerAction * actionsPerHour);
         }
-      }),
+      })
+    ];
+
+    const targetColumns = [
       columnHelper.accessor((row) => actionStats[row.hrid].xp, {
         id: 'actionsToTarget',
         header: '# Actions to Target',
@@ -276,6 +284,9 @@ export function useGatheringColumns({
         }
       })
     ];
+    if (actionFunctionHrid === '/action_functions/gathering')
+      return [...baseColumns, ...gatheringColumns, ...targetColumns];
+    return [...baseColumns, ...targetColumns];
   }, [
     columnHelper,
     actionStats,
@@ -285,7 +296,8 @@ export function useGatheringColumns({
     currentXp,
     targetLevels,
     targetActions,
-    skillHrid
+    skillHrid,
+    actionFunctionHrid
   ]);
 
   return columns;
