@@ -370,7 +370,13 @@ export function useGatheringColumns({
         }
       }),
       columnHelper.accessor(
-        (row) => actionStats[row.hrid].outputItemsProfitPerAction ?? 0,
+        (row) => {
+          const { hrid } = row;
+          const { outputItemsProfitPerAction, inputCostPerAction } = actionStats[hrid];
+          if (outputItemsProfitPerAction == null || inputCostPerAction == null)
+            return -Infinity;
+          else return outputItemsProfitPerAction - inputCostPerAction;
+        },
         {
           id: 'productionProfitPerHour',
           header: 'Profit/hr',
