@@ -1,7 +1,6 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import { useRef } from 'react';
 import { useMemo, useState } from 'react';
-import { GameIcon } from 'src/components/GameIcon';
 import { ItemIcon } from 'src/components/ItemIcon';
 import { ActionDetail } from 'src/core/actions/ActionDetail';
 import { clientData } from 'src/core/clientData';
@@ -36,6 +35,7 @@ interface ActionStat {
   actionsPerHour: number;
   dropsPerAction: { itemHrid: ItemHrid; amt: number }[];
   dropsProfitPerAction: number;
+  outputItemsProfitPerAction: number | null;
 }
 
 export function useGatheringColumns({
@@ -64,9 +64,9 @@ export function useGatheringColumns({
     return { equipmentStats, drinkStats, communityBuffStats };
   }, [activeLoadout, drinks, skillHrid, communityBuffs]);
 
-  const [priceOverrides, setPriceOverrides] = useState<
-    Partial<Record<ActionHrid, number>>
-  >({});
+  const [priceOverrides, setPriceOverrides] = useState<Partial<Record<ItemHrid, number>>>(
+    {}
+  );
   // https://stackoverflow.com/a/67029060/6506007
   const keyToFocus = useRef<string>('');
 
@@ -118,12 +118,23 @@ export function useGatheringColumns({
 
       // TODO: How do we use the price overrides?
       const dropsProfitPerAction = dropsPerAction.reduce((acc, val) => {
-        const override = priceOverrides[action.hrid];
+        const override = priceOverrides[val.itemHrid];
         if (override != null) return acc + val.amt * override;
         if (market == null)
           return acc + val.amt * clientData.itemDetailMap[val.itemHrid].sellPrice;
         else return acc + val.amt * market.getItemPrice(val.itemHrid);
       }, 0);
+
+      let outputItemsProfitPerAction: number | null = null;
+      if (action.outputItems != null) {
+        outputItemsProfitPerAction = action.outputItems.reduce((acc, val) => {
+          const override = priceOverrides[val.itemHrid];
+          if (override != null) return acc + val.count * override;
+          if (market == null)
+            return acc + val.count * clientData.itemDetailMap[val.itemHrid].sellPrice;
+          else return acc + val.count * market.getItemPrice(val.itemHrid);
+        }, 0);
+      }
 
       acc[action.hrid] = {
         actionHrid: action.hrid,
@@ -134,7 +145,8 @@ export function useGatheringColumns({
         actionsPerSecond,
         actionsPerHour,
         dropsPerAction,
-        dropsProfitPerAction
+        dropsProfitPerAction,
+        outputItemsProfitPerAction
       };
 
       return acc;
@@ -213,23 +225,23 @@ export function useGatheringColumns({
         id: 'price',
         header: 'Price',
         cell: (info) => {
-          const { dropTable, hrid } = info.row.original;
+          const { dropTable, hrid: actionHrid } = info.row.original;
           if (dropTable == null || market == null) return 'N/A';
           const dropHrid = dropTable[0].itemHrid;
           const price = market.getItemPrice(dropHrid);
 
-          const key = `${hrid}-override`;
+          const key = `${actionHrid}-override`;
 
           return (
             <input
               key={key}
               className="input-primary input input-sm"
               defaultValue={price}
-              value={priceOverrides[hrid]}
+              value={priceOverrides[dropHrid]}
               onChange={(e) => {
                 keyToFocus.current = key;
                 setPriceOverrides((state) => {
-                  return { ...state, [hrid]: e.target.value };
+                  return { ...state, [dropHrid]: e.target.value };
                 });
               }}
               autoFocus={key === keyToFocus.current}
@@ -274,6 +286,52 @@ export function useGatheringColumns({
         }
       }),
       columnHelper.display({
+        id: 'inputPrices',
+        header: 'Input Prices',
+        cell: ({ row }) => {
+          let { inputItems } = row.original;
+          const { upgradeItemHrid, hrid: actionHrid } = row.original;
+
+          if (inputItems == null) return <div>N/A</div>;
+
+          if (upgradeItemHrid !== '') {
+            inputItems = [...inputItems, { itemHrid: upgradeItemHrid, count: 1 }];
+          }
+
+          return inputItems.map((item) => {
+            if (market == null) return 'N/A';
+
+            const price = market.getItemPrice(item.itemHrid);
+            const key = `${actionHrid}-${item.itemHrid}-input-price-override`;
+
+            return (
+              <div
+                key={`${actionHrid}-${item.itemHrid}`}
+                className="flex items-center justify-between"
+              >
+                <div className="mr-1">
+                  <ItemIcon itemHrid={item.itemHrid} />
+                  {clientData.itemDetailMap[item.itemHrid].name}
+                </div>
+                <input
+                  key={key}
+                  className="input-primary input input-xs w-32"
+                  defaultValue={price}
+                  value={priceOverrides[item.itemHrid]}
+                  onChange={(e) => {
+                    keyToFocus.current = key;
+                    setPriceOverrides((state) => {
+                      return { ...state, [item.itemHrid]: e.target.value };
+                    });
+                  }}
+                  autoFocus={key === keyToFocus.current}
+                />
+              </div>
+            );
+          });
+        }
+      }),
+      columnHelper.display({
         id: 'outputsPerHour',
         header: 'Outputs/hr',
         cell: ({ row }) => {
@@ -291,7 +349,21 @@ export function useGatheringColumns({
             </div>
           ));
         }
-      })
+      }),
+      columnHelper.accessor(
+        (row) => actionStats[row.hrid].outputItemsProfitPerAction ?? 0,
+        {
+          id: 'productionProfitPerHour',
+          header: 'Profit/hr',
+          cell: ({ row }) => {
+            const { hrid } = row.original;
+            const { outputItemsProfitPerAction, actionsPerHour } = actionStats[hrid];
+
+            if (outputItemsProfitPerAction == null) return 'N/A';
+            return formatNumber(outputItemsProfitPerAction * actionsPerHour);
+          }
+        }
+      )
     ];
 
     const targetColumns = [
