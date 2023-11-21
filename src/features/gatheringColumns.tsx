@@ -250,8 +250,8 @@ export function useGatheringColumns({
 
     const productionColumns = [
       columnHelper.display({
-        id: 'inputItems',
-        header: 'Inputs',
+        id: 'inputsPerHour',
+        header: 'Inputs/hr',
         cell: ({ row }) => {
           let { inputItems } = row.original;
           const { upgradeItemHrid, hrid } = row.original;
@@ -269,7 +269,7 @@ export function useGatheringColumns({
                 <div className="mr-1">
                   <ItemIcon itemHrid={item.itemHrid} />
                 </div>
-                {itemName} ({item.count})
+                {itemName} ({formatNumber(item.count * actionStats[hrid].actionsPerHour)})
               </div>
             );
           });
