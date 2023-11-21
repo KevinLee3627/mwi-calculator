@@ -262,17 +262,34 @@ export function useGatheringColumns({
             inputItems = [...inputItems, { itemHrid: upgradeItemHrid, count: 1 }];
           }
 
-          return inputItems.map((item) => {
-            const itemName = clientData.itemDetailMap[item.itemHrid].name;
-            return (
-              <div key={`${hrid}-${item.itemHrid}`} className="flex">
-                <div className="mr-1">
-                  <ItemIcon itemHrid={item.itemHrid} />
-                </div>
-                {itemName} ({formatNumber(item.count * actionStats[hrid].actionsPerHour)})
+          return inputItems.map((item) => (
+            <div key={`${hrid}-${item.itemHrid}`} className="flex">
+              <div className="mr-1">
+                <ItemIcon itemHrid={item.itemHrid} />
               </div>
-            );
-          });
+              {clientData.itemDetailMap[item.itemHrid].name} (
+              {formatNumber(item.count * actionStats[hrid].actionsPerHour)})
+            </div>
+          ));
+        }
+      }),
+      columnHelper.display({
+        id: 'outputsPerHour',
+        header: 'Outputs/hr',
+        cell: ({ row }) => {
+          const { outputItems, hrid } = row.original;
+
+          if (outputItems == null) return <div>N/A</div>;
+
+          return outputItems.map(({ itemHrid, count }) => (
+            <div key={`${hrid}-${itemHrid}`} className="flex">
+              <div className="mr-1">
+                <ItemIcon itemHrid={itemHrid} />
+              </div>
+              {clientData.itemDetailMap[itemHrid].name} (
+              {formatNumber(count * actionStats[hrid].actionsPerHour)})
+            </div>
+          ));
         }
       })
     ];
