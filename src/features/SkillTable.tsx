@@ -30,7 +30,6 @@ interface SkillTableProps {
 }
 
 export function SkillTable({ data, skillHrid }: SkillTableProps) {
-  console.log('rerender');
   const dispatch = useAppDispatch();
   const [category, setCategory] = useState<ActionCategoryHrid | null>(null);
 

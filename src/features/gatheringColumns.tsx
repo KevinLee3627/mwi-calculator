@@ -123,7 +123,6 @@ export function useGatheringColumns({
         return { itemHrid: drop.itemHrid, amt: avgPerAction };
       });
 
-      // TODO: How do we use the price overrides?
       const dropsProfitPerAction = dropsPerAction.reduce((acc, val) => {
         const override = priceOverrides[val.itemHrid];
         if (override != null) return acc + val.amt * override;
