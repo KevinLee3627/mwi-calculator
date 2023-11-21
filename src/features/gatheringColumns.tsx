@@ -1,5 +1,5 @@
 import { createColumnHelper } from '@tanstack/react-table';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useMemo, useState } from 'react';
 import { ItemIcon } from 'src/components/ItemIcon';
 import { ActionDetail } from 'src/core/actions/ActionDetail';
@@ -35,6 +35,7 @@ interface ActionStat {
   actionsPerHour: number;
   dropsPerAction: { itemHrid: ItemHrid; amt: number }[];
   dropsProfitPerAction: number;
+  inputCostPerAction: number | null;
   outputItemsProfitPerAction: number | null;
 }
 
@@ -67,6 +68,12 @@ export function useGatheringColumns({
   const [priceOverrides, setPriceOverrides] = useState<Partial<Record<ItemHrid, number>>>(
     {}
   );
+
+  // Reset price overrides on skill change
+  useEffect(() => {
+    setPriceOverrides({});
+  }, [skillHrid]);
+
   // https://stackoverflow.com/a/67029060/6506007
   const keyToFocus = useRef<string>('');
 
@@ -125,6 +132,17 @@ export function useGatheringColumns({
         else return acc + val.amt * market.getItemPrice(val.itemHrid);
       }, 0);
 
+      let inputCostPerAction: number | null = null;
+      if (action.inputItems != null) {
+        inputCostPerAction = action.inputItems.reduce((acc, val) => {
+          const override = priceOverrides[val.itemHrid];
+          if (override != null) return acc + val.count * override;
+          if (market == null)
+            return acc + val.count * clientData.itemDetailMap[val.itemHrid].sellPrice;
+          else return acc + val.count * market.getItemPrice(val.itemHrid);
+        }, 0);
+      }
+
       let outputItemsProfitPerAction: number | null = null;
       if (action.outputItems != null) {
         outputItemsProfitPerAction = action.outputItems.reduce((acc, val) => {
@@ -146,6 +164,7 @@ export function useGatheringColumns({
         actionsPerHour,
         dropsPerAction,
         dropsProfitPerAction,
+        inputCostPerAction,
         outputItemsProfitPerAction
       };
 
@@ -357,10 +376,14 @@ export function useGatheringColumns({
           header: 'Profit/hr',
           cell: ({ row }) => {
             const { hrid } = row.original;
-            const { outputItemsProfitPerAction, actionsPerHour } = actionStats[hrid];
+            const { outputItemsProfitPerAction, inputCostPerAction, actionsPerHour } =
+              actionStats[hrid];
 
-            if (outputItemsProfitPerAction == null) return 'N/A';
-            return formatNumber(outputItemsProfitPerAction * actionsPerHour);
+            if (outputItemsProfitPerAction == null || inputCostPerAction == null)
+              return 'N/A';
+            return formatNumber(
+              (outputItemsProfitPerAction - inputCostPerAction) * actionsPerHour
+            );
           }
         }
       )
