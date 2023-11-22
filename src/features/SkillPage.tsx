@@ -6,6 +6,7 @@ import { HouseRoomHrid } from 'src/core/hrid/HouseRoomHrid';
 import { CharacterLevelInput } from 'src/features/character/levels/CharacterLevelInput';
 import { CharacterEnhancementSelect } from 'src/features/character/loadout/CharacterEnhancementSelect';
 import { CharacterEquipmentSelect } from 'src/features/character/loadout/CharacterEquipmentSelect';
+import { CommunityBuffsDisplay } from 'src/features/communityBuff/CommunityBuffsDisplay';
 import { SkillDrinksSelect } from 'src/features/drinks/SkillDrinksSelect';
 import { EnhancingTable } from 'src/features/EnhancingTable';
 import { SkillTable } from 'src/features/SkillTable';
@@ -49,30 +50,7 @@ export function SkillPage() {
           />
         </div>
 
-        <div
-          className="form-control ml-4 hover:cursor-pointer"
-          onClick={() => openModal('communityBuffsModal')}
-        >
-          <label className="label">
-            <span className="label-text">Community Buffs</span>
-          </label>
-          <div className="flex h-12 rounded border border-primary">
-            {Object.entries(communityBuffs).map((entry) => {
-              const buffHrid = entry[0] as CommunityBuffTypeHrid;
-              const buffLevel = entry[1];
-              const buffDetail = clientData.communityBuffTypeDetailMap[buffHrid];
-              return (
-                <div key={buffDetail.hrid} className="grid h-12 w-12 place-items-center">
-                  <GameIcon
-                    svgSetName="buffs"
-                    iconName={buffDetail.buff.typeHrid.split('/').at(-1) ?? ''}
-                  />
-                  <p>{buffLevel ?? 0}</p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+        <CommunityBuffsDisplay />
 
         <div
           className="form-control ml-4 hover:cursor-pointer"
