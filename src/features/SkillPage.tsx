@@ -7,6 +7,7 @@ import { CharacterLevelInput } from 'src/features/character/levels/CharacterLeve
 import { CharacterEnhancementSelect } from 'src/features/character/loadout/CharacterEnhancementSelect';
 import { CharacterEquipmentSelect } from 'src/features/character/loadout/CharacterEquipmentSelect';
 import { SkillDrinksSelect } from 'src/features/drinks/SkillDrinksSelect';
+import { EnhancingTable } from 'src/features/EnhancingTable';
 import { SkillTable } from 'src/features/SkillTable';
 import { useStats } from 'src/hooks/useStats';
 import { actionTypeToolLocationMapping } from 'src/util/actionTypeToolLocationMapping';
@@ -100,17 +101,15 @@ export function SkillPage() {
           </div>
         </div>
       </div>
-      <div>
-        <SkillTable data={tableData} skillHrid={activeSkillState.activeSkill} />
-      </div>
-      {/* <SkillTable
-        actionTypeHrid={actionTypeHrid}
-        actionFunctionHrid={actionFunctionHrid}
-        equipmentStats={equipmentStats}
-        drinkStats={drinkStats}
-        characterLevels={levels}
-        data={tableData}
-      /> */}
+      {actionTypeHrid === '/action_types/enhancing' ? (
+        <div>
+          <EnhancingTable targetLevel={10} />
+        </div>
+      ) : (
+        <div>
+          <SkillTable data={tableData} skillHrid={activeSkillState.activeSkill} />
+        </div>
+      )}
     </div>
   );
 }
