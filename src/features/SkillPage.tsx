@@ -16,7 +16,7 @@ import { openModal } from 'src/util/openModal';
 import { skillHridToActionTypeHrid } from 'src/util/skillHridToActionTypeHridMapping';
 
 export function SkillPage() {
-  const { communityBuffs, house, activeSkillState } = useStats();
+  const { house, activeSkillState } = useStats();
 
   const actionTypeHrid = skillHridToActionTypeHrid[activeSkillState.activeSkill];
 
