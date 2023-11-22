@@ -1,4 +1,5 @@
 import { GameIcon } from 'src/components/GameIcon';
+import { ItemIcon } from 'src/components/ItemIcon';
 import { clientData } from 'src/core/clientData';
 import { NonCombatSkillHrid } from 'src/core/skills/NonCombatSkillHrid';
 import { setActiveSkill } from 'src/features/activeSkillSlice';
@@ -17,19 +18,28 @@ export function Sidebar() {
         </div>
         <ul className="menu sticky text-base-content">
           <li>
-            <span onClick={() => openModal('characterEquipmentModal')}>Equipment</span>
-          </li>
-          <li>
-            <span onClick={() => openModal('characterLevelModal')}>Levels</span>
-          </li>
-          <li>
-            <span onClick={() => openModal('communityBuffsModal')}>Community Buffs</span>
-          </li>
-          <li>
-            <span onClick={() => openModal('houseModal')}>House</span>
-          </li>
-          <li>
-            <span onClick={() => openModal('actionQueueModal')}>Queue</span>
+            <h2 className="menu-title">Player Info</h2>
+            <ul>
+              <li>
+                <span onClick={() => openModal('characterEquipmentModal')}>
+                  Equipment
+                </span>
+              </li>
+              <li>
+                <span onClick={() => openModal('characterLevelModal')}>Levels</span>
+              </li>
+              <li>
+                <span onClick={() => openModal('communityBuffsModal')}>
+                  Community Buffs
+                </span>
+              </li>
+              <li>
+                <span onClick={() => openModal('houseModal')}>House</span>
+              </li>
+              <li>
+                <span onClick={() => openModal('actionQueueModal')}>Queue</span>
+              </li>
+            </ul>
           </li>
           <li>
             <h2 className="menu-title">Gathering</h2>
@@ -72,11 +82,7 @@ function SidebarSkillTab({ skillHrid }: SidebarSkillTabProps) {
 
   const skillHridStripped = skillHrid.split('/').at(-1);
   return (
-    <li
-      onClick={() => {
-        dispatch(setActiveSkill({ skillHrid }));
-      }}
-    >
+    <li onClick={() => dispatch(setActiveSkill({ skillHrid }))}>
       <span className={skillHrid === activeSkill ? 'active' : ''}>
         <GameIcon svgSetName="skills" iconName={skillHridStripped ?? ''} />
         {clientData.skillDetailMap[skillHrid].name}
