@@ -6,18 +6,6 @@ export interface ActiveSkillState {
   activeSkill: NonCombatSkillHrid;
 }
 
-// export const activeSkillInitialState: ActiveSkillState = {
-//   '/skills/milking': false,
-//   '/skills/foraging': false,
-//   '/skills/woodcutting': false,
-//   '/skills/cheesesmithing': false,
-//   '/skills/crafting': false,
-//   '/skills/tailoring': false,
-//   '/skills/cooking': false,
-//   '/skills/brewing': false,
-//   '/skills/enhancing': false
-// };
-
 export const activeSkillInitialState: ActiveSkillState = {
   activeSkill: '/skills/milking'
 };
