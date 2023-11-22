@@ -10,6 +10,7 @@ import { computeEquipmentStats } from 'src/features/calculations/computeEquipmen
 import { Market } from 'src/features/market/Market';
 import { useGetMedianMarketDataQuery } from 'src/features/market/marketApi';
 import { useStats } from 'src/hooks/useStats';
+import { formatNumber } from 'src/util/formatNumber';
 import { range } from 'src/util/range';
 
 export function EnhancingTable() {
@@ -329,15 +330,15 @@ export function EnhancingTable() {
                 <tbody>
                   <tr className="hover">
                     <th>Time/Action (s)</th>
-                    <td>{actionTimer}</td>
+                    <td>{formatNumber(actionTimer)}</td>
                   </tr>
                   <tr className="hover">
                     <th>Avg XP/Action</th>
-                    <td>{averageEnhanceXp.toFixed(2)}</td>
+                    <td>{formatNumber(averageEnhanceXp)}</td>
                   </tr>
                   <tr className="hover">
                     <th>XP/hr</th>
-                    <td>{((averageEnhanceXp * 3600) / actionTimer).toFixed(2)}</td>
+                    <td>{formatNumber((averageEnhanceXp * 3600) / actionTimer)}</td>
                   </tr>
                   <tr className="hover">
                     <th>Protection Level</th>
@@ -345,7 +346,7 @@ export function EnhancingTable() {
                   </tr>
                   <tr className="hover">
                     <th>Protections Used</th>
-                    <td>{protUsedCol[targetLevel].toFixed(2)}</td>
+                    <td>{formatNumber(protUsedCol[targetLevel])}</td>
                   </tr>
                   <tr className="hover">
                     <th>Average Actions</th>
@@ -353,15 +354,15 @@ export function EnhancingTable() {
                   </tr>
                   <tr className="hover">
                     <th>Average Time</th>
-                    <td>{(actionsCol[targetLevel] * actionTimer).toFixed(2)}</td>
+                    <td>{formatNumber(actionsCol[targetLevel] * actionTimer)}</td>
                   </tr>
                   <tr className="hover">
                     <th>Average Cost</th>
-                    <td>{cost.toFixed(2)}</td>
+                    <td>{formatNumber(cost)}</td>
                   </tr>
                   <tr className="hover">
                     <th>Average Total XP</th>
-                    <td>{(actionsCol[targetLevel] * averageEnhanceXp).toFixed(2)}</td>
+                    <td>{formatNumber(actionsCol[targetLevel] * averageEnhanceXp)}</td>
                   </tr>
                 </tbody>
               </table>

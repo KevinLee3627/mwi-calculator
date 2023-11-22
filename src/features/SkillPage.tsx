@@ -103,7 +103,7 @@ export function SkillPage() {
       </div>
       {actionTypeHrid === '/action_types/enhancing' ? (
         <div>
-          <EnhancingTable targetLevel={10} />
+          <EnhancingTable />
         </div>
       ) : (
         <div>
