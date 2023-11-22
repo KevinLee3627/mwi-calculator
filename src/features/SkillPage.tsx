@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { GameIcon } from 'src/components/GameIcon';
 import { clientData } from 'src/core/clientData';
-import { CommunityBuffTypeHrid } from 'src/core/hrid/CommunityBuffTypeHrid';
 import { HouseRoomHrid } from 'src/core/hrid/HouseRoomHrid';
 import { CharacterLevelInput } from 'src/features/character/levels/CharacterLevelInput';
 import { CharacterEnhancementSelect } from 'src/features/character/loadout/CharacterEnhancementSelect';
@@ -29,7 +28,6 @@ export function SkillPage() {
   );
 
   if (actionTypeHrid === '/action_types/combat') return <div>Nope...</div>;
-  // const actionFunctionHrid = actionTypeActionFunctionMapping[actionTypeHrid];
 
   return (
     <div>
