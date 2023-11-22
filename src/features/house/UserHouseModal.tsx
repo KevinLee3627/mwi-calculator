@@ -4,7 +4,7 @@ import { setRoomLevel } from 'src/features/house/houseSlice';
 import { useAppDispatch } from 'src/hooks/useAppDispatch';
 import { useStats } from 'src/hooks/useStats';
 
-export function House() {
+export function UserHouseModal() {
   const dispatch = useAppDispatch();
   const { house } = useStats();
 

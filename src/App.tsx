@@ -4,7 +4,7 @@ import { Sidebar } from 'src/components/Sidebar';
 import { CharacterLevels } from 'src/features/character/levels/CharacterLevels';
 import { CharacterEquipment } from 'src/features/character/loadout/CharacterEquipment';
 import { CommunityBuffs } from 'src/features/communityBuff/CommunityBuffs';
-import { House } from 'src/features/house/House';
+import { UserHouseModal } from 'src/features/house/UserHouseModal';
 import { ActionQueue } from 'src/features/queue/ActionQueue';
 import { SkillPage } from 'src/features/SkillPage';
 
@@ -38,7 +38,7 @@ const App = () => {
         <CharacterEquipment />
         <CharacterLevels />
         <CommunityBuffs />
-        <House />
+        <UserHouseModal />
         <ActionQueue />
       </div>
     </>
