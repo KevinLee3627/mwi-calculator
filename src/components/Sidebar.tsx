@@ -63,6 +63,12 @@ export function Sidebar() {
             <h2 className="menu-title">Miscellanous</h2>
             <ul>
               <SidebarSkillTab skillHrid="/skills/enhancing" />
+              <li>
+                <span>
+                  <ItemIcon itemHrid="/items/lumber" />
+                  Houses
+                </span>
+              </li>
             </ul>
           </li>
         </ul>
