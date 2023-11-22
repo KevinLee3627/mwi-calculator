@@ -291,7 +291,7 @@ export function EnhancingTable() {
           prices (but can be overriden)
         </div>
       )}
-      <div className="flex gap-4">
+      <div className="mb-4 flex gap-4">
         <div className="form-control">
           <label className="label">
             <span className="label-text">Item To Enhance</span>
