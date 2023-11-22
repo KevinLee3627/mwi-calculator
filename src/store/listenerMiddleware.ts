@@ -4,9 +4,9 @@ import { characterLevelsSlice } from 'src/features/character/levels/characterLev
 import { loadoutSlice } from 'src/features/character/loadout/loadoutSlice';
 import { communityBuffSlice } from 'src/features/communityBuff/communityBuffSlice';
 import { currentXpSlice } from 'src/features/currentXpSlice';
-// import { actionQueueSlice } from 'src/old/features/queue/actionQueueSlice';
 import { skillDrinksSlice } from 'src/features/drinks/drinksSlice';
 import { houseSlice } from 'src/features/house/houseSlice';
+import { actionQueueSlice } from 'src/features/queue/actionQueueSlice';
 import { targetActionsSlice } from 'src/features/targetActionsSlice';
 import { targetLevelsSlice } from 'src/features/targetLevelSlice';
 import { store } from 'src/store/store';
@@ -96,18 +96,18 @@ currentXpListenerMiddleware.startListening({
   }
 });
 
-// export const actionQueueListenerMiddleware = createListenerMiddleware();
-// actionQueueListenerMiddleware.startListening({
-//   matcher: isAnyOf(
-//     actionQueueSlice.actions.createActionQueueEntry,
-//     actionQueueSlice.actions.updateActionType,
-//     actionQueueSlice.actions.updateActionHrid,
-//     actionQueueSlice.actions.updateNumActions,
-//     actionQueueSlice.actions.deleteActionQueueEntry,
-//     actionQueueSlice.actions.reorderActionQueue
-//   ),
-//   effect: (action) => {
-//     console.log('saved', action);
-//     localStorage.setItem('actionQueue', JSON.stringify(store.getState().actionQueue));
-//   }
-// });
+export const actionQueueListenerMiddleware = createListenerMiddleware();
+actionQueueListenerMiddleware.startListening({
+  matcher: isAnyOf(
+    actionQueueSlice.actions.createActionQueueEntry,
+    actionQueueSlice.actions.updateActionType,
+    actionQueueSlice.actions.updateActionHrid,
+    actionQueueSlice.actions.updateNumActions,
+    actionQueueSlice.actions.deleteActionQueueEntry,
+    actionQueueSlice.actions.reorderActionQueue
+  ),
+  effect: (action) => {
+    console.log('saved', action);
+    localStorage.setItem('actionQueue', JSON.stringify(store.getState().actionQueue));
+  }
+});

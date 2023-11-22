@@ -13,16 +13,16 @@ import {
   communityBuffSlice
 } from 'src/features/communityBuff/communityBuffSlice';
 import { currentXpInitialState, currentXpSlice } from 'src/features/currentXpSlice';
-// import {
-//   actionQueueInitialState,
-//   actionQueueSlice
-// } from 'src/old/features/queue/actionQueueSlice';
 import {
   skillDrinksInitialState,
   skillDrinksSlice
 } from 'src/features/drinks/drinksSlice';
 import { houseInitialState, houseSlice } from 'src/features/house/houseSlice';
 import { marketApi } from 'src/features/market/marketApi';
+import {
+  actionQueueInitialState,
+  actionQueueSlice
+} from 'src/features/queue/actionQueueSlice';
 import {
   targetActionsInitialState,
   targetActionsSlice
@@ -32,7 +32,7 @@ import {
   targetLevelsSlice
 } from 'src/features/targetLevelSlice';
 import {
-  // actionQueueListenerMiddleware,
+  actionQueueListenerMiddleware,
   activeSkillListenerMiddleware,
   characterLevelsListenerMiddleware,
   communityBuffListenerMiddleware,
@@ -60,7 +60,7 @@ export const store = configureStore({
     communityBuff: communityBuffSlice.reducer,
     house: houseSlice.reducer,
     currentXp: currentXpSlice.reducer,
-    // actionQueue: actionQueueSlice.reducer,
+    actionQueue: actionQueueSlice.reducer,
     [marketApi.reducerPath]: marketApi.reducer
   },
   middleware: (getDefaultMiddleware) => [
@@ -74,7 +74,7 @@ export const store = configureStore({
     communityBuffListenerMiddleware.middleware,
     houseListenerMiddleware.middleware,
     currentXpListenerMiddleware.middleware,
-    // actionQueueListenerMiddleware.middleware,
+    actionQueueListenerMiddleware.middleware,
     marketApi.middleware
   ],
   preloadedState: {
@@ -86,8 +86,8 @@ export const store = configureStore({
     targetActions: tryLocalStorage('targetActions', targetActionsInitialState),
     communityBuff: tryLocalStorage('communityBuff', communityBuffInitialState),
     house: tryLocalStorage('house', houseInitialState),
-    currentXp: tryLocalStorage('currentXp', currentXpInitialState)
-    //   actionQueue: tryLocalStorage('actionQueue', actionQueueInitialState)
+    currentXp: tryLocalStorage('currentXp', currentXpInitialState),
+    actionQueue: tryLocalStorage('actionQueue', actionQueueInitialState)
   }
 });
 

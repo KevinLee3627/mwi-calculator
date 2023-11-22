@@ -8,6 +8,7 @@ import { selectCommunityBuffs } from 'src/features/communityBuff/communityBuffSl
 import { selectCurrentXp } from 'src/features/currentXpSlice';
 import { selectSkillDrinks } from 'src/features/drinks/drinksSlice';
 import { selectHouse } from 'src/features/house/houseSlice';
+import { selectActionQueueState } from 'src/features/queue/actionQueueSlice';
 import { selectTargetActions } from 'src/features/targetActionsSlice';
 import { selectTargetLevels } from 'src/features/targetLevelSlice';
 import { useAppSelector } from 'src/hooks/useAppSelector';
@@ -23,6 +24,7 @@ export function useStats() {
   const targetLevels = useAppSelector(selectTargetLevels);
   const targetActions = useAppSelector(selectTargetActions);
   const currentXp = useAppSelector(selectCurrentXp);
+  const actionQueue = useAppSelector(selectActionQueueState);
 
   return {
     characterLevels,
@@ -34,21 +36,7 @@ export function useStats() {
     drinks,
     targetLevels,
     targetActions,
-    currentXp
+    currentXp,
+    actionQueue
   };
 }
-
-// function computeGatheringQuantityBonus() {
-// const teaDropQuantityBonus = drinkStats['/buff_types/gathering'] ?? 0;
-// const equipDropQuantitybonus = equipmentStats['gatheringQuantity'] ?? 0;
-// const communityBuffLevel = communityBuffs['/community_buff_types/gathering_quantity'];
-// let communityBuffBonus = 0;
-// if (communityBuffLevel > 0) {
-//   const { flatBoost, flatBoostLevelBonus } =
-//     clientData.communityBuffTypeDetailMap['/community_buff_types/gathering_quantity']
-//       .buff;
-//   communityBuffBonus = flatBoost + (communityBuffLevel - 1) * flatBoostLevelBonus;
-// }
-// const bonus = teaDropQuantityBonus + equipDropQuantitybonus + communityBuffBonus;
-// return bonus;
-// }
