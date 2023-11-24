@@ -3,6 +3,8 @@ import { useMemo } from 'react';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import { GameIcon } from 'src/components/GameIcon';
 import { Select } from 'src/components/Select';
+import { SkillIcon } from 'src/components/SkillIcon';
+import { NonCombatActionTypeHrid } from 'src/core/actions/NonCombatActionTypeHrid';
 import { clientData } from 'src/core/clientData';
 import { computeActionEfficiency } from 'src/features/calculations/computeActionEfficiency';
 import { computeActionTime } from 'src/features/calculations/computeActionTime';
@@ -38,7 +40,8 @@ export function ActionQueue() {
       .map((detail) => ({
         label: detail.name,
         value: detail
-      }));
+      }))
+      .sort((a, b) => a.value.sortIndex - b.value.sortIndex);
   }, []);
   const layout = actionQueue.layout.map((entry) => ({
     i: entry.i,
@@ -63,11 +66,12 @@ export function ActionQueue() {
         <Select
           className="flex-none"
           options={actionTypeOptions}
-          formatOptionLabel={() => {
+          formatOptionLabel={(data) => {
             const skillHrid =
-              nonCombatActionTypeHridToSkillHrid[queueEntry.actionTypeHrid];
-            const skillIconName = skillHrid.split('/').at(-1) ?? '';
-            return <GameIcon svgSetName="skills" iconName={skillIconName} />;
+              nonCombatActionTypeHridToSkillHrid[
+                data.value.hrid as NonCombatActionTypeHrid
+              ];
+            return <SkillIcon skillHrid={skillHrid} />;
           }}
           value={{
             label: clientData.actionTypeDetailMap[queueEntry.actionTypeHrid].name,
