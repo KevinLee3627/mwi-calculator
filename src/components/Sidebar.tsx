@@ -2,12 +2,14 @@ import { GameIcon } from 'src/components/GameIcon';
 import { ItemIcon } from 'src/components/ItemIcon';
 import { clientData } from 'src/core/clientData';
 import { NonCombatSkillHrid } from 'src/core/skills/NonCombatSkillHrid';
-import { setActiveSkill } from 'src/features/activeSkillSlice';
+import { setActivePage } from 'src/features/activePageSlice';
 import { useAppDispatch } from 'src/hooks/useAppDispatch';
 import { useStats } from 'src/hooks/useStats';
 import { openModal } from 'src/util/openModal';
 
 export function Sidebar() {
+  const dispatch = useAppDispatch();
+
   return (
     <div className="drawer-side z-50">
       <label htmlFor="drawer-sidebar" className="drawer-overlay"></label>
@@ -63,7 +65,7 @@ export function Sidebar() {
             <h2 className="menu-title">Miscellanous</h2>
             <ul>
               <SidebarSkillTab skillHrid="/skills/enhancing" />
-              <li>
+              <li onClick={() => dispatch(setActivePage({ pageId: '/page/houses' }))}>
                 <span>
                   <ItemIcon itemHrid="/items/lumber" />
                   Houses
@@ -82,14 +84,14 @@ interface SidebarSkillTabProps {
 }
 function SidebarSkillTab({ skillHrid }: SidebarSkillTabProps) {
   const {
-    activeSkillState: { activeSkill }
+    activePage: { activePage }
   } = useStats();
   const dispatch = useAppDispatch();
 
   const skillHridStripped = skillHrid.split('/').at(-1);
   return (
-    <li onClick={() => dispatch(setActiveSkill({ skillHrid }))}>
-      <span className={skillHrid === activeSkill ? 'active' : ''}>
+    <li onClick={() => dispatch(setActivePage({ pageId: skillHrid }))}>
+      <span className={skillHrid === activePage ? 'active' : ''}>
         <GameIcon svgSetName="skills" iconName={skillHridStripped ?? ''} />
         {clientData.skillDetailMap[skillHrid].name}
       </span>

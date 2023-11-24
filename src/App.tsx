@@ -1,4 +1,5 @@
 import { Bars3Icon } from '@heroicons/react/24/solid';
+import { useMemo } from 'react';
 import { Sidebar } from 'src/components/Sidebar';
 import { CharacterLevels } from 'src/features/character/levels/CharacterLevels';
 import { CharacterEquipment } from 'src/features/character/loadout/CharacterEquipment';
@@ -6,8 +7,14 @@ import { CommunityBuffs } from 'src/features/communityBuff/CommunityBuffs';
 import { UserHouseModal } from 'src/features/house/UserHouseModal';
 import { ActionQueue } from 'src/features/queue/ActionQueue';
 import { SkillPage } from 'src/features/SkillPage';
+import { useStats } from 'src/hooks/useStats';
 
 const App = () => {
+  const { activePage } = useStats();
+  const page = useMemo(() => {
+    if (activePage.activePage === '/page/houses') return <div>yeerrp</div>;
+    else return <SkillPage skillHrid={activePage.activePage} />;
+  }, [activePage.activePage]);
   return (
     <>
       <div className="drawer lg:drawer-open">
@@ -30,7 +37,7 @@ const App = () => {
           </nav>
           <div className="flex-1">
             {/* <Dev /> */}
-            <SkillPage />
+            {page}
           </div>
         </div>
         <Sidebar />

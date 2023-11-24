@@ -1,5 +1,5 @@
 import { createListenerMiddleware, isAnyOf } from '@reduxjs/toolkit';
-import { activeSkillSlice } from 'src/features/activeSkillSlice';
+import { activePageSlice } from 'src/features/activePageSlice';
 import { characterLevelsSlice } from 'src/features/character/levels/characterLevelsSlice';
 import { loadoutSlice } from 'src/features/character/loadout/loadoutSlice';
 import { communityBuffSlice } from 'src/features/communityBuff/communityBuffSlice';
@@ -48,11 +48,11 @@ skillDrinksListenerMiddleware.startListening({
   }
 });
 
-export const activeSkillListenerMiddleware = createListenerMiddleware();
-activeSkillListenerMiddleware.startListening({
-  actionCreator: activeSkillSlice.actions.setActiveSkill,
+export const activePageListenerMiddleware = createListenerMiddleware();
+activePageListenerMiddleware.startListening({
+  actionCreator: activePageSlice.actions.setActivePage,
   effect: () => {
-    localStorage.setItem('activeSkill', JSON.stringify(store.getState().activeSkill));
+    localStorage.setItem('activePage', JSON.stringify(store.getState().activePage));
   }
 });
 

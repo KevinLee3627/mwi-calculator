@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { GameIcon } from 'src/components/GameIcon';
 import { clientData } from 'src/core/clientData';
 import { HouseRoomHrid } from 'src/core/hrid/HouseRoomHrid';
+import { NonCombatSkillHrid } from 'src/core/skills/NonCombatSkillHrid';
 import { CharacterLevelInput } from 'src/features/character/levels/CharacterLevelInput';
 import { CharacterEnhancementSelect } from 'src/features/character/loadout/CharacterEnhancementSelect';
 import { CharacterEquipmentSelect } from 'src/features/character/loadout/CharacterEquipmentSelect';
@@ -14,10 +15,14 @@ import { actionTypeToolLocationMapping } from 'src/util/actionTypeToolLocationMa
 import { openModal } from 'src/util/openModal';
 import { skillHridToActionTypeHrid } from 'src/util/skillHridToActionTypeHridMapping';
 
-export function SkillPage() {
-  const { house, activeSkillState } = useStats();
+interface SkillPageProps {
+  skillHrid: NonCombatSkillHrid;
+}
 
-  const actionTypeHrid = skillHridToActionTypeHrid[activeSkillState.activeSkill];
+export function SkillPage({ skillHrid }: SkillPageProps) {
+  const { house } = useStats();
+
+  const actionTypeHrid = skillHridToActionTypeHrid[skillHrid];
 
   const tableData = useMemo(
     () =>
@@ -33,10 +38,10 @@ export function SkillPage() {
     <div>
       <div className="flex max-w-fit flex-col items-start sm:max-w-full sm:flex-row sm:items-end">
         <div className="ml-4 sm:ml-0">
-          <CharacterLevelInput skillHrid={activeSkillState.activeSkill} />
+          <CharacterLevelInput skillHrid={skillHrid} />
         </div>
         <div className="ml-4">
-          <SkillDrinksSelect skillHrid={activeSkillState.activeSkill} />
+          <SkillDrinksSelect skillHrid={skillHrid} />
         </div>
         <div className="ml-4"></div>
         <div className="ml-4 flex items-end gap-2">
@@ -62,7 +67,7 @@ export function SkillPage() {
               const roomHrid = entry[0] as HouseRoomHrid;
               const roomLevel = entry[1];
               const roomDetail = clientData.houseRoomDetailMap[roomHrid];
-              if (roomDetail.skillHrid !== activeSkillState.activeSkill) return null;
+              if (roomDetail.skillHrid !== skillHrid) return null;
 
               return (
                 <div key={roomDetail.hrid} className="grid h-12 w-12 place-items-center">
@@ -83,7 +88,7 @@ export function SkillPage() {
         </div>
       ) : (
         <div>
-          <SkillTable data={tableData} skillHrid={activeSkillState.activeSkill} />
+          <SkillTable data={tableData} skillHrid={skillHrid} />
         </div>
       )}
     </div>

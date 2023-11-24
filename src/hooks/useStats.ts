@@ -1,4 +1,4 @@
-import { selectActiveSkillState } from 'src/features/activeSkillSlice';
+import { selectActivePage } from 'src/features/activePageSlice';
 import { selectCharacterLevels } from 'src/features/character/levels/characterLevelsSlice';
 import {
   selectActiveLoadout,
@@ -18,7 +18,7 @@ export function useStats() {
   const activeLoadout = useAppSelector(selectActiveLoadout);
   const allLoadouts = useAppSelector(selectAllLoadouts);
   const communityBuffs = useAppSelector(selectCommunityBuffs);
-  const activeSkillState = useAppSelector(selectActiveSkillState);
+  const activePage = useAppSelector(selectActivePage);
   const house = useAppSelector(selectHouse);
   const drinks = useAppSelector(selectSkillDrinks);
   const targetLevels = useAppSelector(selectTargetLevels);
@@ -31,7 +31,7 @@ export function useStats() {
     activeLoadout,
     allLoadouts,
     communityBuffs,
-    activeSkillState,
+    activePage,
     house,
     drinks,
     targetLevels,

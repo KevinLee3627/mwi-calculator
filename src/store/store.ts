@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { activeSkillInitialState, activeSkillSlice } from 'src/features/activeSkillSlice';
+import { activePageInitialState, activePageSlice } from 'src/features/activePageSlice';
 import {
   characterLevelsInitialState,
   characterLevelsSlice
@@ -33,7 +33,7 @@ import {
 } from 'src/features/targetLevelSlice';
 import {
   actionQueueListenerMiddleware,
-  activeSkillListenerMiddleware,
+  activePageListenerMiddleware,
   characterLevelsListenerMiddleware,
   communityBuffListenerMiddleware,
   currentXpListenerMiddleware,
@@ -54,7 +54,7 @@ export const store = configureStore({
     characterLevels: characterLevelsSlice.reducer,
     loadout: loadoutSlice.reducer,
     skillDrinks: skillDrinksSlice.reducer,
-    activeSkill: activeSkillSlice.reducer,
+    activePage: activePageSlice.reducer,
     targetLevels: targetLevelsSlice.reducer,
     targetActions: targetActionsSlice.reducer,
     communityBuff: communityBuffSlice.reducer,
@@ -68,7 +68,7 @@ export const store = configureStore({
     characterLevelsListenerMiddleware.middleware,
     loadoutListenerMiddleware.middleware,
     skillDrinksListenerMiddleware.middleware,
-    activeSkillListenerMiddleware.middleware,
+    activePageListenerMiddleware.middleware,
     targetLevelsListenerMiddleware.middleware,
     targetActionsListenerMiddleware.middleware,
     communityBuffListenerMiddleware.middleware,
@@ -81,7 +81,7 @@ export const store = configureStore({
     characterLevels: tryLocalStorage('characterLevels', characterLevelsInitialState),
     loadout: tryLocalStorage('loadout', loadoutInitialState),
     skillDrinks: tryLocalStorage('skillDrinks', skillDrinksInitialState),
-    activeSkill: tryLocalStorage('activeSkill', activeSkillInitialState),
+    activePage: tryLocalStorage('activePage', activePageInitialState),
     targetLevels: tryLocalStorage('targetLevels', targetLevelsInitialState),
     targetActions: tryLocalStorage('targetActions', targetActionsInitialState),
     communityBuff: tryLocalStorage('communityBuff', communityBuffInitialState),
