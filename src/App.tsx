@@ -4,6 +4,7 @@ import { Sidebar } from 'src/components/Sidebar';
 import { CharacterLevels } from 'src/features/character/levels/CharacterLevels';
 import { CharacterEquipment } from 'src/features/character/loadout/CharacterEquipment';
 import { CommunityBuffs } from 'src/features/communityBuff/CommunityBuffs';
+import { HouseCalculator } from 'src/features/house/HouseCalculator';
 import { UserHouseModal } from 'src/features/house/UserHouseModal';
 import { ActionQueue } from 'src/features/queue/ActionQueue';
 import { SkillPage } from 'src/features/SkillPage';
@@ -12,7 +13,7 @@ import { useStats } from 'src/hooks/useStats';
 const App = () => {
   const { activePage } = useStats();
   const page = useMemo(() => {
-    if (activePage === '/page/houses') return <div>yeerrp</div>;
+    if (activePage === '/page/houses') return <HouseCalculator />;
     else return <SkillPage skillHrid={activePage} />;
   }, [activePage]);
   return (
@@ -35,10 +36,7 @@ const App = () => {
               </div>
             </div>
           </nav>
-          <div className="flex-1">
-            {/* <Dev /> */}
-            {page}
-          </div>
+          <div className="flex-1">{page}</div>
         </div>
         <Sidebar />
         <CharacterEquipment />
