@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Select } from 'src/components/Select';
+import { SkillIcon } from 'src/components/SkillIcon';
 import { clientData } from 'src/core/clientData';
 import { HouseRoomDetail } from 'src/core/house/HouseRoomDetail';
 
@@ -28,6 +29,14 @@ export function HouseCalculator() {
             } else {
               setSelectedRoom(selected.value);
             }
+          }}
+          formatOptionLabel={(data) => {
+            return (
+              <div className="flex items-center gap-2">
+                <SkillIcon skillHrid={data.value.skillHrid} />
+                {data.value.name}
+              </div>
+            );
           }}
           isClearable
         />
