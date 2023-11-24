@@ -1,4 +1,4 @@
-import { GameIcon } from 'src/components/GameIcon';
+import { SkillIcon } from 'src/components/SkillIcon';
 import { clientData } from 'src/core/clientData';
 import { setRoomLevel } from 'src/features/house/houseSlice';
 import { useAppDispatch } from 'src/hooks/useAppDispatch';
@@ -15,10 +15,7 @@ export function UserHouseModal() {
         <div key={room.hrid}>
           <label className="label">
             <span className="label-text">
-              <GameIcon
-                svgSetName="skills"
-                iconName={room.skillHrid.split('/').at(-1) ?? ''}
-              />
+              <SkillIcon skillHrid={room.skillHrid} />
               {room.name}
             </span>
           </label>

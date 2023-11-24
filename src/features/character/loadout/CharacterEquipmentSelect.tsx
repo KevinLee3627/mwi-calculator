@@ -1,4 +1,4 @@
-import { GameIcon } from 'src/components/GameIcon';
+import { ItemIcon } from 'src/components/ItemIcon';
 import { Select } from 'src/components/Select';
 import { clientData } from 'src/core/clientData';
 import { itemLocationToItemMap } from 'src/features/character/loadout/itemLocationToItemMap';
@@ -22,19 +22,14 @@ export function CharacterEquipmentSelect({
   const possibleItems = itemLocationToItemMap[itemLocationHrid];
   const itemLocationName = clientData.itemLocationDetailMap[itemLocationHrid].name;
   const location = itemLocationHrid.split('/').at(-1);
-  const itemHridStripped = activeLoadout.equipment[itemLocationHrid]?.hrid.replace(
-    '/items/',
-    ''
-  );
+  const item = activeLoadout.equipment[itemLocationHrid];
 
   if (location == null) return <></>;
   return (
     <div className="form-control">
       <label className="label">
         <span className="label-text">
-          {itemHridStripped ? (
-            <GameIcon svgSetName="items" iconName={itemHridStripped ?? ''} />
-          ) : null}
+          {item ? <ItemIcon itemHrid={item.hrid} /> : null}
           {itemLocationName}
         </span>
       </label>
@@ -42,8 +37,8 @@ export function CharacterEquipmentSelect({
         name={`${itemLocationHrid}_select`}
         options={possibleItems.map((item) => ({ label: item.name, value: item }))}
         value={{
-          label: activeLoadout.equipment[itemLocationHrid]?.name,
-          value: activeLoadout.equipment[itemLocationHrid]
+          label: item?.name,
+          value: item
         }}
         placeholder="test"
         onChange={(selected) => {

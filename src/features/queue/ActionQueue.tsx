@@ -1,7 +1,6 @@
 import { EllipsisVerticalIcon, TrashIcon } from '@heroicons/react/24/solid';
 import { useMemo } from 'react';
 import { Responsive, WidthProvider } from 'react-grid-layout';
-import { GameIcon } from 'src/components/GameIcon';
 import { Select } from 'src/components/Select';
 import { SkillIcon } from 'src/components/SkillIcon';
 import { NonCombatActionTypeHrid } from 'src/core/actions/NonCombatActionTypeHrid';

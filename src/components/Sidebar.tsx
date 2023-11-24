@@ -1,5 +1,6 @@
 import { GameIcon } from 'src/components/GameIcon';
 import { ItemIcon } from 'src/components/ItemIcon';
+import { SkillIcon } from 'src/components/SkillIcon';
 import { clientData } from 'src/core/clientData';
 import { NonCombatSkillHrid } from 'src/core/skills/NonCombatSkillHrid';
 import { setActivePage } from 'src/features/activePageSlice';
@@ -86,11 +87,10 @@ function SidebarSkillTab({ skillHrid }: SidebarSkillTabProps) {
   const { activePage } = useStats();
   const dispatch = useAppDispatch();
 
-  const skillHridStripped = skillHrid.split('/').at(-1);
   return (
     <li onClick={() => dispatch(setActivePage({ pageId: skillHrid }))}>
       <span className={skillHrid === activePage ? 'active' : ''}>
-        <GameIcon svgSetName="skills" iconName={skillHridStripped ?? ''} />
+        <SkillIcon skillHrid={skillHrid} />
         {clientData.skillDetailMap[skillHrid].name}
       </span>
     </li>

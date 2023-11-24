@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { GameIcon } from 'src/components/GameIcon';
+import { SkillIcon } from 'src/components/SkillIcon';
 import { clientData } from 'src/core/clientData';
 import { HouseRoomHrid } from 'src/core/hrid/HouseRoomHrid';
 import { NonCombatSkillHrid } from 'src/core/skills/NonCombatSkillHrid';
@@ -71,10 +71,7 @@ export function SkillPage({ skillHrid }: SkillPageProps) {
 
               return (
                 <div key={roomDetail.hrid} className="grid h-12 w-12 place-items-center">
-                  <GameIcon
-                    svgSetName="skills"
-                    iconName={roomDetail.skillHrid.split('/').at(-1) ?? ''}
-                  />
+                  <SkillIcon skillHrid={skillHrid} />
                   <p>{roomLevel}</p>
                 </div>
               );

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { GameIcon } from 'src/components/GameIcon';
+import { ItemIcon } from 'src/components/ItemIcon';
 import { Select } from 'src/components/Select';
 import { clientData } from 'src/core/clientData';
 import { SkillHrid } from 'src/core/hrid/SkillHrid';
@@ -30,14 +30,7 @@ export function SkillDrinksSelect({ skillHrid }: SkillDrinksSelectProps) {
   }, [actionTypeHrid]);
 
   const drinkIcons = skillDrinks[actionTypeHrid]?.map((drink) => {
-    const drinkHridStripped = drink.hrid.replace('/items/', '');
-    return (
-      <GameIcon
-        key={drinkHridStripped}
-        svgSetName="items"
-        iconName={drinkHridStripped ?? ''}
-      />
-    );
+    return <ItemIcon key={drink.hrid} itemHrid={drink.hrid} />;
   });
   return (
     <div className="form-control">
