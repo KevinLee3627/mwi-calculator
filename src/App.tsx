@@ -12,9 +12,9 @@ import { useStats } from 'src/hooks/useStats';
 const App = () => {
   const { activePage } = useStats();
   const page = useMemo(() => {
-    if (activePage.activePage === '/page/houses') return <div>yeerrp</div>;
-    else return <SkillPage skillHrid={activePage.activePage} />;
-  }, [activePage.activePage]);
+    if (activePage === '/page/houses') return <div>yeerrp</div>;
+    else return <SkillPage skillHrid={activePage} />;
+  }, [activePage]);
   return (
     <>
       <div className="drawer lg:drawer-open">

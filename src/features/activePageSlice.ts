@@ -29,4 +29,4 @@ export const activePageSlice = createSlice({
 
 export const { setActivePage } = activePageSlice.actions;
 
-export const selectActivePage = (state: RootState) => state.activePage;
+export const selectActivePage = (state: RootState) => state.activePage.activePage;

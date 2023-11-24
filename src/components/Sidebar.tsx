@@ -83,9 +83,7 @@ interface SidebarSkillTabProps {
   skillHrid: NonCombatSkillHrid;
 }
 function SidebarSkillTab({ skillHrid }: SidebarSkillTabProps) {
-  const {
-    activePage: { activePage }
-  } = useStats();
+  const { activePage } = useStats();
   const dispatch = useAppDispatch();
 
   const skillHridStripped = skillHrid.split('/').at(-1);
