@@ -5,6 +5,7 @@ import { ItemHrid } from 'src/core/hrid/ItemHrid';
 import { getHouseCosts } from 'src/features/house/getHouseCosts';
 import { ItemEntry } from 'src/features/house/ItemEntry';
 import { Market } from 'src/features/market/Market';
+import { formatNumber } from 'src/util/formatNumber';
 
 interface TotalCostTableProps {
   room: HouseRoomDetail;
@@ -38,7 +39,6 @@ export function TotalCostTable({
   }, [startLevel, endLevel, room, market, priceOverrides]);
 
   const totalCosts = useMemo(() => {
-    console.log('recalc');
     return Object.entries(getHouseCosts({ startLevel, endLevel, roomHrid: room.hrid }))
       .sort((a, b) => {
         const indexA = clientData.itemDetailMap[a[0] as ItemHrid].sortIndex;
@@ -70,12 +70,12 @@ export function TotalCostTable({
     <table className="table-zebra table">
       <thead>
         <tr>
-          <th>Total Coin Cost: {totalCoinCost}</th>
+          <th>Total Coin Cost: {formatNumber(totalCoinCost)}</th>
         </tr>
         <tr>
           <th>Item</th>
           <th>Amount</th>
-          <th>Avg. Market Cost</th>
+          <th>Market Price</th>
         </tr>
       </thead>
       <tbody>{totalCosts}</tbody>
