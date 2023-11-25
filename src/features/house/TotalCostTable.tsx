@@ -64,7 +64,7 @@ export function TotalCostTable({
           />
         );
       });
-  }, [startLevel, endLevel, priceOverrides, room.hrid, market]);
+  }, [startLevel, endLevel, priceOverrides, room.hrid, market, setPriceOverrides]);
 
   return (
     <table className="table-zebra table">
