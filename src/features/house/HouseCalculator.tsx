@@ -1,14 +1,14 @@
 /* eslint-disable tailwindcss/no-custom-classname */
 import { useState } from 'react';
-import { ItemIcon } from 'src/components/ItemIcon';
 import { Select } from 'src/components/Select';
 import { SkillIcon } from 'src/components/SkillIcon';
 import { clientData } from 'src/core/clientData';
 import { HouseRoomDetail } from 'src/core/house/HouseRoomDetail';
 import { ItemHrid } from 'src/core/hrid/ItemHrid';
 import { getHouseCosts } from 'src/features/house/getHouseCosts';
+import { ItemEntry } from 'src/features/house/ItemEntry';
+import { LevelByLevelCostTable } from 'src/features/house/LevelByLevelCostTable';
 import { useStats } from 'src/hooks/useStats';
-import { formatNumber } from 'src/util/formatNumber';
 
 const roomDetailMap = clientData.houseRoomDetailMap;
 
@@ -137,60 +137,14 @@ export function HouseCalculator() {
             </tbody>
           </table>
         )}
-        {activeTab === 'levelByLevel' &&
-          Object.entries(selectedRoom.upgradeCostsMap)
-            .filter((entry) => {
-              const [levelStr] = entry;
-              const level = parseInt(levelStr, 10);
-              return level > startLevel && level <= endLevel;
-            })
-            .map((entry) => {
-              const [levelStr, costArr] = entry;
-              const level = parseInt(levelStr, 10);
-
-              return (
-                <div key={`${selectedRoom.hrid}-level-${levelStr}`} className="mb-4">
-                  <p className="font-bold">
-                    Level {level - 1} → {level}
-                  </p>
-                  <div className="table-zebra table">
-                    <thead>
-                      <tr>
-                        <th>Item</th>
-                        <th>Amount</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {costArr.map((cost) => (
-                        <ItemEntry
-                          key={`levelByLevel-${selectedRoom.hrid}-${cost.itemHrid}`}
-                          itemHrid={cost.itemHrid}
-                          count={cost.count}
-                        />
-                      ))}
-                    </tbody>
-                  </div>
-                </div>
-              );
-            })}
+        {activeTab === 'levelByLevel' && (
+          <LevelByLevelCostTable
+            room={selectedRoom}
+            startLevel={startLevel}
+            endLevel={endLevel}
+          />
+        )}
       </div>
     </div>
-  );
-}
-
-interface ItemEntryProps {
-  itemHrid: ItemHrid;
-  count: number;
-}
-function ItemEntry({ itemHrid, count }: ItemEntryProps) {
-  const name = clientData.itemDetailMap[itemHrid].name;
-  return (
-    <tr>
-      <td>
-        <ItemIcon itemHrid={itemHrid} />
-        <span className="ml-2">{name}</span>
-      </td>
-      <td>{formatNumber(count)}</td>
-    </tr>
   );
 }
