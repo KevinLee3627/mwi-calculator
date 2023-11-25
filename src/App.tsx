@@ -27,7 +27,7 @@ const App = () => {
                 className="tooltip tooltip-bottom sticky top-0 before:text-xs before:content-[attr(data-tip)]"
                 data-tip="Menu"
               >
-                <label className="btn-ghost btn-square btn" htmlFor="drawer-sidebar">
+                <label className="btn-ghost btn btn-square" htmlFor="drawer-sidebar">
                   <Bars3Icon className="h-8 w-8" />
                 </label>
               </span>
