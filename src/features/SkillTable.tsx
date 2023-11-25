@@ -235,7 +235,7 @@ function ColumnVisibilityDropdown({ table }: ColumnVisibilityDropdownProps) {
       </label>
       <ul
         tabIndex={0}
-        className="dropdown-content menu rounded-box z-50 bg-base-200 p-2 shadow"
+        className="dropdown-content menu z-50 rounded-box bg-base-200 p-2 shadow"
       >
         <li className="mb-2">
           <label>
