@@ -6,29 +6,19 @@ import { clientData } from 'src/core/clientData';
 import { HouseRoomDetail } from 'src/core/house/HouseRoomDetail';
 import { HouseRoomHrid } from 'src/core/hrid/HouseRoomHrid';
 import { ItemHrid } from 'src/core/hrid/ItemHrid';
-import { range } from 'src/util/range';
+import { useStats } from 'src/hooks/useStats';
 
 const roomDetailMap = clientData.houseRoomDetailMap;
 
 export function HouseCalculator() {
+  const { house } = useStats();
+
   const [selectedRoom, setSelectedRoom] = useState<HouseRoomDetail>(
     roomDetailMap['/house_rooms/dairy_barn']
   );
-  const [startLevel, setStartLevel] = useState(0);
+  const [startLevel, setStartLevel] = useState(house[selectedRoom.hrid]);
   const [endLevel, setEndLevel] = useState(8);
   const [activeTab, setActiveTab] = useState('total');
-
-  const totalCosts = Object.values(selectedRoom.upgradeCostsMap).reduce<
-    Record<string, number>
-  >((acc, costs, i) => {
-    costs.forEach((cost) => {
-      if (acc[cost.itemHrid] == null) {
-        acc[cost.itemHrid] = 0;
-      }
-      acc[cost.itemHrid] += cost.count;
-    });
-    return acc;
-  }, {}) as Record<ItemHrid, number>;
 
   return (
     <div>
