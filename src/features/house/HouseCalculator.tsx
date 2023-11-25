@@ -1,12 +1,13 @@
 /* eslint-disable tailwindcss/no-custom-classname */
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Select } from 'src/components/Select';
 import { SkillIcon } from 'src/components/SkillIcon';
 import { clientData } from 'src/core/clientData';
 import { HouseRoomDetail } from 'src/core/house/HouseRoomDetail';
 import { LevelByLevelCostTable } from 'src/features/house/LevelByLevelCostTable';
 import { TotalCostTable } from 'src/features/house/TotalCostTable';
+import { Market } from 'src/features/market/Market';
 import { useGetMarketDataQuery } from 'src/features/market/marketApi';
 import { useStats } from 'src/hooks/useStats';
 
@@ -29,6 +30,11 @@ export function HouseCalculator() {
   } = useGetMarketDataQuery('', {
     pollingInterval: 1000 * 60 * 30
   });
+
+  const market = useMemo(() => {
+    if (isLoading || error || marketData == null) return null;
+    else return new Market(marketData.market);
+  }, [marketData, isLoading, error]);
 
   useEffect(() => {
     setStartLevel(house[selectedRoom.hrid]);
@@ -119,12 +125,12 @@ export function HouseCalculator() {
         </a>
       </div>
       <div>
-        {(marketData == null || error) && (
+        {(market == null || marketData == null || error) && (
           <div role="alert" className="alert alert-warning">
             <ExclamationTriangleIcon className="h-6 w-6" />
             <span>
-              Market data could not be retrieved - enhancement costs are based on vendor
-              prices (but can be overriden){' '}
+              Market data could not be retrieved - costs are based on vendor prices (but
+              can be overriden){' '}
             </span>
           </div>
         )}
@@ -133,6 +139,7 @@ export function HouseCalculator() {
             room={selectedRoom}
             startLevel={startLevel}
             endLevel={endLevel}
+            market={market}
           />
         )}
         {activeTab === 'levelByLevel' && (
