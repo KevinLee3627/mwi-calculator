@@ -123,6 +123,8 @@ export function useGatheringColumns({
         return { itemHrid: drop.itemHrid, amt: avgPerAction };
       });
 
+      const rareDropsPerAction = action.rareDropTable.map((drop) => {});
+
       const dropsProfitPerAction = dropsPerAction.reduce((acc, val) => {
         const override = priceOverrides[val.itemHrid];
         if (override != null) return acc + val.amt * override;
