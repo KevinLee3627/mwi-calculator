@@ -33,10 +33,7 @@ export function CharacterEquipment() {
 
     return (
       <div className="flex items-end gap-2" key={`${itemLocationHrid}_key`}>
-        <CharacterEquipmentSelect
-          itemLocationHrid={itemLocationHrid}
-          possibleItems={itemLocationToItemMap[itemLocationHrid]}
-        />
+        <CharacterEquipmentSelect itemLocationHrid={itemLocationHrid} />
         <div className="min-w-fit">
           <CharacterEnhancementSelect itemLocationHrid={itemLocationHrid} />
         </div>
