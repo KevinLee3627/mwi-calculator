@@ -9,7 +9,6 @@ import { CreatableSelect } from 'src/components/CreatableSelect';
 import { ItemDetail } from 'src/core/items/ItemDetail';
 import { CharacterEnhancementSelect } from 'src/features/character/loadout/CharacterEnhancementSelect';
 import { CharacterEquipmentSelect } from 'src/features/character/loadout/CharacterEquipmentSelect';
-import { itemLocationToItemMap } from 'src/features/character/loadout/itemLocationToItemMap';
 import {
   createLoadout,
   deleteLoadout,
