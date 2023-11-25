@@ -19,4 +19,5 @@ export interface ItemDetail {
   equipmentDetail: EquipmentDetail;
   consumableDetail: ConsumableDetail;
   abilityBookDetail: AbilityBookDetail;
+  sortIndex: number;
 }
