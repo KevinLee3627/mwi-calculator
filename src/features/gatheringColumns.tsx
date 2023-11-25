@@ -35,6 +35,7 @@ interface ActionStat {
   actionsPerHour: number;
   dropsPerAction: { itemHrid: ItemHrid; amt: number }[];
   dropsProfitPerAction: number;
+  rareDropsPerAction: { itemHrid: ItemHrid; amt: number }[];
   inputCostPerAction: number | null;
   outputItemsProfitPerAction: number | null;
 }
@@ -106,24 +107,29 @@ export function useGatheringColumns({
       const actionsPerSecond = 1 / (time / (1 + efficiency));
       const actionsPerHour = 3600 * actionsPerSecond;
 
-      const fullDropTable = [
-        ...(action.dropTable ?? []),
-        ...(action.rareDropTable ?? [])
-      ];
-
-      const teaBonus = drinkStats['/buff_types/gathering'] ?? 0;
-      const equipBonus = equipmentStats['gatheringQuantity'] ?? 0;
-      const communityBonus =
+      const teaGatheringBonus = drinkStats['/buff_types/gathering'] ?? 0;
+      const equipGatheringBonus = equipmentStats['gatheringQuantity'] ?? 0;
+      const communityGatheringBonus =
         communityBuffStats['/community_buff_types/gathering_quantity'] ?? 0;
-      const gatheringBonus = teaBonus + equipBonus + communityBonus;
+      const gatheringBonus =
+        teaGatheringBonus + equipGatheringBonus + communityGatheringBonus;
 
-      const dropsPerAction = fullDropTable.map((drop) => {
+      const dropsPerAction = (action.dropTable ?? []).map((drop) => {
         const avgPerAction =
           ((1 + gatheringBonus) * (drop.dropRate * (drop.minCount + drop.maxCount))) / 2;
         return { itemHrid: drop.itemHrid, amt: avgPerAction };
       });
 
-      const rareDropsPerAction = action.rareDropTable.map((drop) => {});
+      const equipRareFindBonus = equipmentStats['skillingRareFind'] ?? 0;
+      const houseRareFindBonus =
+        Object.values(house).reduce((acc, val) => acc + val, 0) * 0.002;
+      const rareFindBonus = equipRareFindBonus + houseRareFindBonus;
+
+      const rareDropsPerAction = (action.rareDropTable ?? []).map((drop) => {
+        const avgPerAction =
+          ((1 + rareFindBonus) * (drop.dropRate * (drop.minCount + drop.maxCount))) / 2;
+        return { itemHrid: drop.itemHrid, amt: avgPerAction };
+      });
 
       const dropsProfitPerAction = dropsPerAction.reduce((acc, val) => {
         const override = priceOverrides[val.itemHrid];
@@ -165,6 +171,7 @@ export function useGatheringColumns({
         actionsPerHour,
         dropsPerAction,
         dropsProfitPerAction,
+        rareDropsPerAction,
         inputCostPerAction,
         outputItemsProfitPerAction
       };
@@ -224,10 +231,11 @@ export function useGatheringColumns({
         header: 'Drops/hr',
         cell: (info) => {
           const { hrid: actionHrid } = info.row.original;
-
+          const { dropsPerAction, rareDropsPerAction } = actionStats[actionHrid];
+          const fullDropTable = [...dropsPerAction, ...rareDropsPerAction];
           return (
             <div>
-              {actionStats[actionHrid].dropsPerAction.map((drop) => {
+              {fullDropTable.map((drop) => {
                 const itemName = clientData.itemDetailMap[drop.itemHrid].name;
                 const dropsPerHour = drop.amt * actionStats[actionHrid].actionsPerHour;
                 return (
