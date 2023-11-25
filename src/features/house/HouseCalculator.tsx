@@ -5,6 +5,7 @@ import { Select } from 'src/components/Select';
 import { SkillIcon } from 'src/components/SkillIcon';
 import { clientData } from 'src/core/clientData';
 import { HouseRoomDetail } from 'src/core/house/HouseRoomDetail';
+import { ItemHrid } from 'src/core/hrid/ItemHrid';
 import { LevelByLevelCostTable } from 'src/features/house/LevelByLevelCostTable';
 import { TotalCostTable } from 'src/features/house/TotalCostTable';
 import { Market } from 'src/features/market/Market';
@@ -15,6 +16,10 @@ const roomDetailMap = clientData.houseRoomDetailMap;
 
 export function HouseCalculator() {
   const { house } = useStats();
+
+  const [priceOverrides, setPriceOverrides] = useState<Partial<Record<ItemHrid, number>>>(
+    {}
+  );
 
   const [selectedRoom, setSelectedRoom] = useState<HouseRoomDetail>(
     roomDetailMap['/house_rooms/dairy_barn']
@@ -140,6 +145,8 @@ export function HouseCalculator() {
             startLevel={startLevel}
             endLevel={endLevel}
             market={market}
+            priceOverrides={priceOverrides}
+            setPriceOverrides={setPriceOverrides}
           />
         )}
         {activeTab === 'levelByLevel' && (
@@ -147,6 +154,9 @@ export function HouseCalculator() {
             room={selectedRoom}
             startLevel={startLevel}
             endLevel={endLevel}
+            market={market}
+            priceOverrides={priceOverrides}
+            setPriceOverrides={setPriceOverrides}
           />
         )}
       </div>

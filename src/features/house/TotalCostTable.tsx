@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { Dispatch, SetStateAction, useMemo } from 'react';
 import { clientData } from 'src/core/clientData';
 import { HouseRoomDetail } from 'src/core/house/HouseRoomDetail';
 import { ItemHrid } from 'src/core/hrid/ItemHrid';
@@ -11,18 +11,18 @@ interface TotalCostTableProps {
   startLevel: number;
   endLevel: number;
   market: Market | null;
+  priceOverrides: Partial<Record<ItemHrid, number>>;
+  setPriceOverrides: Dispatch<SetStateAction<Partial<Record<ItemHrid, number>>>>;
 }
 
 export function TotalCostTable({
   room,
   startLevel,
   endLevel,
-  market
+  market,
+  priceOverrides,
+  setPriceOverrides
 }: TotalCostTableProps) {
-  const [priceOverrides, setPriceOverrides] = useState<Partial<Record<ItemHrid, number>>>(
-    {}
-  );
-
   const totalCoinCost = useMemo(() => {
     return Object.entries(
       getHouseCosts({ startLevel, endLevel, roomHrid: room.hrid })
