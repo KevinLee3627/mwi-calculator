@@ -1,13 +1,11 @@
 /* eslint-disable tailwindcss/no-custom-classname */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Select } from 'src/components/Select';
 import { SkillIcon } from 'src/components/SkillIcon';
 import { clientData } from 'src/core/clientData';
 import { HouseRoomDetail } from 'src/core/house/HouseRoomDetail';
-import { ItemHrid } from 'src/core/hrid/ItemHrid';
-import { getHouseCosts } from 'src/features/house/getHouseCosts';
-import { ItemEntry } from 'src/features/house/ItemEntry';
 import { LevelByLevelCostTable } from 'src/features/house/LevelByLevelCostTable';
+import { TotalCostTable } from 'src/features/house/TotalCostTable';
 import { useStats } from 'src/hooks/useStats';
 
 const roomDetailMap = clientData.houseRoomDetailMap;
@@ -108,34 +106,11 @@ export function HouseCalculator() {
       </div>
       <div>
         {activeTab === 'total' && (
-          <table className="table-zebra table">
-            <thead>
-              <tr>
-                <th>Item</th>
-                <th>Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Object.entries(
-                getHouseCosts({ startLevel, endLevel, roomHrid: selectedRoom.hrid })
-              )
-                .sort((a, b) => {
-                  const indexA = clientData.itemDetailMap[a[0] as ItemHrid].sortIndex;
-                  const indexB = clientData.itemDetailMap[b[0] as ItemHrid].sortIndex;
-                  return indexA - indexB;
-                })
-                .map((entry) => {
-                  const [itemHrid, amount] = entry as [ItemHrid, number];
-                  return (
-                    <ItemEntry
-                      key={`${selectedRoom.hrid}-${itemHrid}-${amount}`}
-                      itemHrid={itemHrid}
-                      count={amount}
-                    />
-                  );
-                })}
-            </tbody>
-          </table>
+          <TotalCostTable
+            room={selectedRoom}
+            startLevel={startLevel}
+            endLevel={endLevel}
+          />
         )}
         {activeTab === 'levelByLevel' && (
           <LevelByLevelCostTable
