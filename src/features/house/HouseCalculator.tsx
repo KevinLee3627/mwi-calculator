@@ -1,13 +1,14 @@
 /* eslint-disable tailwindcss/no-custom-classname */
 import { useState } from 'react';
+import { ItemIcon } from 'src/components/ItemIcon';
 import { Select } from 'src/components/Select';
 import { SkillIcon } from 'src/components/SkillIcon';
 import { clientData } from 'src/core/clientData';
 import { HouseRoomDetail } from 'src/core/house/HouseRoomDetail';
-import { HouseRoomHrid } from 'src/core/hrid/HouseRoomHrid';
 import { ItemHrid } from 'src/core/hrid/ItemHrid';
 import { getHouseCosts } from 'src/features/house/getHouseCosts';
 import { useStats } from 'src/hooks/useStats';
+import { formatNumber } from 'src/util/formatNumber';
 
 const roomDetailMap = clientData.houseRoomDetailMap;
 
@@ -104,32 +105,38 @@ export function HouseCalculator() {
         >
           Level-by-Level Costs
         </a>
-        <a
-          role="tab"
-          className={`tab-bordered tab ${activeTab === 'three' && 'tab-active'}`}
-          onClick={() => setActiveTab('three')}
-        >
-          Tab 3
-        </a>
       </div>
       <div>
-        {activeTab === 'total' &&
-          Object.entries(
-            getHouseCosts({ startLevel, endLevel, roomHrid: selectedRoom.hrid })
-          )
-            .sort((a, b) => {
-              const indexA = clientData.itemDetailMap[a[0] as ItemHrid].sortIndex;
-              const indexB = clientData.itemDetailMap[b[0] as ItemHrid].sortIndex;
-              return indexA - indexB;
-            })
-            .map((entry) => {
-              const [itemHrid, amount] = entry as [ItemHrid, number];
-              return (
-                <div key={`${selectedRoom.hrid}-${itemHrid}-${amount}`}>
-                  {itemHrid} - {amount}
-                </div>
-              );
-            })}
+        {activeTab === 'total' && (
+          <table className="table-zebra table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Object.entries(
+                getHouseCosts({ startLevel, endLevel, roomHrid: selectedRoom.hrid })
+              )
+                .sort((a, b) => {
+                  const indexA = clientData.itemDetailMap[a[0] as ItemHrid].sortIndex;
+                  const indexB = clientData.itemDetailMap[b[0] as ItemHrid].sortIndex;
+                  return indexA - indexB;
+                })
+                .map((entry) => {
+                  const [itemHrid, amount] = entry as [ItemHrid, number];
+                  return (
+                    <ItemEntry
+                      key={`${selectedRoom.hrid}-${itemHrid}-${amount}`}
+                      itemHrid={itemHrid}
+                      count={amount}
+                    />
+                  );
+                })}
+            </tbody>
+          </table>
+        )}
         {activeTab === 'levelByLevel' &&
           Object.entries(selectedRoom.upgradeCostsMap)
             .filter((entry) => {
@@ -142,23 +149,48 @@ export function HouseCalculator() {
               const level = parseInt(levelStr, 10);
 
               return (
-                <div key={`${selectedRoom.hrid}-level-${levelStr}`}>
-                  <p>
-                    Level {level - 1} --{'>'} {level}
+                <div key={`${selectedRoom.hrid}-level-${levelStr}`} className="mb-4">
+                  <p className="font-bold">
+                    Level {level - 1} → {level}
                   </p>
-                  <div>
-                    {costArr.map((cost) => {
-                      return (
-                        <div key={`levelByLevel-${selectedRoom.hrid}-${cost.itemHrid}`}>
-                          {cost.itemHrid} ({cost.count})
-                        </div>
-                      );
-                    })}
+                  <div className="table-zebra table">
+                    <thead>
+                      <tr>
+                        <th>Item</th>
+                        <th>Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {costArr.map((cost) => (
+                        <ItemEntry
+                          key={`levelByLevel-${selectedRoom.hrid}-${cost.itemHrid}`}
+                          itemHrid={cost.itemHrid}
+                          count={cost.count}
+                        />
+                      ))}
+                    </tbody>
                   </div>
                 </div>
               );
             })}
       </div>
     </div>
+  );
+}
+
+interface ItemEntryProps {
+  itemHrid: ItemHrid;
+  count: number;
+}
+function ItemEntry({ itemHrid, count }: ItemEntryProps) {
+  const name = clientData.itemDetailMap[itemHrid].name;
+  return (
+    <tr>
+      <td>
+        <ItemIcon itemHrid={itemHrid} />
+        <span className="ml-2">{name}</span>
+      </td>
+      <td>{formatNumber(count)}</td>
+    </tr>
   );
 }
