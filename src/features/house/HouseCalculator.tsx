@@ -20,6 +20,10 @@ export function HouseCalculator() {
   const [endLevel, setEndLevel] = useState(8);
   const [activeTab, setActiveTab] = useState('total');
 
+  useEffect(() => {
+    setStartLevel(house[selectedRoom.hrid]);
+  }, [selectedRoom]);
+
   return (
     <div>
       <div className="form-control">
