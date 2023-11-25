@@ -6,6 +6,7 @@ import { clientData } from 'src/core/clientData';
 import { HouseRoomDetail } from 'src/core/house/HouseRoomDetail';
 import { HouseRoomHrid } from 'src/core/hrid/HouseRoomHrid';
 import { ItemHrid } from 'src/core/hrid/ItemHrid';
+import { getHouseCosts } from 'src/features/house/getHouseCosts';
 import { useStats } from 'src/hooks/useStats';
 
 const roomDetailMap = clientData.houseRoomDetailMap;
@@ -113,7 +114,9 @@ export function HouseCalculator() {
       </div>
       <div>
         {activeTab === 'total' &&
-          Object.entries(getCosts({ startLevel, endLevel, roomHrid: selectedRoom.hrid }))
+          Object.entries(
+            getHouseCosts({ startLevel, endLevel, roomHrid: selectedRoom.hrid })
+          )
             .sort((a, b) => {
               const indexA = clientData.itemDetailMap[a[0] as ItemHrid].sortIndex;
               const indexB = clientData.itemDetailMap[b[0] as ItemHrid].sortIndex;
@@ -158,31 +161,4 @@ export function HouseCalculator() {
       </div>
     </div>
   );
-}
-
-interface GetCostsParams {
-  startLevel: number;
-  endLevel: number;
-  roomHrid: HouseRoomHrid;
-}
-function getCosts({ startLevel, endLevel, roomHrid }: GetCostsParams) {
-  const costMap = clientData.houseRoomDetailMap[roomHrid].upgradeCostsMap;
-
-  const totalCosts = Object.entries(costMap).reduce<Record<string, number>>(
-    (acc, entry) => {
-      const [key, val] = entry;
-      const level = parseInt(key, 10);
-      if (level <= startLevel || level > endLevel) return acc;
-
-      val.forEach((cost) => {
-        if (acc[cost.itemHrid] == null) {
-          acc[cost.itemHrid] = 0;
-        }
-        acc[cost.itemHrid] += cost.count;
-      });
-      return acc;
-    },
-    {}
-  ) as Record<ItemHrid, number>;
-  return totalCosts;
 }
