@@ -1,4 +1,5 @@
 /* eslint-disable tailwindcss/no-custom-classname */
+import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import { useEffect, useState } from 'react';
 import { Select } from 'src/components/Select';
 import { SkillIcon } from 'src/components/SkillIcon';
@@ -6,6 +7,7 @@ import { clientData } from 'src/core/clientData';
 import { HouseRoomDetail } from 'src/core/house/HouseRoomDetail';
 import { LevelByLevelCostTable } from 'src/features/house/LevelByLevelCostTable';
 import { TotalCostTable } from 'src/features/house/TotalCostTable';
+import { useGetMarketDataQuery } from 'src/features/market/marketApi';
 import { useStats } from 'src/hooks/useStats';
 
 const roomDetailMap = clientData.houseRoomDetailMap;
@@ -19,6 +21,14 @@ export function HouseCalculator() {
   const [startLevel, setStartLevel] = useState(house[selectedRoom.hrid]);
   const [endLevel, setEndLevel] = useState(8);
   const [activeTab, setActiveTab] = useState('total');
+
+  const {
+    data: marketData,
+    error,
+    isLoading
+  } = useGetMarketDataQuery('', {
+    pollingInterval: 1000 * 60 * 30
+  });
 
   useEffect(() => {
     setStartLevel(house[selectedRoom.hrid]);
@@ -109,6 +119,15 @@ export function HouseCalculator() {
         </a>
       </div>
       <div>
+        {(marketData == null || error) && (
+          <div role="alert" className="alert alert-warning">
+            <ExclamationTriangleIcon className="h-6 w-6" />
+            <span>
+              Market data could not be retrieved - enhancement costs are based on vendor
+              prices (but can be overriden){' '}
+            </span>
+          </div>
+        )}
         {activeTab === 'total' && (
           <TotalCostTable
             room={selectedRoom}
