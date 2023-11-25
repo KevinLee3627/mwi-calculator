@@ -75,7 +75,8 @@ export function TotalCostTable({
         <tr>
           <th>Item</th>
           <th>Amount</th>
-          <th>Market Price</th>
+          <th>Price per Item</th>
+          <th>Total Item Price</th>
         </tr>
       </thead>
       <tbody>{totalCosts}</tbody>

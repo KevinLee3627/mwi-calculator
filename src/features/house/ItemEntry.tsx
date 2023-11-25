@@ -20,6 +20,7 @@ export function ItemEntry({
   defaultPrice
 }: ItemEntryProps) {
   const name = clientData.itemDetailMap[itemHrid].name;
+  const price = priceOverrides[itemHrid] ?? defaultPrice;
   return (
     <tr>
       <td>
@@ -30,7 +31,7 @@ export function ItemEntry({
       <td>
         <input
           className="input-primary input input-sm"
-          value={priceOverrides[itemHrid] ?? defaultPrice}
+          value={price}
           onChange={(e) => {
             setPriceOverrides((state) => {
               return { ...state, [itemHrid]: e.target.value };
@@ -38,6 +39,7 @@ export function ItemEntry({
           }}
         />
       </td>
+      <td>{formatNumber(price * count)}</td>
     </tr>
   );
 }
