@@ -21,6 +21,13 @@ export function Sidebar() {
         </div>
         <ul className="menu sticky text-base-content">
           <li>
+            <ul>
+              <li onClick={() => openModal('aboutModal')}>
+                <span>About</span>
+              </li>
+            </ul>
+          </li>
+          <li>
             <h2 className="menu-title">Player Info</h2>
             <ul>
               <li>
