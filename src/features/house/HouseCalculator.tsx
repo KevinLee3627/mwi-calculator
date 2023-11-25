@@ -22,7 +22,7 @@ export function HouseCalculator() {
 
   useEffect(() => {
     setStartLevel(house[selectedRoom.hrid]);
-  }, [selectedRoom]);
+  }, [selectedRoom, house]);
 
   return (
     <div>
